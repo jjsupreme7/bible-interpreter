@@ -15,224 +15,545 @@
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
       line-height: 1.6;
       color: #333;
-      max-width: 800px;
-      margin: 0 auto;
-      padding: 20px;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
     }
 
-    h1 {
-      text-align: center;
-      margin-bottom: 10px;
+    /* Header */
+    header {
+      background: #2c3e50;
+      color: white;
+      padding: 12px 20px;
+      display: flex;
+      align-items: center;
+      gap: 20px;
     }
 
-    .subtitle {
-      text-align: center;
-      color: #666;
-      margin-bottom: 30px;
+    header h1 {
+      font-size: 20px;
+      font-weight: 600;
     }
 
-    .search-container {
+    .nav-controls {
       display: flex;
       gap: 10px;
-      margin-bottom: 30px;
+      align-items: center;
     }
 
-    #reference-input {
-      flex: 1;
-      padding: 12px 16px;
-      font-size: 16px;
-      border: 2px solid #ddd;
-      border-radius: 8px;
-    }
-
-    #reference-input:focus {
-      outline: none;
-      border-color: #4a90d9;
-    }
-
-    #analyze-btn {
-      padding: 12px 24px;
-      font-size: 16px;
-      background: #4a90d9;
-      color: white;
+    .nav-controls select {
+      padding: 8px 12px;
+      font-size: 14px;
       border: none;
-      border-radius: 8px;
+      border-radius: 4px;
+      background: white;
       cursor: pointer;
     }
 
-    #analyze-btn:hover {
-      background: #357abd;
+    .nav-controls button {
+      padding: 8px 16px;
+      font-size: 14px;
+      border: none;
+      border-radius: 4px;
+      background: #3498db;
+      color: white;
+      cursor: pointer;
     }
 
-    #analyze-btn:disabled {
-      background: #ccc;
-      cursor: not-allowed;
+    .nav-controls button:hover {
+      background: #2980b9;
     }
 
-    .examples {
-      text-align: center;
-      margin-bottom: 30px;
-      color: #666;
+    /* Main layout */
+    .main-container {
+      display: flex;
+      flex: 1;
+      overflow: hidden;
     }
 
-    .examples a {
-      color: #4a90d9;
-      text-decoration: none;
-      margin: 0 8px;
+    /* Bible reader panel */
+    .bible-panel {
+      flex: 1;
+      padding: 30px 40px;
+      overflow-y: auto;
+      background: #fafafa;
     }
 
-    .examples a:hover {
-      text-decoration: underline;
+    .chapter-header {
+      font-size: 28px;
+      font-weight: 600;
+      margin-bottom: 20px;
+      color: #2c3e50;
     }
 
-    #results {
+    .verse {
+      display: inline;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .verse:hover {
+      background: #e8f4fc;
+    }
+
+    .verse.selected {
+      background: #fff3cd;
+    }
+
+    .verse-num {
+      font-size: 11px;
+      color: #888;
+      vertical-align: super;
+      margin-right: 2px;
+      font-weight: 600;
+    }
+
+    .verse-text {
+      font-size: 18px;
+      line-height: 1.8;
+    }
+
+    /* Interpretation panel */
+    .interpretation-panel {
+      width: 450px;
+      background: white;
+      border-left: 1px solid #ddd;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    .interpretation-panel.hidden {
       display: none;
     }
 
-    .passage-header {
-      font-size: 24px;
-      margin-bottom: 10px;
+    .panel-header {
+      padding: 16px 20px;
+      background: #f8f9fa;
+      border-bottom: 1px solid #ddd;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
     }
 
-    .english-text {
-      font-size: 18px;
-      color: #444;
-      margin-bottom: 30px;
-      padding: 20px;
-      background: #f9f9f9;
-      border-radius: 8px;
+    .panel-header h2 {
+      font-size: 16px;
+      font-weight: 600;
     }
 
-    .section-title {
-      font-size: 18px;
-      margin: 20px 0 10px;
+    .close-panel {
+      background: none;
+      border: none;
+      font-size: 20px;
+      cursor: pointer;
+      color: #666;
+    }
+
+    .close-panel:hover {
       color: #333;
     }
 
-    .word-grid {
-      display: grid;
-      gap: 10px;
-      margin-bottom: 30px;
+    .panel-content {
+      flex: 1;
+      overflow-y: auto;
+      padding: 20px;
     }
 
-    .word-card {
-      padding: 12px;
-      background: #fff;
-      border: 1px solid #ddd;
+    .selected-text {
+      background: #fff3cd;
+      padding: 12px 16px;
       border-radius: 8px;
+      margin-bottom: 20px;
+      font-style: italic;
+      font-size: 15px;
+    }
+
+    .section-title {
+      font-size: 14px;
+      font-weight: 600;
+      color: #666;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin: 20px 0 12px;
+    }
+
+    .word-list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+
+    .word-item {
+      padding: 12px;
+      background: #f8f9fa;
+      border-radius: 8px;
+      border-left: 3px solid #3498db;
     }
 
     .word-original {
-      font-size: 20px;
-      color: #4a90d9;
+      font-size: 18px;
+      color: #2c3e50;
+      font-weight: 600;
     }
 
     .word-transliteration {
       font-style: italic;
       color: #666;
+      font-size: 14px;
     }
 
     .word-strongs {
-      font-size: 12px;
-      color: #999;
+      display: inline-block;
+      font-size: 11px;
+      background: #3498db;
+      color: white;
+      padding: 2px 6px;
+      border-radius: 3px;
+      margin-top: 4px;
+    }
+
+    .word-strongs a {
+      color: white;
+      text-decoration: none;
+    }
+
+    .word-strongs a:hover {
+      text-decoration: underline;
     }
 
     .word-definition {
       margin-top: 8px;
+      font-size: 14px;
+      color: #444;
     }
 
-    .interpretation {
-      padding: 20px;
-      background: #f0f7ff;
-      border-radius: 8px;
+    .interpretation-text {
+      font-size: 15px;
       line-height: 1.8;
+      color: #333;
       white-space: pre-wrap;
     }
 
-    .loading {
-      text-align: center;
-      padding: 40px;
+    .citation {
+      display: inline;
+      color: #3498db;
+      cursor: pointer;
+      font-weight: 500;
+    }
+
+    .citation:hover {
+      text-decoration: underline;
+    }
+
+    /* Loading state */
+    .loading-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(255,255,255,0.9);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
       color: #666;
     }
 
-    .error {
-      padding: 20px;
-      background: #fff0f0;
-      border-radius: 8px;
-      color: #c00;
+    .loading-overlay.hidden {
+      display: none;
+    }
+
+    /* Floating action button */
+    .interpret-fab {
+      position: fixed;
+      bottom: 30px;
+      right: 30px;
+      background: #3498db;
+      color: white;
+      border: none;
+      padding: 16px 24px;
+      border-radius: 30px;
+      font-size: 16px;
+      cursor: pointer;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+      display: none;
+      z-index: 100;
+    }
+
+    .interpret-fab:hover {
+      background: #2980b9;
+    }
+
+    .interpret-fab.visible {
+      display: block;
+    }
+
+    /* Instructions */
+    .instructions {
+      text-align: center;
+      padding: 40px;
+      color: #888;
+    }
+
+    .instructions p {
+      margin-bottom: 10px;
+    }
+
+    /* Mobile responsive */
+    @media (max-width: 768px) {
+      .main-container {
+        flex-direction: column;
+      }
+
+      .interpretation-panel {
+        width: 100%;
+        height: 50vh;
+        border-left: none;
+        border-top: 1px solid #ddd;
+      }
+
+      .bible-panel {
+        padding: 20px;
+      }
     }
   </style>
 </head>
 <body>
-  <h1>Bible Interpreter</h1>
-  <p class="subtitle">Understand Scripture through the original Greek & Hebrew</p>
+  <header>
+    <h1>Bible Interpreter</h1>
+    <div class="nav-controls">
+      <select id="book-select"></select>
+      <select id="chapter-select"></select>
+      <button id="load-chapter">Go</button>
+    </div>
+  </header>
 
-  <div class="search-container">
-    <input
-      type="text"
-      id="reference-input"
-      placeholder="Enter a passage (e.g., 1 Corinthians 4:3-6)"
-    >
-    <button id="analyze-btn">Analyze</button>
+  <div class="main-container">
+    <div class="bible-panel" id="bible-panel">
+      <div class="instructions" id="instructions">
+        <p>Select a book and chapter above to start reading.</p>
+        <p>Then highlight or click on verses to get Greek/Hebrew analysis.</p>
+      </div>
+      <h2 class="chapter-header" id="chapter-header" style="display:none;"></h2>
+      <div class="verses-container" id="verses-container"></div>
+    </div>
+
+    <div class="interpretation-panel hidden" id="interpretation-panel">
+      <div class="panel-header">
+        <h2>Interpretation</h2>
+        <button class="close-panel" id="close-panel">&times;</button>
+      </div>
+      <div class="panel-content" id="panel-content">
+        <div class="loading-overlay hidden" id="panel-loading">
+          Analyzing passage...
+        </div>
+        <div class="selected-text" id="selected-text"></div>
+        <div class="section-title">Key Words</div>
+        <div class="word-list" id="word-list"></div>
+        <div class="section-title">Interpretation</div>
+        <div class="interpretation-text" id="interpretation-text"></div>
+      </div>
+    </div>
   </div>
 
-  <div class="examples">
-    Try:
-    <a href="#" data-ref="1 Corinthians 4:3-6">1 Corinthians 4:3-6</a>
-    <a href="#" data-ref="Romans 8:28">Romans 8:28</a>
-    <a href="#" data-ref="Philippians 2:5-8">Philippians 2:5-8</a>
-  </div>
-
-  <div id="loading" class="loading" style="display: none;">
-    Analyzing passage...
-  </div>
-
-  <div id="error" class="error" style="display: none;"></div>
-
-  <div id="results">
-    <h2 class="passage-header" id="result-reference"></h2>
-    <div class="english-text" id="result-english"></div>
-
-    <h3 class="section-title">Original Language Breakdown</h3>
-    <div class="word-grid" id="result-words"></div>
-
-    <h3 class="section-title">Interpretation</h3>
-    <div class="interpretation" id="result-interpretation"></div>
-  </div>
+  <button class="interpret-fab" id="interpret-fab">Interpret Selection</button>
 
   <script>
-    const input = document.getElementById('reference-input');
-    const btn = document.getElementById('analyze-btn');
-    const loading = document.getElementById('loading');
-    const error = document.getElementById('error');
-    const results = document.getElementById('results');
+    // Book data
+    const BOOKS = [
+      { name: 'Genesis', chapters: 50 }, { name: 'Exodus', chapters: 40 },
+      { name: 'Leviticus', chapters: 27 }, { name: 'Numbers', chapters: 36 },
+      { name: 'Deuteronomy', chapters: 34 }, { name: 'Joshua', chapters: 24 },
+      { name: 'Judges', chapters: 21 }, { name: 'Ruth', chapters: 4 },
+      { name: '1 Samuel', chapters: 31 }, { name: '2 Samuel', chapters: 24 },
+      { name: '1 Kings', chapters: 22 }, { name: '2 Kings', chapters: 25 },
+      { name: '1 Chronicles', chapters: 29 }, { name: '2 Chronicles', chapters: 36 },
+      { name: 'Ezra', chapters: 10 }, { name: 'Nehemiah', chapters: 13 },
+      { name: 'Esther', chapters: 10 }, { name: 'Job', chapters: 42 },
+      { name: 'Psalms', chapters: 150 }, { name: 'Proverbs', chapters: 31 },
+      { name: 'Ecclesiastes', chapters: 12 }, { name: 'Song of Solomon', chapters: 8 },
+      { name: 'Isaiah', chapters: 66 }, { name: 'Jeremiah', chapters: 52 },
+      { name: 'Lamentations', chapters: 5 }, { name: 'Ezekiel', chapters: 48 },
+      { name: 'Daniel', chapters: 12 }, { name: 'Hosea', chapters: 14 },
+      { name: 'Joel', chapters: 3 }, { name: 'Amos', chapters: 9 },
+      { name: 'Obadiah', chapters: 1 }, { name: 'Jonah', chapters: 4 },
+      { name: 'Micah', chapters: 7 }, { name: 'Nahum', chapters: 3 },
+      { name: 'Habakkuk', chapters: 3 }, { name: 'Zephaniah', chapters: 3 },
+      { name: 'Haggai', chapters: 2 }, { name: 'Zechariah', chapters: 14 },
+      { name: 'Malachi', chapters: 4 },
+      // New Testament
+      { name: 'Matthew', chapters: 28 }, { name: 'Mark', chapters: 16 },
+      { name: 'Luke', chapters: 24 }, { name: 'John', chapters: 21 },
+      { name: 'Acts', chapters: 28 }, { name: 'Romans', chapters: 16 },
+      { name: '1 Corinthians', chapters: 16 }, { name: '2 Corinthians', chapters: 13 },
+      { name: 'Galatians', chapters: 6 }, { name: 'Ephesians', chapters: 6 },
+      { name: 'Philippians', chapters: 4 }, { name: 'Colossians', chapters: 4 },
+      { name: '1 Thessalonians', chapters: 5 }, { name: '2 Thessalonians', chapters: 3 },
+      { name: '1 Timothy', chapters: 6 }, { name: '2 Timothy', chapters: 4 },
+      { name: 'Titus', chapters: 3 }, { name: 'Philemon', chapters: 1 },
+      { name: 'Hebrews', chapters: 13 }, { name: 'James', chapters: 5 },
+      { name: '1 Peter', chapters: 5 }, { name: '2 Peter', chapters: 3 },
+      { name: '1 John', chapters: 5 }, { name: '2 John', chapters: 1 },
+      { name: '3 John', chapters: 1 }, { name: 'Jude', chapters: 1 },
+      { name: 'Revelation', chapters: 22 }
+    ];
 
-    // Example links
-    document.querySelectorAll('.examples a').forEach(link => {
-      link.addEventListener('click', (e) => {
-        e.preventDefault();
-        input.value = e.target.dataset.ref;
-        analyzePassage();
-      });
+    // DOM elements
+    const bookSelect = document.getElementById('book-select');
+    const chapterSelect = document.getElementById('chapter-select');
+    const loadChapterBtn = document.getElementById('load-chapter');
+    const versesContainer = document.getElementById('verses-container');
+    const chapterHeader = document.getElementById('chapter-header');
+    const instructions = document.getElementById('instructions');
+    const interpretPanel = document.getElementById('interpretation-panel');
+    const closePanel = document.getElementById('close-panel');
+    const panelLoading = document.getElementById('panel-loading');
+    const selectedTextEl = document.getElementById('selected-text');
+    const wordList = document.getElementById('word-list');
+    const interpretationText = document.getElementById('interpretation-text');
+    const interpretFab = document.getElementById('interpret-fab');
+
+    // State
+    let selectedVerses = new Set();
+    let currentBook = '';
+    let currentChapter = 0;
+
+    // Initialize book select
+    BOOKS.forEach((book, index) => {
+      const option = document.createElement('option');
+      option.value = index;
+      option.textContent = book.name;
+      bookSelect.appendChild(option);
     });
 
-    // Analyze button
-    btn.addEventListener('click', analyzePassage);
-
-    // Enter key
-    input.addEventListener('keypress', (e) => {
-      if (e.key === 'Enter') analyzePassage();
+    // Update chapter select when book changes
+    bookSelect.addEventListener('change', () => {
+      const bookIndex = parseInt(bookSelect.value);
+      const book = BOOKS[bookIndex];
+      chapterSelect.textContent = '';
+      for (let i = 1; i <= book.chapters; i++) {
+        const option = document.createElement('option');
+        option.value = i;
+        option.textContent = i;
+        chapterSelect.appendChild(option);
+      }
     });
 
-    async function analyzePassage() {
-      const reference = input.value.trim();
-      if (!reference) return;
+    // Trigger initial chapter load
+    bookSelect.value = 45; // Romans
+    bookSelect.dispatchEvent(new Event('change'));
+    chapterSelect.value = 8;
+
+    // Load chapter
+    loadChapterBtn.addEventListener('click', loadChapter);
+
+    async function loadChapter() {
+      const bookIndex = parseInt(bookSelect.value);
+      const book = BOOKS[bookIndex];
+      const chapter = parseInt(chapterSelect.value);
+
+      currentBook = book.name;
+      currentChapter = chapter;
 
       // Show loading
-      loading.style.display = 'block';
-      error.style.display = 'none';
-      results.style.display = 'none';
-      btn.disabled = true;
+      instructions.style.display = 'none';
+      chapterHeader.style.display = 'block';
+      chapterHeader.textContent = book.name + ' ' + chapter;
+      versesContainer.textContent = 'Loading...';
+
+      try {
+        const response = await fetch('/api/chapter', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ book: book.name, chapter })
+        });
+
+        if (!response.ok) throw new Error('Failed to load chapter');
+
+        const data = await response.json();
+        displayVerses(data.verses);
+      } catch (err) {
+        versesContainer.textContent = 'Error loading chapter: ' + err.message;
+      }
+    }
+
+    function displayVerses(verses) {
+      versesContainer.textContent = '';
+      selectedVerses.clear();
+      updateFab();
+
+      verses.forEach(v => {
+        const verseSpan = document.createElement('span');
+        verseSpan.className = 'verse';
+        verseSpan.dataset.verse = v.verse;
+
+        const numSpan = document.createElement('sup');
+        numSpan.className = 'verse-num';
+        numSpan.textContent = v.verse;
+
+        const textSpan = document.createElement('span');
+        textSpan.className = 'verse-text';
+        textSpan.textContent = v.text + ' ';
+
+        verseSpan.appendChild(numSpan);
+        verseSpan.appendChild(textSpan);
+
+        verseSpan.addEventListener('click', () => toggleVerse(verseSpan, v.verse));
+
+        versesContainer.appendChild(verseSpan);
+      });
+    }
+
+    function toggleVerse(el, verseNum) {
+      if (selectedVerses.has(verseNum)) {
+        selectedVerses.delete(verseNum);
+        el.classList.remove('selected');
+      } else {
+        selectedVerses.add(verseNum);
+        el.classList.add('selected');
+      }
+      updateFab();
+    }
+
+    function updateFab() {
+      if (selectedVerses.size > 0) {
+        interpretFab.classList.add('visible');
+        interpretFab.textContent = selectedVerses.size === 1
+          ? 'Interpret Verse ' + [...selectedVerses][0]
+          : 'Interpret ' + selectedVerses.size + ' Verses';
+      } else {
+        interpretFab.classList.remove('visible');
+      }
+    }
+
+    // Interpret selected verses
+    interpretFab.addEventListener('click', interpretSelection);
+
+    async function interpretSelection() {
+      if (selectedVerses.size === 0) return;
+
+      const sortedVerses = [...selectedVerses].sort((a, b) => a - b);
+      const startVerse = sortedVerses[0];
+      const endVerse = sortedVerses[sortedVerses.length - 1];
+
+      const reference = endVerse > startVerse
+        ? currentBook + ' ' + currentChapter + ':' + startVerse + '-' + endVerse
+        : currentBook + ' ' + currentChapter + ':' + startVerse;
+
+      // Get selected text
+      const selectedText = sortedVerses.map(v => {
+        const el = document.querySelector('.verse[data-verse="' + v + '"] .verse-text');
+        return v + ' ' + (el ? el.textContent.trim() : '');
+      }).join(' ');
+
+      // Show panel
+      interpretPanel.classList.remove('hidden');
+      selectedTextEl.textContent = selectedText;
+      panelLoading.classList.remove('hidden');
+      wordList.textContent = '';
+      interpretationText.textContent = '';
 
       try {
         const response = await fetch('/api/analyze', {
@@ -241,59 +562,73 @@
           body: JSON.stringify({ reference })
         });
 
-        if (!response.ok) throw new Error('Failed to analyze passage');
+        if (!response.ok) throw new Error('Failed to analyze');
 
         const data = await response.json();
-        displayResults(data);
+        displayInterpretation(data);
       } catch (err) {
-        error.textContent = err.message;
-        error.style.display = 'block';
+        interpretationText.textContent = 'Error: ' + err.message;
       } finally {
-        loading.style.display = 'none';
-        btn.disabled = false;
+        panelLoading.classList.add('hidden');
       }
     }
 
-    function displayResults(data) {
-      document.getElementById('result-reference').textContent = data.reference;
-      document.getElementById('result-english').textContent = data.englishText;
+    function displayInterpretation(data) {
+      // Display words
+      wordList.textContent = '';
+      if (data.words && data.words.length > 0) {
+        data.words.forEach(word => {
+          const item = document.createElement('div');
+          item.className = 'word-item';
 
-      // Display words using safe DOM methods
-      const wordsContainer = document.getElementById('result-words');
-      wordsContainer.textContent = ''; // Clear previous content
+          const original = document.createElement('div');
+          original.className = 'word-original';
+          original.textContent = word.original || '';
+          item.appendChild(original);
 
-      data.words.forEach(word => {
-        const card = document.createElement('div');
-        card.className = 'word-card';
+          if (word.transliteration) {
+            const translit = document.createElement('div');
+            translit.className = 'word-transliteration';
+            translit.textContent = word.transliteration;
+            item.appendChild(translit);
+          }
 
-        const original = document.createElement('div');
-        original.className = 'word-original';
-        original.textContent = word.original || '';
-        card.appendChild(original);
+          if (word.strongs) {
+            const strongs = document.createElement('span');
+            strongs.className = 'word-strongs';
+            const link = document.createElement('a');
+            link.href = 'https://biblehub.com/greek/' + word.strongs.replace(/[^\d]/g, '') + '.htm';
+            link.target = '_blank';
+            link.textContent = "Strong's " + word.strongs;
+            strongs.appendChild(link);
+            item.appendChild(strongs);
+          }
 
-        const translit = document.createElement('div');
-        translit.className = 'word-transliteration';
-        translit.textContent = word.transliteration || '';
-        card.appendChild(translit);
+          if (word.definition) {
+            const def = document.createElement('div');
+            def.className = 'word-definition';
+            def.textContent = word.definition;
+            item.appendChild(def);
+          }
 
-        const strongs = document.createElement('div');
-        strongs.className = 'word-strongs';
-        strongs.textContent = word.strongs ? `Strong's ${word.strongs}` : '';
-        card.appendChild(strongs);
+          wordList.appendChild(item);
+        });
+      } else {
+        const noWords = document.createElement('div');
+        noWords.textContent = 'Word-level data analyzed by AI below.';
+        noWords.style.color = '#888';
+        noWords.style.fontStyle = 'italic';
+        wordList.appendChild(noWords);
+      }
 
-        const definition = document.createElement('div');
-        definition.className = 'word-definition';
-        definition.textContent = word.definition || '';
-        card.appendChild(definition);
-
-        wordsContainer.appendChild(card);
-      });
-
-      // Display interpretation using textContent (safe)
-      document.getElementById('result-interpretation').textContent = data.interpretation;
-
-      results.style.display = 'block';
+      // Display interpretation
+      interpretationText.textContent = data.interpretation || 'No interpretation available.';
     }
+
+    // Close panel
+    closePanel.addEventListener('click', () => {
+      interpretPanel.classList.add('hidden');
+    });
   </script>
 </body>
 </html>
