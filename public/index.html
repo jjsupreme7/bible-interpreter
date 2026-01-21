@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bible Interpreter</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      line-height: 1.6;
+      color: #333;
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+
+    h1 {
+      text-align: center;
+      margin-bottom: 10px;
+    }
+
+    .subtitle {
+      text-align: center;
+      color: #666;
+      margin-bottom: 30px;
+    }
+
+    .search-container {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 30px;
+    }
+
+    #reference-input {
+      flex: 1;
+      padding: 12px 16px;
+      font-size: 16px;
+      border: 2px solid #ddd;
+      border-radius: 8px;
+    }
+
+    #reference-input:focus {
+      outline: none;
+      border-color: #4a90d9;
+    }
+
+    #analyze-btn {
+      padding: 12px 24px;
+      font-size: 16px;
+      background: #4a90d9;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+
+    #analyze-btn:hover {
+      background: #357abd;
+    }
+
+    #analyze-btn:disabled {
+      background: #ccc;
+      cursor: not-allowed;
+    }
+
+    .examples {
+      text-align: center;
+      margin-bottom: 30px;
+      color: #666;
+    }
+
+    .examples a {
+      color: #4a90d9;
+      text-decoration: none;
+      margin: 0 8px;
+    }
+
+    .examples a:hover {
+      text-decoration: underline;
+    }
+
+    #results {
+      display: none;
+    }
+
+    .passage-header {
+      font-size: 24px;
+      margin-bottom: 10px;
+    }
+
+    .english-text {
+      font-size: 18px;
+      color: #444;
+      margin-bottom: 30px;
+      padding: 20px;
+      background: #f9f9f9;
+      border-radius: 8px;
+    }
+
+    .section-title {
+      font-size: 18px;
+      margin: 20px 0 10px;
+      color: #333;
+    }
+
+    .word-grid {
+      display: grid;
+      gap: 10px;
+      margin-bottom: 30px;
+    }
+
+    .word-card {
+      padding: 12px;
+      background: #fff;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+    }
+
+    .word-original {
+      font-size: 20px;
+      color: #4a90d9;
+    }
+
+    .word-transliteration {
+      font-style: italic;
+      color: #666;
+    }
+
+    .word-strongs {
+      font-size: 12px;
+      color: #999;
+    }
+
+    .word-definition {
+      margin-top: 8px;
+    }
+
+    .interpretation {
+      padding: 20px;
+      background: #f0f7ff;
+      border-radius: 8px;
+      line-height: 1.8;
+      white-space: pre-wrap;
+    }
+
+    .loading {
+      text-align: center;
+      padding: 40px;
+      color: #666;
+    }
+
+    .error {
+      padding: 20px;
+      background: #fff0f0;
+      border-radius: 8px;
+      color: #c00;
+    }
+  </style>
+</head>
+<body>
+  <h1>Bible Interpreter</h1>
+  <p class="subtitle">Understand Scripture through the original Greek & Hebrew</p>
+
+  <div class="search-container">
+    <input
+      type="text"
+      id="reference-input"
+      placeholder="Enter a passage (e.g., 1 Corinthians 4:3-6)"
+    >
+    <button id="analyze-btn">Analyze</button>
+  </div>
+
+  <div class="examples">
+    Try:
+    <a href="#" data-ref="1 Corinthians 4:3-6">1 Corinthians 4:3-6</a>
+    <a href="#" data-ref="Romans 8:28">Romans 8:28</a>
+    <a href="#" data-ref="Philippians 2:5-8">Philippians 2:5-8</a>
+  </div>
+
+  <div id="loading" class="loading" style="display: none;">
+    Analyzing passage...
+  </div>
+
+  <div id="error" class="error" style="display: none;"></div>
+
+  <div id="results">
+    <h2 class="passage-header" id="result-reference"></h2>
+    <div class="english-text" id="result-english"></div>
+
+    <h3 class="section-title">Original Language Breakdown</h3>
+    <div class="word-grid" id="result-words"></div>
+
+    <h3 class="section-title">Interpretation</h3>
+    <div class="interpretation" id="result-interpretation"></div>
+  </div>
+
+  <script>
+    const input = document.getElementById('reference-input');
+    const btn = document.getElementById('analyze-btn');
+    const loading = document.getElementById('loading');
+    const error = document.getElementById('error');
+    const results = document.getElementById('results');
+
+    // Example links
+    document.querySelectorAll('.examples a').forEach(link => {
+      link.addEventListener('click', (e) => {
+        e.preventDefault();
+        input.value = e.target.dataset.ref;
+        analyzePassage();
+      });
+    });
+
+    // Analyze button
+    btn.addEventListener('click', analyzePassage);
+
+    // Enter key
+    input.addEventListener('keypress', (e) => {
+      if (e.key === 'Enter') analyzePassage();
+    });
+
+    async function analyzePassage() {
+      const reference = input.value.trim();
+      if (!reference) return;
+
+      // Show loading
+      loading.style.display = 'block';
+      error.style.display = 'none';
+      results.style.display = 'none';
+      btn.disabled = true;
+
+      try {
+        const response = await fetch('/api/analyze', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ reference })
+        });
+
+        if (!response.ok) throw new Error('Failed to analyze passage');
+
+        const data = await response.json();
+        displayResults(data);
+      } catch (err) {
+        error.textContent = err.message;
+        error.style.display = 'block';
+      } finally {
+        loading.style.display = 'none';
+        btn.disabled = false;
+      }
+    }
+
+    function displayResults(data) {
+      document.getElementById('result-reference').textContent = data.reference;
+      document.getElementById('result-english').textContent = data.englishText;
+
+      // Display words using safe DOM methods
+      const wordsContainer = document.getElementById('result-words');
+      wordsContainer.textContent = ''; // Clear previous content
+
+      data.words.forEach(word => {
+        const card = document.createElement('div');
+        card.className = 'word-card';
+
+        const original = document.createElement('div');
+        original.className = 'word-original';
+        original.textContent = word.original || '';
+        card.appendChild(original);
+
+        const translit = document.createElement('div');
+        translit.className = 'word-transliteration';
+        translit.textContent = word.transliteration || '';
+        card.appendChild(translit);
+
+        const strongs = document.createElement('div');
+        strongs.className = 'word-strongs';
+        strongs.textContent = word.strongs ? `Strong's ${word.strongs}` : '';
+        card.appendChild(strongs);
+
+        const definition = document.createElement('div');
+        definition.className = 'word-definition';
+        definition.textContent = word.definition || '';
+        card.appendChild(definition);
+
+        wordsContainer.appendChild(card);
+      });
+
+      // Display interpretation using textContent (safe)
+      document.getElementById('result-interpretation').textContent = data.interpretation;
+
+      results.style.display = 'block';
+    }
+  </script>
+</body>
+</html>
