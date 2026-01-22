@@ -2,6 +2,8 @@ require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
 const Anthropic = require('@anthropic-ai/sdk');
+const fs = require('fs');
+const path = require('path');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -14,6 +16,65 @@ app.use(express.static('public'));
 const anthropic = new Anthropic({
   apiKey: process.env.ANTHROPIC_API_KEY,
 });
+
+// Usage tracking
+const USAGE_FILE = path.join(__dirname, 'usage.json');
+
+// Claude Sonnet pricing (as of 2024)
+const PRICING = {
+  inputPerMillion: 3.00,   // $3 per million input tokens
+  outputPerMillion: 15.00  // $15 per million output tokens
+};
+
+function loadUsage() {
+  try {
+    if (fs.existsSync(USAGE_FILE)) {
+      return JSON.parse(fs.readFileSync(USAGE_FILE, 'utf8'));
+    }
+  } catch (e) {
+    console.error('Error loading usage file:', e);
+  }
+  return {
+    totalInputTokens: 0,
+    totalOutputTokens: 0,
+    totalRequests: 0,
+    requests: []
+  };
+}
+
+function saveUsage(usage) {
+  try {
+    fs.writeFileSync(USAGE_FILE, JSON.stringify(usage, null, 2));
+  } catch (e) {
+    console.error('Error saving usage file:', e);
+  }
+}
+
+function trackUsage(reference, inputTokens, outputTokens) {
+  const usage = loadUsage();
+  usage.totalInputTokens += inputTokens;
+  usage.totalOutputTokens += outputTokens;
+  usage.totalRequests += 1;
+  usage.requests.push({
+    timestamp: new Date().toISOString(),
+    reference,
+    inputTokens,
+    outputTokens,
+    estimatedCost: calculateCost(inputTokens, outputTokens)
+  });
+  // Keep only last 100 requests to avoid huge file
+  if (usage.requests.length > 100) {
+    usage.requests = usage.requests.slice(-100);
+  }
+  saveUsage(usage);
+  return usage;
+}
+
+function calculateCost(inputTokens, outputTokens) {
+  const inputCost = (inputTokens / 1000000) * PRICING.inputPerMillion;
+  const outputCost = (outputTokens / 1000000) * PRICING.outputPerMillion;
+  return inputCost + outputCost;
+}
 
 // Book name to number mapping for Bolls.life API
 const BOOK_MAP = {
@@ -121,7 +182,7 @@ function parseReference(reference) {
 // API endpoint to analyze a Bible passage
 app.post('/api/analyze', async (req, res) => {
   try {
-    const { reference } = req.body;
+    const { reference, translation = 'ESV' } = req.body;
 
     if (!reference) {
       return res.status(400).json({ error: 'Reference is required' });
@@ -131,7 +192,7 @@ app.post('/api/analyze', async (req, res) => {
     const parsed = parseReference(reference);
 
     // Step 1: Fetch passage data from Bible API
-    const passageData = await fetchPassageData(parsed);
+    const passageData = await fetchPassageData(parsed, translation);
 
     // Step 2: Fetch Greek/Hebrew word data
     const wordData = await fetchWordData(parsed);
@@ -152,11 +213,11 @@ app.post('/api/analyze', async (req, res) => {
 });
 
 // Fetch passage text from Bolls.life API
-async function fetchPassageData(parsed) {
+async function fetchPassageData(parsed, translation = 'ESV') {
   const { bookNum, chapter, startVerse, endVerse } = parsed;
 
-  // Fetch the chapter from Bolls.life (ESV translation)
-  const url = `https://bolls.life/get-text/ESV/${bookNum}/${chapter}/`;
+  // Fetch the chapter from Bolls.life
+  const url = `https://bolls.life/get-text/${translation}/${bookNum}/${chapter}/`;
 
   const response = await fetch(url);
   if (!response.ok) {
@@ -325,6 +386,13 @@ ${wordDataSummary}
       ]
     });
 
+    // Track usage
+    const inputTokens = message.usage?.input_tokens || 0;
+    const outputTokens = message.usage?.output_tokens || 0;
+    trackUsage(reference, inputTokens, outputTokens);
+
+    console.log(`API Usage - Input: ${inputTokens}, Output: ${outputTokens}, Cost: $${calculateCost(inputTokens, outputTokens).toFixed(4)}`);
+
     return message.content[0].text;
   } catch (error) {
     console.error('Claude API error:', error);
@@ -332,10 +400,37 @@ ${wordDataSummary}
   }
 }
 
+// API endpoint to get usage stats
+app.get('/api/usage', (req, res) => {
+  const usage = loadUsage();
+  const totalCost = calculateCost(usage.totalInputTokens, usage.totalOutputTokens);
+  res.json({
+    totalInputTokens: usage.totalInputTokens,
+    totalOutputTokens: usage.totalOutputTokens,
+    totalRequests: usage.totalRequests,
+    totalCost: totalCost,
+    formattedCost: `$${totalCost.toFixed(4)}`,
+    recentRequests: usage.requests.slice(-10).reverse(),
+    pricing: PRICING
+  });
+});
+
+// API endpoint to reset usage stats
+app.post('/api/usage/reset', (req, res) => {
+  const emptyUsage = {
+    totalInputTokens: 0,
+    totalOutputTokens: 0,
+    totalRequests: 0,
+    requests: []
+  };
+  saveUsage(emptyUsage);
+  res.json({ message: 'Usage stats reset', usage: emptyUsage });
+});
+
 // API endpoint to load a full chapter
 app.post('/api/chapter', async (req, res) => {
   try {
-    const { book, chapter } = req.body;
+    const { book, chapter, translation = 'ESV' } = req.body;
 
     if (!book || !chapter) {
       return res.status(400).json({ error: 'Book and chapter are required' });
@@ -348,8 +443,8 @@ app.post('/api/chapter', async (req, res) => {
       return res.status(400).json({ error: `Unknown book: ${book}` });
     }
 
-    // Fetch the chapter from Bolls.life (ESV translation)
-    const url = `https://bolls.life/get-text/ESV/${bookNum}/${chapter}/`;
+    // Fetch the chapter from Bolls.life
+    const url = `https://bolls.life/get-text/${translation}/${bookNum}/${chapter}/`;
 
     const response = await fetch(url);
     if (!response.ok) {
@@ -358,10 +453,20 @@ app.post('/api/chapter', async (req, res) => {
 
     const verses = await response.json();
 
+    // Clean up Strong's numbers and other markup from the text
+    const cleanedVerses = verses.map(v => ({
+      ...v,
+      text: v.text
+        .replace(/<S>\d+<\/S>/g, '')  // Remove Strong's numbers
+        .replace(/<[^>]+>/g, '')       // Remove any other HTML tags
+        .replace(/\s+/g, ' ')          // Normalize whitespace
+        .trim()
+    }));
+
     res.json({
       book,
       chapter,
-      verses
+      verses: cleanedVerses
     });
   } catch (error) {
     console.error('Error loading chapter:', error);

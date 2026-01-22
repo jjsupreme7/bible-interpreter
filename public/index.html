@@ -4,7 +4,108 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Bible Interpreter</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Literata:opsz,wght@7..72,400;7..72,500;7..72,600&display=swap" rel="stylesheet">
   <style>
+    /* ===== Design System ===== */
+    :root {
+      /* Colors - Light Mode */
+      --primary-50: #EEF2FF;
+      --primary-100: #E0E7FF;
+      --primary-500: #6366F1;
+      --primary-600: #4F46E5;
+      --primary-700: #4338CA;
+
+      --neutral-50: #FAFAFA;
+      --neutral-100: #F5F5F5;
+      --neutral-200: #E5E5E5;
+      --neutral-300: #D4D4D4;
+      --neutral-400: #A3A3A3;
+      --neutral-500: #737373;
+      --neutral-600: #525252;
+      --neutral-700: #404040;
+      --neutral-800: #262626;
+      --neutral-900: #171717;
+
+      --selection-bg: #FEF3C7;
+      --selection-border: #F59E0B;
+      --success: #10B981;
+      --error: #EF4444;
+
+      --scripture-bg: #FFFBEB;
+      --verse-hover: #FEF9C3;
+
+      --header-bg: #1E1B4B;
+      --panel-bg: #FFFFFF;
+
+      /* Typography */
+      --font-ui: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+      --font-scripture: 'Literata', Georgia, 'Times New Roman', serif;
+      --font-mono: 'SF Mono', Monaco, 'Cascadia Code', Consolas, monospace;
+
+      /* Type Scale */
+      --text-xs: 0.75rem;
+      --text-sm: 0.875rem;
+      --text-base: 1rem;
+      --text-lg: 1.125rem;
+      --text-xl: 1.25rem;
+      --text-2xl: 1.5rem;
+      --text-3xl: 1.875rem;
+
+      /* Spacing */
+      --space-1: 0.25rem;
+      --space-2: 0.5rem;
+      --space-3: 0.75rem;
+      --space-4: 1rem;
+      --space-5: 1.25rem;
+      --space-6: 1.5rem;
+      --space-8: 2rem;
+      --space-10: 2.5rem;
+      --space-12: 3rem;
+
+      /* Shadows */
+      --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+      --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
+      --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1);
+      --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+
+      /* Transitions */
+      --transition-fast: 0.15s ease;
+      --transition-normal: 0.2s ease;
+      --transition-slow: 0.3s ease;
+    }
+
+    /* Dark Mode */
+    :root.dark {
+      --primary-50: #312E81;
+      --primary-100: #3730A3;
+      --primary-500: #818CF8;
+      --primary-600: #A5B4FC;
+      --primary-700: #C7D2FE;
+
+      --neutral-50: #0A0A0A;
+      --neutral-100: #171717;
+      --neutral-200: #262626;
+      --neutral-300: #404040;
+      --neutral-400: #525252;
+      --neutral-500: #737373;
+      --neutral-600: #A3A3A3;
+      --neutral-700: #D4D4D4;
+      --neutral-800: #E5E5E5;
+      --neutral-900: #FAFAFA;
+
+      --selection-bg: #422006;
+      --selection-border: #D97706;
+
+      --scripture-bg: #1C1917;
+      --verse-hover: #292524;
+
+      --header-bg: #0F0D1A;
+      --panel-bg: #171717;
+    }
+
+    /* ===== Base Styles ===== */
     * {
       box-sizing: border-box;
       margin: 0;
@@ -12,205 +113,598 @@
     }
 
     body {
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      font-family: var(--font-ui);
       line-height: 1.6;
-      color: #333;
+      color: var(--neutral-700);
+      background: var(--neutral-50);
       height: 100vh;
       display: flex;
       flex-direction: column;
+      transition: background var(--transition-normal), color var(--transition-normal);
     }
 
-    /* Header */
+    /* Focus styles */
+    :focus-visible {
+      outline: 2px solid var(--primary-500);
+      outline-offset: 2px;
+    }
+
+    /* ===== Header ===== */
     header {
-      background: #2c3e50;
+      background: var(--header-bg);
       color: white;
-      padding: 12px 20px;
+      padding: var(--space-3) var(--space-5);
       display: flex;
       align-items: center;
-      gap: 20px;
+      gap: var(--space-4);
+      position: relative;
+      z-index: 100;
     }
 
     header h1 {
-      font-size: 20px;
+      font-size: var(--text-lg);
       font-weight: 600;
+      white-space: nowrap;
     }
 
     .nav-controls {
       display: flex;
-      gap: 10px;
+      gap: var(--space-2);
       align-items: center;
     }
 
-    .nav-controls select {
-      padding: 8px 12px;
-      font-size: 14px;
+    .nav-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 36px;
+      height: 36px;
       border: none;
-      border-radius: 4px;
-      background: white;
-      cursor: pointer;
-    }
-
-    .nav-controls button {
-      padding: 8px 16px;
-      font-size: 14px;
-      border: none;
-      border-radius: 4px;
-      background: #3498db;
+      border-radius: 8px;
+      background: rgba(255,255,255,0.1);
       color: white;
       cursor: pointer;
+      transition: background var(--transition-fast);
     }
 
-    .nav-controls button:hover {
-      background: #2980b9;
+    .nav-btn:hover:not(:disabled) {
+      background: var(--primary-500);
     }
 
-    /* Main layout */
+    .nav-btn:disabled {
+      opacity: 0.3;
+      cursor: not-allowed;
+    }
+
+    .nav-btn svg {
+      width: 20px;
+      height: 20px;
+    }
+
+    .nav-controls select {
+      padding: var(--space-2) var(--space-3);
+      font-size: var(--text-sm);
+      border: none;
+      border-radius: 8px;
+      background: white;
+      color: #262626;
+      cursor: pointer;
+      min-width: 120px;
+    }
+
+    .nav-controls .go-btn {
+      padding: var(--space-2) var(--space-4);
+      font-size: var(--text-sm);
+      font-weight: 500;
+      border: none;
+      border-radius: 8px;
+      background: var(--primary-500);
+      color: white;
+      cursor: pointer;
+      transition: background var(--transition-fast);
+    }
+
+    .nav-controls .go-btn:hover {
+      background: var(--primary-600);
+    }
+
+    .header-actions {
+      margin-left: auto;
+      display: flex;
+      align-items: center;
+      gap: var(--space-3);
+    }
+
+    .version-select {
+      padding: var(--space-2) var(--space-3);
+      font-size: var(--text-sm);
+      font-weight: 500;
+      border: none;
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.15);
+      color: white;
+      cursor: pointer;
+      min-width: 70px;
+    }
+
+    .version-select:hover {
+      background: rgba(255, 255, 255, 0.25);
+    }
+
+    .version-select option {
+      background: var(--header-bg);
+      color: white;
+    }
+
+    .theme-toggle {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 40px;
+      height: 40px;
+      border: none;
+      border-radius: 8px;
+      background: rgba(255,255,255,0.1);
+      color: white;
+      cursor: pointer;
+      transition: background var(--transition-fast);
+    }
+
+    .theme-toggle:hover {
+      background: rgba(255,255,255,0.2);
+    }
+
+    .theme-toggle svg {
+      width: 20px;
+      height: 20px;
+    }
+
+    .theme-toggle .sun-icon { display: none; }
+    .theme-toggle .moon-icon { display: block; }
+    :root.dark .theme-toggle .sun-icon { display: block; }
+    :root.dark .theme-toggle .moon-icon { display: none; }
+
+    .usage-badge {
+      background: rgba(255,255,255,0.15);
+      padding: var(--space-2) var(--space-3);
+      border-radius: 20px;
+      font-size: var(--text-sm);
+      cursor: pointer;
+      transition: background var(--transition-fast);
+      white-space: nowrap;
+    }
+
+    .usage-badge:hover {
+      background: rgba(255,255,255,0.25);
+    }
+
+    /* ===== Usage Modal ===== */
+    .usage-modal {
+      display: none;
+      position: fixed;
+      top: 60px;
+      right: var(--space-5);
+      background: var(--panel-bg);
+      border-radius: 12px;
+      box-shadow: var(--shadow-xl);
+      padding: var(--space-5);
+      width: 320px;
+      z-index: 1000;
+      color: var(--neutral-700);
+    }
+
+    .usage-modal.visible {
+      display: block;
+      animation: fadeIn 0.2s ease;
+    }
+
+    .usage-modal h3 {
+      margin-bottom: var(--space-4);
+      font-size: var(--text-base);
+      color: var(--neutral-900);
+    }
+
+    .usage-stat {
+      display: flex;
+      justify-content: space-between;
+      padding: var(--space-2) 0;
+      border-bottom: 1px solid var(--neutral-200);
+    }
+
+    .usage-stat:last-child {
+      border-bottom: none;
+    }
+
+    .usage-stat-label {
+      color: var(--neutral-500);
+      font-size: var(--text-sm);
+    }
+
+    .usage-stat-value {
+      font-weight: 600;
+      color: var(--neutral-900);
+    }
+
+    .usage-cost {
+      font-size: var(--text-2xl);
+      font-weight: 600;
+      color: var(--success);
+      text-align: center;
+      padding: var(--space-4) 0;
+    }
+
+    .usage-reset {
+      width: 100%;
+      padding: var(--space-2);
+      margin-top: var(--space-4);
+      background: var(--error);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: var(--text-sm);
+      font-weight: 500;
+      transition: background var(--transition-fast);
+    }
+
+    .usage-reset:hover {
+      background: #DC2626;
+    }
+
+    .recent-requests {
+      margin-top: var(--space-4);
+      max-height: 150px;
+      overflow-y: auto;
+    }
+
+    .recent-request {
+      font-size: var(--text-xs);
+      padding: var(--space-2) 0;
+      border-bottom: 1px solid var(--neutral-200);
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .recent-request-ref {
+      font-weight: 500;
+      color: var(--neutral-700);
+    }
+
+    .recent-request-cost {
+      color: var(--success);
+    }
+
+    /* ===== Search Modal ===== */
+    .search-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.5);
+      z-index: 1999;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity var(--transition-normal), visibility var(--transition-normal);
+    }
+
+    .search-backdrop.open {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .search-modal {
+      position: fixed;
+      top: 20%;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 90%;
+      max-width: 500px;
+      background: var(--panel-bg);
+      border-radius: 12px;
+      box-shadow: var(--shadow-xl);
+      z-index: 2000;
+      overflow: hidden;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity var(--transition-normal), visibility var(--transition-normal);
+    }
+
+    .search-modal.open {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .search-input-wrapper {
+      display: flex;
+      align-items: center;
+      padding: var(--space-4);
+      border-bottom: 1px solid var(--neutral-200);
+    }
+
+    .search-input-wrapper svg {
+      width: 20px;
+      height: 20px;
+      color: var(--neutral-400);
+      margin-right: var(--space-3);
+      flex-shrink: 0;
+    }
+
+    .search-input {
+      flex: 1;
+      border: none;
+      font-size: var(--text-lg);
+      outline: none;
+      background: transparent;
+      color: var(--neutral-900);
+    }
+
+    .search-input::placeholder {
+      color: var(--neutral-400);
+    }
+
+    .search-results {
+      max-height: 300px;
+      overflow-y: auto;
+    }
+
+    .search-result-item {
+      padding: var(--space-3) var(--space-4);
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      transition: background var(--transition-fast);
+    }
+
+    .search-result-item:hover,
+    .search-result-item.highlighted {
+      background: var(--primary-50);
+    }
+
+    .search-result-ref {
+      font-weight: 500;
+      color: var(--neutral-900);
+    }
+
+    .search-hint {
+      padding: var(--space-3) var(--space-4);
+      background: var(--neutral-100);
+      font-size: var(--text-sm);
+      color: var(--neutral-500);
+      border-top: 1px solid var(--neutral-200);
+    }
+
+    .search-hint kbd {
+      background: var(--neutral-200);
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-family: var(--font-mono);
+      font-size: var(--text-xs);
+      margin: 0 2px;
+    }
+
+    /* ===== Main Layout ===== */
     .main-container {
       display: flex;
       flex: 1;
       overflow: hidden;
     }
 
-    /* Bible reader panel */
+    /* ===== Bible Panel ===== */
     .bible-panel {
       flex: 1;
-      padding: 30px 40px;
+      padding: var(--space-8) var(--space-6);
       overflow-y: auto;
-      background: #fafafa;
+      background: var(--scripture-bg);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      transition: background var(--transition-normal);
+    }
+
+    .bible-content {
+      max-width: 700px;
+      width: 100%;
     }
 
     .chapter-header {
-      font-size: 28px;
+      font-family: var(--font-scripture);
+      font-size: var(--text-3xl);
       font-weight: 600;
-      margin-bottom: 20px;
-      color: #2c3e50;
+      margin-bottom: var(--space-6);
+      color: var(--neutral-900);
+      padding-bottom: var(--space-4);
+      border-bottom: 1px solid var(--neutral-200);
+    }
+
+    .verses-container {
+      line-height: 2;
     }
 
     .verse {
       display: inline;
       cursor: pointer;
-      transition: background 0.2s;
+      padding: 2px 4px;
+      margin: 0 -2px;
+      border-radius: 4px;
+      transition: background var(--transition-fast), box-shadow var(--transition-fast);
     }
 
     .verse:hover {
-      background: #e8f4fc;
+      background: var(--verse-hover);
     }
 
     .verse.selected {
-      background: #fff3cd;
+      background: var(--selection-bg);
+      box-shadow: inset 0 0 0 2px var(--selection-border);
     }
 
     .verse-num {
-      font-size: 11px;
-      color: #888;
-      vertical-align: super;
-      margin-right: 2px;
+      font-family: var(--font-mono);
+      font-size: var(--text-xs);
       font-weight: 600;
+      color: var(--primary-500);
+      vertical-align: super;
+      margin-right: 3px;
+      user-select: none;
     }
 
     .verse-text {
-      font-size: 18px;
-      line-height: 1.8;
+      font-family: var(--font-scripture);
+      font-size: var(--text-lg);
+      color: var(--neutral-700);
     }
 
-    /* Interpretation panel */
+    .instructions {
+      text-align: center;
+      padding: var(--space-10);
+      color: var(--neutral-500);
+    }
+
+    .instructions p {
+      margin-bottom: var(--space-2);
+    }
+
+    /* ===== Interpretation Panel ===== */
     .interpretation-panel {
       width: 450px;
-      background: white;
-      border-left: 1px solid #ddd;
+      background: var(--panel-bg);
+      border-left: 1px solid var(--neutral-200);
       display: flex;
       flex-direction: column;
       overflow: hidden;
+      transform: translateX(0);
+      transition: transform var(--transition-slow), background var(--transition-normal);
     }
 
     .interpretation-panel.hidden {
-      display: none;
+      transform: translateX(100%);
+      position: absolute;
+      right: 0;
+      top: 0;
+      bottom: 0;
     }
 
     .panel-header {
-      padding: 16px 20px;
-      background: #f8f9fa;
-      border-bottom: 1px solid #ddd;
+      padding: var(--space-4) var(--space-5);
+      background: var(--neutral-100);
+      border-bottom: 1px solid var(--neutral-200);
       display: flex;
       justify-content: space-between;
       align-items: center;
     }
 
     .panel-header h2 {
-      font-size: 16px;
+      font-size: var(--text-base);
       font-weight: 600;
+      color: var(--neutral-900);
     }
 
     .close-panel {
       background: none;
       border: none;
-      font-size: 20px;
+      font-size: var(--text-xl);
       cursor: pointer;
-      color: #666;
+      color: var(--neutral-500);
+      width: 32px;
+      height: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 6px;
+      transition: background var(--transition-fast), color var(--transition-fast);
     }
 
     .close-panel:hover {
-      color: #333;
+      background: var(--neutral-200);
+      color: var(--neutral-700);
     }
 
     .panel-content {
       flex: 1;
       overflow-y: auto;
-      padding: 20px;
+      padding: var(--space-5);
+      position: relative;
     }
 
     .selected-text {
-      background: #fff3cd;
-      padding: 12px 16px;
+      background: var(--selection-bg);
+      padding: var(--space-3) var(--space-4);
       border-radius: 8px;
-      margin-bottom: 20px;
+      margin-bottom: var(--space-5);
+      font-family: var(--font-scripture);
       font-style: italic;
-      font-size: 15px;
+      font-size: var(--text-sm);
+      color: var(--neutral-700);
+      border-left: 3px solid var(--selection-border);
     }
 
     .section-title {
-      font-size: 14px;
+      font-size: var(--text-xs);
       font-weight: 600;
-      color: #666;
+      color: var(--neutral-500);
       text-transform: uppercase;
-      letter-spacing: 0.5px;
-      margin: 20px 0 12px;
+      letter-spacing: 0.05em;
+      margin: var(--space-5) 0 var(--space-3);
+      display: flex;
+      align-items: center;
+      gap: var(--space-2);
+      cursor: pointer;
+      user-select: none;
+    }
+
+    .section-title svg {
+      width: 16px;
+      height: 16px;
+      transition: transform var(--transition-fast);
+    }
+
+    .section-title.collapsed svg {
+      transform: rotate(-90deg);
+    }
+
+    .section-content {
+      overflow: hidden;
+      transition: max-height var(--transition-slow);
+      max-height: 2000px;
+    }
+
+    .section-content.collapsed {
+      max-height: 0;
     }
 
     .word-list {
       display: flex;
       flex-direction: column;
-      gap: 12px;
-      margin-bottom: 20px;
+      gap: var(--space-3);
+      margin-bottom: var(--space-5);
     }
 
     .word-item {
-      padding: 12px;
-      background: #f8f9fa;
+      padding: var(--space-3);
+      background: var(--neutral-100);
       border-radius: 8px;
-      border-left: 3px solid #3498db;
+      border-left: 3px solid var(--primary-500);
     }
 
     .word-original {
-      font-size: 18px;
-      color: #2c3e50;
+      font-size: var(--text-lg);
+      color: var(--neutral-900);
       font-weight: 600;
     }
 
     .word-transliteration {
       font-style: italic;
-      color: #666;
-      font-size: 14px;
+      color: var(--neutral-500);
+      font-size: var(--text-sm);
     }
 
     .word-strongs {
       display: inline-block;
-      font-size: 11px;
-      background: #3498db;
+      font-size: var(--text-xs);
+      background: var(--primary-500);
       color: white;
-      padding: 2px 6px;
-      border-radius: 3px;
-      margin-top: 4px;
+      padding: 2px 8px;
+      border-radius: 4px;
+      margin-top: var(--space-2);
     }
 
     .word-strongs a {
@@ -223,145 +717,450 @@
     }
 
     .word-definition {
-      margin-top: 8px;
-      font-size: 14px;
-      color: #444;
+      margin-top: var(--space-2);
+      font-size: var(--text-sm);
+      color: var(--neutral-600);
     }
 
     .interpretation-text {
-      font-size: 15px;
+      font-size: var(--text-sm);
       line-height: 1.8;
-      color: #333;
-      white-space: pre-wrap;
+      color: var(--neutral-700);
     }
 
-    .citation {
-      display: inline;
-      color: #3498db;
-      cursor: pointer;
-      font-weight: 500;
+    .interpretation-text h2 {
+      font-size: var(--text-lg);
+      font-weight: 600;
+      margin: var(--space-5) 0 var(--space-3);
+      color: var(--neutral-900);
     }
 
-    .citation:hover {
-      text-decoration: underline;
+    .interpretation-text h3 {
+      font-size: var(--text-base);
+      font-weight: 600;
+      margin: var(--space-4) 0 var(--space-2);
+      color: var(--neutral-900);
     }
 
-    /* Loading state */
-    .loading-overlay {
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      background: rgba(255,255,255,0.9);
+    .interpretation-text p {
+      margin-bottom: var(--space-4);
+    }
+
+    .interpretation-text strong {
+      font-weight: 600;
+      color: var(--neutral-900);
+    }
+
+    .interpretation-text em {
+      font-style: italic;
+    }
+
+    .interpretation-text ul,
+    .interpretation-text ol {
+      margin: var(--space-3) 0;
+      padding-left: var(--space-6);
+    }
+
+    .interpretation-text li {
+      margin-bottom: var(--space-2);
+    }
+
+    /* ===== Panel Actions ===== */
+    .panel-actions {
+      display: flex;
+      gap: var(--space-2);
+      padding: var(--space-3) var(--space-5);
+      border-top: 1px solid var(--neutral-200);
+      background: var(--neutral-50);
+    }
+
+    .action-btn {
       display: flex;
       align-items: center;
-      justify-content: center;
-      font-size: 16px;
-      color: #666;
+      gap: var(--space-2);
+      padding: var(--space-2) var(--space-3);
+      border: 1px solid var(--neutral-200);
+      border-radius: 6px;
+      background: var(--panel-bg);
+      color: var(--neutral-600);
+      font-size: var(--text-sm);
+      cursor: pointer;
+      transition: all var(--transition-fast);
     }
 
-    .loading-overlay.hidden {
+    .action-btn:hover {
+      border-color: var(--primary-500);
+      color: var(--primary-600);
+    }
+
+    .action-btn svg {
+      width: 16px;
+      height: 16px;
+    }
+
+    .action-btn.copied {
+      background: var(--success);
+      border-color: var(--success);
+      color: white;
+    }
+
+    /* ===== Loading State ===== */
+    .loading-state {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: var(--space-10);
+      color: var(--neutral-500);
+    }
+
+    .loading-state.hidden {
       display: none;
     }
 
-    /* Floating action button */
+    .spinner {
+      width: 40px;
+      height: 40px;
+      border: 3px solid var(--neutral-200);
+      border-top-color: var(--primary-500);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+      margin-bottom: var(--space-4);
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    .loading-state p {
+      font-size: var(--text-sm);
+    }
+
+    /* ===== Toast ===== */
+    .toast {
+      position: fixed;
+      bottom: var(--space-6);
+      left: 50%;
+      transform: translateX(-50%) translateY(100px);
+      background: var(--neutral-900);
+      color: white;
+      padding: var(--space-3) var(--space-5);
+      border-radius: 8px;
+      font-size: var(--text-sm);
+      box-shadow: var(--shadow-lg);
+      transition: transform var(--transition-slow);
+      z-index: 3000;
+    }
+
+    .toast.visible {
+      transform: translateX(-50%) translateY(0);
+    }
+
+    /* ===== Floating Action Button ===== */
     .interpret-fab {
       position: fixed;
-      bottom: 30px;
-      right: 30px;
-      background: #3498db;
+      bottom: var(--space-6);
+      right: var(--space-6);
+      background: var(--primary-500);
       color: white;
       border: none;
-      padding: 16px 24px;
+      padding: var(--space-4) var(--space-6);
       border-radius: 30px;
-      font-size: 16px;
+      font-size: var(--text-base);
+      font-weight: 500;
       cursor: pointer;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+      box-shadow: var(--shadow-lg);
       display: none;
       z-index: 100;
+      transition: background var(--transition-fast), transform var(--transition-fast);
     }
 
     .interpret-fab:hover {
-      background: #2980b9;
+      background: var(--primary-600);
+      transform: translateY(-2px);
     }
 
     .interpret-fab.visible {
       display: block;
+      animation: fabBounce 0.5s ease;
     }
 
-    /* Instructions */
-    .instructions {
-      text-align: center;
-      padding: 40px;
-      color: #888;
+    @keyframes fabBounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-8px); }
     }
 
-    .instructions p {
-      margin-bottom: 10px;
+    /* ===== Keyboard Shortcuts Help ===== */
+    .shortcuts-help {
+      position: fixed;
+      bottom: var(--space-4);
+      left: var(--space-4);
+      background: var(--neutral-800);
+      color: var(--neutral-300);
+      padding: var(--space-2) var(--space-3);
+      border-radius: 6px;
+      font-size: var(--text-xs);
+      opacity: 0.7;
+      transition: opacity var(--transition-fast);
     }
 
-    /* Mobile responsive */
+    .shortcuts-help:hover {
+      opacity: 1;
+    }
+
+    .shortcuts-help kbd {
+      display: inline-block;
+      background: var(--neutral-600);
+      padding: 2px 6px;
+      border-radius: 3px;
+      font-family: var(--font-mono);
+      margin-right: var(--space-1);
+    }
+
+    /* ===== Animations ===== */
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    @keyframes slideUp {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .verse {
+      animation: slideUp 0.3s ease backwards;
+    }
+
+    /* ===== Reduced Motion ===== */
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        transition-duration: 0.01ms !important;
+      }
+    }
+
+    /* ===== Mobile Responsive ===== */
     @media (max-width: 768px) {
+      header {
+        flex-wrap: wrap;
+        padding: var(--space-3);
+        gap: var(--space-3);
+      }
+
+      header h1 {
+        font-size: var(--text-base);
+      }
+
+      .nav-controls {
+        order: 2;
+        width: 100%;
+      }
+
+      .nav-controls select {
+        flex: 1;
+        min-width: 0;
+      }
+
+      .header-actions {
+        margin-left: auto;
+      }
+
       .main-container {
         flex-direction: column;
       }
 
-      .interpretation-panel {
-        width: 100%;
-        height: 50vh;
-        border-left: none;
-        border-top: 1px solid #ddd;
+      .bible-panel {
+        padding: var(--space-4);
       }
 
-      .bible-panel {
-        padding: 20px;
+      .bible-content {
+        max-width: 100%;
+      }
+
+      .interpretation-panel {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        width: 100%;
+        height: 60vh;
+        border-radius: 16px 16px 0 0;
+        border-left: none;
+        box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.15);
+        transform: translateY(100%);
+      }
+
+      .interpretation-panel:not(.hidden) {
+        transform: translateY(0);
+      }
+
+      .interpretation-panel.hidden {
+        position: fixed;
+      }
+
+      .interpret-fab {
+        bottom: var(--space-4);
+        right: var(--space-4);
+        left: var(--space-4);
+        width: auto;
+        text-align: center;
+      }
+
+      .shortcuts-help {
+        display: none;
+      }
+
+      .search-modal {
+        top: 0;
+        width: 100%;
+        max-width: none;
+        height: 100vh;
+        border-radius: 0;
       }
     }
   </style>
 </head>
 <body>
+  <a href="#verses-container" class="sr-only">Skip to content</a>
+
   <header>
     <h1>Bible Interpreter</h1>
     <div class="nav-controls">
-      <select id="book-select"></select>
-      <select id="chapter-select"></select>
-      <button id="load-chapter">Go</button>
+      <button class="nav-btn" id="prev-chapter" title="Previous Chapter" aria-label="Previous chapter">
+        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
+      </button>
+      <select id="book-select" aria-label="Select book"></select>
+      <select id="chapter-select" aria-label="Select chapter"></select>
+      <button class="nav-btn" id="next-chapter" title="Next Chapter" aria-label="Next chapter">
+        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+      </button>
+      <button class="go-btn" id="load-chapter">Go</button>
+    </div>
+    <div class="header-actions">
+      <select id="version-select" class="version-select" aria-label="Select Bible version" title="Bible version">
+        <option value="NIV2011">NIV</option>
+        <option value="ESV">ESV</option>
+        <option value="KJV">KJV</option>
+        <option value="NLT">NLT</option>
+        <option value="NKJV">NKJV</option>
+        <option value="CSB17">CSB</option>
+        <option value="NASB">NASB</option>
+        <option value="MSG">MSG</option>
+        <option value="AMP">AMP</option>
+      </select>
+      <button class="theme-toggle" id="theme-toggle" title="Toggle dark mode" aria-label="Toggle dark mode">
+        <svg class="moon-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/></svg>
+        <svg class="sun-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
+      </button>
+      <div class="usage-badge" id="usage-badge" title="Click to view API usage" role="button" tabindex="0">
+        API: <span id="usage-cost">$0.00</span>
+      </div>
     </div>
   </header>
 
-  <div class="main-container">
-    <div class="bible-panel" id="bible-panel">
-      <div class="instructions" id="instructions">
-        <p>Select a book and chapter above to start reading.</p>
-        <p>Then highlight or click on verses to get Greek/Hebrew analysis.</p>
-      </div>
-      <h2 class="chapter-header" id="chapter-header" style="display:none;"></h2>
-      <div class="verses-container" id="verses-container"></div>
+  <div class="usage-modal" id="usage-modal" role="dialog" aria-labelledby="usage-modal-title">
+    <h3 id="usage-modal-title">API Usage</h3>
+    <div class="usage-cost" id="usage-total-cost">$0.0000</div>
+    <div class="usage-stat">
+      <span class="usage-stat-label">Total Requests</span>
+      <span class="usage-stat-value" id="usage-requests">0</span>
     </div>
+    <div class="usage-stat">
+      <span class="usage-stat-label">Input Tokens</span>
+      <span class="usage-stat-value" id="usage-input">0</span>
+    </div>
+    <div class="usage-stat">
+      <span class="usage-stat-label">Output Tokens</span>
+      <span class="usage-stat-value" id="usage-output">0</span>
+    </div>
+    <div class="recent-requests" id="recent-requests">
+      <div class="usage-stat"><span class="usage-stat-label">Recent Requests</span></div>
+    </div>
+    <button class="usage-reset" id="usage-reset">Reset Usage Stats</button>
+  </div>
 
-    <div class="interpretation-panel hidden" id="interpretation-panel">
-      <div class="panel-header">
-        <h2>Interpretation</h2>
-        <button class="close-panel" id="close-panel">&times;</button>
-      </div>
-      <div class="panel-content" id="panel-content">
-        <div class="loading-overlay hidden" id="panel-loading">
-          Analyzing passage...
-        </div>
-        <div class="selected-text" id="selected-text"></div>
-        <div class="section-title">Key Words</div>
-        <div class="word-list" id="word-list"></div>
-        <div class="section-title">Interpretation</div>
-        <div class="interpretation-text" id="interpretation-text"></div>
-      </div>
+  <div class="search-backdrop" id="search-backdrop"></div>
+  <div class="search-modal" id="search-modal" role="dialog" aria-labelledby="search-title">
+    <div class="search-input-wrapper">
+      <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+      <input type="text" class="search-input" id="search-input" placeholder="Jump to reference (e.g., John 3:16)" aria-label="Search for a Bible reference">
+    </div>
+    <div class="search-results" id="search-results"></div>
+    <div class="search-hint">
+      Press <kbd>Enter</kbd> to go, <kbd>Esc</kbd> to close
     </div>
   </div>
 
-  <button class="interpret-fab" id="interpret-fab">Interpret Selection</button>
+  <main class="main-container" role="main">
+    <div class="bible-panel" id="bible-panel" aria-label="Bible text">
+      <div class="bible-content">
+        <div class="instructions" id="instructions">
+          <p>Select a book and chapter above to start reading.</p>
+          <p>Click on verses to select them, then interpret.</p>
+          <p style="margin-top: var(--space-4); font-size: var(--text-sm);">
+            Press <kbd style="background: var(--neutral-200); padding: 2px 6px; border-radius: 4px; font-family: var(--font-mono);">/</kbd> to search
+          </p>
+        </div>
+        <h2 class="chapter-header" id="chapter-header" style="display:none;"></h2>
+        <div class="verses-container" id="verses-container" role="list" aria-label="Bible verses"></div>
+      </div>
+    </div>
+
+    <aside class="interpretation-panel hidden" id="interpretation-panel" aria-label="Interpretation results" aria-live="polite">
+      <div class="panel-header">
+        <h2>Interpretation</h2>
+        <button class="close-panel" id="close-panel" aria-label="Close panel">&times;</button>
+      </div>
+      <div class="panel-content" id="panel-content">
+        <div class="loading-state hidden" id="panel-loading">
+          <div class="spinner"></div>
+          <p>Analyzing Greek and Hebrew roots...</p>
+        </div>
+        <div id="interpretation-content">
+          <div class="selected-text" id="selected-text"></div>
+          <div class="section-title" id="words-toggle">
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+            Key Words
+          </div>
+          <div class="section-content" id="words-section">
+            <div class="word-list" id="word-list"></div>
+          </div>
+          <div class="section-title" id="interpretation-toggle">
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+            Interpretation
+          </div>
+          <div class="section-content" id="interpretation-section">
+            <div class="interpretation-text" id="interpretation-text"></div>
+          </div>
+        </div>
+      </div>
+      <div class="panel-actions">
+        <button class="action-btn" id="copy-btn" title="Copy to clipboard">
+          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"/></svg>
+          <span>Copy</span>
+        </button>
+        <button class="action-btn" id="share-btn" title="Share">
+          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z"/></svg>
+          <span>Share</span>
+        </button>
+      </div>
+    </aside>
+  </main>
+
+  <button class="interpret-fab" id="interpret-fab" aria-describedby="fab-description">Interpret Selection</button>
+  <span id="fab-description" class="sr-only">Analyze selected verses with Greek and Hebrew insights</span>
+
+  <div class="toast" id="toast"></div>
+
+  <div class="shortcuts-help">
+    <kbd>/</kbd> Search &nbsp; <kbd>D</kbd> Dark mode &nbsp; <kbd>Esc</kbd> Close
+  </div>
+
+  <style>.sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0; }</style>
 
   <script>
-    // Book data
+    // ===== Book Data =====
     const BOOKS = [
       { name: 'Genesis', chapters: 50 }, { name: 'Exodus', chapters: 40 },
       { name: 'Leviticus', chapters: 27 }, { name: 'Numbers', chapters: 36 },
@@ -383,7 +1182,6 @@
       { name: 'Habakkuk', chapters: 3 }, { name: 'Zephaniah', chapters: 3 },
       { name: 'Haggai', chapters: 2 }, { name: 'Zechariah', chapters: 14 },
       { name: 'Malachi', chapters: 4 },
-      // New Testament
       { name: 'Matthew', chapters: 28 }, { name: 'Mark', chapters: 16 },
       { name: 'Luke', chapters: 24 }, { name: 'John', chapters: 21 },
       { name: 'Acts', chapters: 28 }, { name: 'Romans', chapters: 16 },
@@ -400,27 +1198,90 @@
       { name: 'Revelation', chapters: 22 }
     ];
 
-    // DOM elements
+    // Book aliases for search
+    const BOOK_ALIASES = {
+      'gen': 0, 'ex': 1, 'lev': 2, 'num': 3, 'deut': 4, 'josh': 5, 'judg': 6, 'ru': 7,
+      '1sam': 8, '2sam': 9, '1ki': 10, '2ki': 11, '1chr': 12, '2chr': 13,
+      'ezr': 14, 'neh': 15, 'est': 16, 'ps': 18, 'psa': 18, 'prov': 19, 'eccl': 20,
+      'song': 21, 'isa': 22, 'jer': 23, 'lam': 24, 'ezek': 25, 'dan': 26,
+      'hos': 27, 'am': 29, 'ob': 30, 'jon': 31, 'mic': 32, 'nah': 33, 'hab': 34,
+      'zeph': 35, 'hag': 36, 'zech': 37, 'mal': 38,
+      'matt': 39, 'mt': 39, 'mk': 40, 'lk': 41, 'jn': 42, 'jhn': 42,
+      'rom': 45, '1cor': 46, '2cor': 47, 'gal': 48, 'eph': 49, 'phil': 50, 'php': 50,
+      'col': 51, '1thess': 52, '2thess': 53, '1tim': 54, '2tim': 55, 'tit': 56,
+      'phlm': 57, 'heb': 58, 'jas': 59, '1pet': 60, '2pet': 61,
+      '1jn': 62, '2jn': 63, '3jn': 64, 'rev': 65
+    };
+
+    // ===== DOM Elements =====
     const bookSelect = document.getElementById('book-select');
     const chapterSelect = document.getElementById('chapter-select');
     const loadChapterBtn = document.getElementById('load-chapter');
+    const prevChapterBtn = document.getElementById('prev-chapter');
+    const nextChapterBtn = document.getElementById('next-chapter');
     const versesContainer = document.getElementById('verses-container');
     const chapterHeader = document.getElementById('chapter-header');
     const instructions = document.getElementById('instructions');
     const interpretPanel = document.getElementById('interpretation-panel');
     const closePanel = document.getElementById('close-panel');
     const panelLoading = document.getElementById('panel-loading');
+    const interpretationContent = document.getElementById('interpretation-content');
     const selectedTextEl = document.getElementById('selected-text');
     const wordList = document.getElementById('word-list');
     const interpretationText = document.getElementById('interpretation-text');
     const interpretFab = document.getElementById('interpret-fab');
+    const themeToggle = document.getElementById('theme-toggle');
+    const searchModal = document.getElementById('search-modal');
+    const searchBackdrop = document.getElementById('search-backdrop');
+    const searchInput = document.getElementById('search-input');
+    const searchResults = document.getElementById('search-results');
+    const toast = document.getElementById('toast');
+    const versionSelect = document.getElementById('version-select');
 
-    // State
+    // ===== State =====
     let selectedVerses = new Set();
     let currentBook = '';
     let currentChapter = 0;
+    let currentBookIndex = 0;
 
-    // Initialize book select
+    // ===== Theme =====
+    function initTheme() {
+      const stored = localStorage.getItem('bible-theme');
+      const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+      if (stored === 'dark' || (!stored && prefersDark)) {
+        document.documentElement.classList.add('dark');
+      }
+    }
+
+    function toggleDarkMode() {
+      const isDark = document.documentElement.classList.toggle('dark');
+      localStorage.setItem('bible-theme', isDark ? 'dark' : 'light');
+      showToast(isDark ? 'Dark mode enabled' : 'Light mode enabled');
+    }
+
+    themeToggle.addEventListener('click', toggleDarkMode);
+    initTheme();
+
+    // ===== Version Selection =====
+    function initVersion() {
+      const stored = localStorage.getItem('bible-version');
+      if (stored && versionSelect.querySelector(`option[value="${stored}"]`)) {
+        versionSelect.value = stored;
+      }
+    }
+
+    versionSelect.addEventListener('change', () => {
+      localStorage.setItem('bible-version', versionSelect.value);
+      showToast(`Switched to ${versionSelect.options[versionSelect.selectedIndex].text}`);
+      // Reload current chapter if one is loaded
+      if (currentBook) {
+        loadChapter();
+      }
+    });
+
+    initVersion();
+
+    // ===== Book/Chapter Navigation =====
     BOOKS.forEach((book, index) => {
       const option = document.createElement('option');
       option.value = index;
@@ -428,7 +1289,6 @@
       bookSelect.appendChild(option);
     });
 
-    // Update chapter select when book changes
     bookSelect.addEventListener('change', () => {
       const bookIndex = parseInt(bookSelect.value);
       const book = BOOKS[bookIndex];
@@ -439,14 +1299,52 @@
         option.textContent = i;
         chapterSelect.appendChild(option);
       }
+      updateNavButtons();
     });
 
-    // Trigger initial chapter load
-    bookSelect.value = 45; // Romans
-    bookSelect.dispatchEvent(new Event('change'));
-    chapterSelect.value = 8;
+    function updateNavButtons() {
+      const bookIndex = parseInt(bookSelect.value);
+      const chapter = parseInt(chapterSelect.value);
+      prevChapterBtn.disabled = (bookIndex === 0 && chapter === 1);
+      nextChapterBtn.disabled = (bookIndex === BOOKS.length - 1 && chapter === BOOKS[bookIndex].chapters);
+    }
 
-    // Load chapter
+    chapterSelect.addEventListener('change', updateNavButtons);
+
+    prevChapterBtn.addEventListener('click', () => {
+      let bookIndex = parseInt(bookSelect.value);
+      let chapter = parseInt(chapterSelect.value);
+      if (chapter > 1) {
+        chapterSelect.value = chapter - 1;
+      } else if (bookIndex > 0) {
+        bookIndex--;
+        bookSelect.value = bookIndex;
+        bookSelect.dispatchEvent(new Event('change'));
+        chapterSelect.value = BOOKS[bookIndex].chapters;
+      }
+      loadChapter();
+    });
+
+    nextChapterBtn.addEventListener('click', () => {
+      let bookIndex = parseInt(bookSelect.value);
+      let chapter = parseInt(chapterSelect.value);
+      if (chapter < BOOKS[bookIndex].chapters) {
+        chapterSelect.value = chapter + 1;
+      } else if (bookIndex < BOOKS.length - 1) {
+        bookIndex++;
+        bookSelect.value = bookIndex;
+        bookSelect.dispatchEvent(new Event('change'));
+        chapterSelect.value = 1;
+      }
+      loadChapter();
+    });
+
+    // Initialize with John 3
+    bookSelect.value = 42;
+    bookSelect.dispatchEvent(new Event('change'));
+    chapterSelect.value = 3;
+    updateNavButtons();
+
     loadChapterBtn.addEventListener('click', loadChapter);
 
     async function loadChapter() {
@@ -456,18 +1354,21 @@
 
       currentBook = book.name;
       currentChapter = chapter;
+      currentBookIndex = bookIndex;
 
-      // Show loading
       instructions.style.display = 'none';
       chapterHeader.style.display = 'block';
       chapterHeader.textContent = book.name + ' ' + chapter;
       versesContainer.textContent = 'Loading...';
 
+      updateNavButtons();
+
       try {
+        const translation = versionSelect.value;
         const response = await fetch('/api/chapter', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ book: book.name, chapter })
+          body: JSON.stringify({ book: book.name, chapter, translation })
         });
 
         if (!response.ok) throw new Error('Failed to load chapter');
@@ -484,10 +1385,12 @@
       selectedVerses.clear();
       updateFab();
 
-      verses.forEach(v => {
+      verses.forEach((v, i) => {
         const verseSpan = document.createElement('span');
         verseSpan.className = 'verse';
         verseSpan.dataset.verse = v.verse;
+        verseSpan.setAttribute('role', 'listitem');
+        verseSpan.style.animationDelay = `${Math.min(i * 0.02, 0.5)}s`;
 
         const numSpan = document.createElement('sup');
         numSpan.className = 'verse-num';
@@ -499,7 +1402,6 @@
 
         verseSpan.appendChild(numSpan);
         verseSpan.appendChild(textSpan);
-
         verseSpan.addEventListener('click', () => toggleVerse(verseSpan, v.verse));
 
         versesContainer.appendChild(verseSpan);
@@ -517,18 +1419,25 @@
       updateFab();
     }
 
+    function clearSelection() {
+      selectedVerses.clear();
+      document.querySelectorAll('.verse.selected').forEach(el => el.classList.remove('selected'));
+      updateFab();
+    }
+
     function updateFab() {
       if (selectedVerses.size > 0) {
         interpretFab.classList.add('visible');
-        interpretFab.textContent = selectedVerses.size === 1
-          ? 'Interpret Verse ' + [...selectedVerses][0]
-          : 'Interpret ' + selectedVerses.size + ' Verses';
+        const sorted = [...selectedVerses].sort((a, b) => a - b);
+        interpretFab.textContent = sorted.length === 1
+          ? 'Interpret Verse ' + sorted[0]
+          : 'Interpret ' + sorted.length + ' Verses';
       } else {
         interpretFab.classList.remove('visible');
       }
     }
 
-    // Interpret selected verses
+    // ===== Interpretation =====
     interpretFab.addEventListener('click', interpretSelection);
 
     async function interpretSelection() {
@@ -542,39 +1451,54 @@
         ? currentBook + ' ' + currentChapter + ':' + startVerse + '-' + endVerse
         : currentBook + ' ' + currentChapter + ':' + startVerse;
 
-      // Get selected text
       const selectedText = sortedVerses.map(v => {
         const el = document.querySelector('.verse[data-verse="' + v + '"] .verse-text');
         return v + ' ' + (el ? el.textContent.trim() : '');
       }).join(' ');
 
-      // Show panel
       interpretPanel.classList.remove('hidden');
       selectedTextEl.textContent = selectedText;
       panelLoading.classList.remove('hidden');
+      interpretationContent.style.display = 'none';
       wordList.textContent = '';
       interpretationText.textContent = '';
 
       try {
+        const translation = versionSelect.value;
         const response = await fetch('/api/analyze', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ reference })
+          body: JSON.stringify({ reference, translation })
         });
 
         if (!response.ok) throw new Error('Failed to analyze');
 
         const data = await response.json();
         displayInterpretation(data);
+        fetchUsage();
       } catch (err) {
         interpretationText.textContent = 'Error: ' + err.message;
+        interpretationContent.style.display = 'block';
       } finally {
         panelLoading.classList.add('hidden');
       }
     }
 
+    function renderMarkdown(text) {
+      if (!text) return '';
+      return text
+        .replace(/^### (.*$)/gm, '<h4>$1</h4>')
+        .replace(/^## (.*$)/gm, '<h3>$1</h3>')
+        .replace(/^# (.*$)/gm, '<h2>$1</h2>')
+        .replace(/\*\*\*(.*?)\*\*\*/g, '<strong><em>$1</em></strong>')
+        .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+        .replace(/\*(.*?)\*/g, '<em>$1</em>')
+        .replace(/\n\n/g, '</p><p>')
+        .replace(/^/, '<p>')
+        .replace(/$/, '</p>');
+    }
+
     function displayInterpretation(data) {
-      // Display words
       wordList.textContent = '';
       if (data.words && data.words.length > 0) {
         data.words.forEach(word => {
@@ -599,6 +1523,7 @@
             const link = document.createElement('a');
             link.href = 'https://biblehub.com/greek/' + word.strongs.replace(/[^\d]/g, '') + '.htm';
             link.target = '_blank';
+            link.rel = 'noopener';
             link.textContent = "Strong's " + word.strongs;
             strongs.appendChild(link);
             item.appendChild(strongs);
@@ -616,19 +1541,272 @@
       } else {
         const noWords = document.createElement('div');
         noWords.textContent = 'Word-level data analyzed by AI below.';
-        noWords.style.color = '#888';
+        noWords.style.color = 'var(--neutral-500)';
         noWords.style.fontStyle = 'italic';
+        noWords.style.fontSize = 'var(--text-sm)';
         wordList.appendChild(noWords);
       }
 
-      // Display interpretation
-      interpretationText.textContent = data.interpretation || 'No interpretation available.';
+      interpretationText.innerHTML = renderMarkdown(data.interpretation || 'No interpretation available.');
+      interpretationContent.style.display = 'block';
     }
 
-    // Close panel
     closePanel.addEventListener('click', () => {
       interpretPanel.classList.add('hidden');
     });
+
+    // ===== Collapsible Sections =====
+    document.getElementById('words-toggle').addEventListener('click', function() {
+      this.classList.toggle('collapsed');
+      document.getElementById('words-section').classList.toggle('collapsed');
+    });
+
+    document.getElementById('interpretation-toggle').addEventListener('click', function() {
+      this.classList.toggle('collapsed');
+      document.getElementById('interpretation-section').classList.toggle('collapsed');
+    });
+
+    // ===== Panel Actions =====
+    document.getElementById('copy-btn').addEventListener('click', async () => {
+      const text = `${currentBook} ${currentChapter}:${[...selectedVerses].sort((a,b)=>a-b).join('-')}\n\n${selectedTextEl.textContent}\n\n${interpretationText.textContent}`;
+      try {
+        await navigator.clipboard.writeText(text);
+        const btn = document.getElementById('copy-btn');
+        btn.classList.add('copied');
+        btn.querySelector('span').textContent = 'Copied!';
+        setTimeout(() => {
+          btn.classList.remove('copied');
+          btn.querySelector('span').textContent = 'Copy';
+        }, 2000);
+        showToast('Copied to clipboard');
+      } catch (err) {
+        showToast('Failed to copy');
+      }
+    });
+
+    document.getElementById('share-btn').addEventListener('click', async () => {
+      const shareData = {
+        title: `${currentBook} ${currentChapter}`,
+        text: interpretationText.textContent.substring(0, 200) + '...',
+        url: window.location.href
+      };
+
+      if (navigator.share) {
+        try {
+          await navigator.share(shareData);
+        } catch (err) {
+          if (err.name !== 'AbortError') {
+            await navigator.clipboard.writeText(window.location.href);
+            showToast('Link copied');
+          }
+        }
+      } else {
+        await navigator.clipboard.writeText(window.location.href);
+        showToast('Link copied to clipboard');
+      }
+    });
+
+    // ===== Toast =====
+    function showToast(message) {
+      toast.textContent = message;
+      toast.classList.add('visible');
+      setTimeout(() => toast.classList.remove('visible'), 3000);
+    }
+
+    // ===== Search Modal =====
+    function openSearch() {
+      searchModal.classList.add('open');
+      searchBackdrop.classList.add('open');
+      searchInput.value = '';
+      searchResults.textContent = '';
+      searchInput.focus();
+    }
+
+    function closeSearch() {
+      searchModal.classList.remove('open');
+      searchBackdrop.classList.remove('open');
+    }
+
+    searchBackdrop.addEventListener('click', closeSearch);
+
+    searchInput.addEventListener('input', () => {
+      const query = searchInput.value.trim().toLowerCase();
+      searchResults.textContent = '';
+
+      if (!query) return;
+
+      // Parse reference
+      const match = query.match(/^(\d?\s*[a-z]+)\s*(\d+)?(?::(\d+))?/i);
+      if (match) {
+        const [, bookPart, chapter, verse] = match;
+        const bookName = bookPart.replace(/\s+/g, '').toLowerCase();
+
+        // Find matching books
+        const matches = [];
+        BOOKS.forEach((book, index) => {
+          const name = book.name.toLowerCase().replace(/\s+/g, '');
+          if (name.startsWith(bookName) || (BOOK_ALIASES[bookName] === index)) {
+            matches.push({ book, index, chapter: chapter || 1, verse });
+          }
+        });
+
+        matches.slice(0, 5).forEach(m => {
+          const item = document.createElement('div');
+          item.className = 'search-result-item';
+
+          const ref = document.createElement('span');
+          ref.className = 'search-result-ref';
+          ref.textContent = m.book.name + (m.chapter ? ' ' + m.chapter : '') + (m.verse ? ':' + m.verse : '');
+
+          item.appendChild(ref);
+          item.addEventListener('click', () => {
+            bookSelect.value = m.index;
+            bookSelect.dispatchEvent(new Event('change'));
+            chapterSelect.value = m.chapter;
+            loadChapter();
+            closeSearch();
+          });
+
+          searchResults.appendChild(item);
+        });
+      }
+    });
+
+    searchInput.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') {
+        const firstResult = searchResults.querySelector('.search-result-item');
+        if (firstResult) firstResult.click();
+      } else if (e.key === 'Escape') {
+        closeSearch();
+      }
+    });
+
+    // ===== Keyboard Shortcuts =====
+    document.addEventListener('keydown', (e) => {
+      if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+
+      switch(e.code) {
+        case 'ArrowLeft':
+          if (!prevChapterBtn.disabled) prevChapterBtn.click();
+          break;
+        case 'ArrowRight':
+          if (!nextChapterBtn.disabled) nextChapterBtn.click();
+          break;
+        case 'Escape':
+          if (searchModal.classList.contains('open')) {
+            closeSearch();
+          } else {
+            clearSelection();
+            interpretPanel.classList.add('hidden');
+          }
+          break;
+        case 'Enter':
+          if (selectedVerses.size > 0) interpretSelection();
+          break;
+        case 'KeyD':
+          toggleDarkMode();
+          break;
+        case 'Slash':
+          e.preventDefault();
+          openSearch();
+          break;
+      }
+    });
+
+    // Cmd/Ctrl+F for search
+    document.addEventListener('keydown', (e) => {
+      if ((e.metaKey || e.ctrlKey) && e.key === 'f') {
+        e.preventDefault();
+        openSearch();
+      }
+    });
+
+    // ===== Usage Tracking =====
+    const usageBadge = document.getElementById('usage-badge');
+    const usageModal = document.getElementById('usage-modal');
+    const usageCost = document.getElementById('usage-cost');
+    const usageTotalCost = document.getElementById('usage-total-cost');
+    const usageRequests = document.getElementById('usage-requests');
+    const usageInput = document.getElementById('usage-input');
+    const usageOutput = document.getElementById('usage-output');
+    const recentRequestsEl = document.getElementById('recent-requests');
+    const usageReset = document.getElementById('usage-reset');
+
+    usageBadge.addEventListener('click', () => {
+      usageModal.classList.toggle('visible');
+      if (usageModal.classList.contains('visible')) fetchUsage();
+    });
+
+    usageBadge.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        usageBadge.click();
+      }
+    });
+
+    document.addEventListener('click', (e) => {
+      if (!usageModal.contains(e.target) && !usageBadge.contains(e.target)) {
+        usageModal.classList.remove('visible');
+      }
+    });
+
+    usageReset.addEventListener('click', async () => {
+      if (confirm('Reset all usage stats? This cannot be undone.')) {
+        await fetch('/api/usage/reset', { method: 'POST' });
+        fetchUsage();
+        showToast('Usage stats reset');
+      }
+    });
+
+    async function fetchUsage() {
+      try {
+        const response = await fetch('/api/usage');
+        const data = await response.json();
+        updateUsageDisplay(data);
+      } catch (err) {
+        console.error('Error fetching usage:', err);
+      }
+    }
+
+    function updateUsageDisplay(data) {
+      usageCost.textContent = data.formattedCost;
+      usageTotalCost.textContent = data.formattedCost;
+      usageRequests.textContent = data.totalRequests.toLocaleString();
+      usageInput.textContent = data.totalInputTokens.toLocaleString();
+      usageOutput.textContent = data.totalOutputTokens.toLocaleString();
+
+      recentRequestsEl.textContent = '';
+      const header = document.createElement('div');
+      header.className = 'usage-stat';
+      const headerLabel = document.createElement('span');
+      headerLabel.className = 'usage-stat-label';
+      headerLabel.textContent = 'Recent Requests';
+      header.appendChild(headerLabel);
+      recentRequestsEl.appendChild(header);
+
+      if (data.recentRequests && data.recentRequests.length > 0) {
+        data.recentRequests.forEach(req => {
+          const div = document.createElement('div');
+          div.className = 'recent-request';
+          const refSpan = document.createElement('span');
+          refSpan.className = 'recent-request-ref';
+          refSpan.textContent = req.reference;
+          const costSpan = document.createElement('span');
+          costSpan.className = 'recent-request-cost';
+          costSpan.textContent = '$' + req.estimatedCost.toFixed(4);
+          div.appendChild(refSpan);
+          div.appendChild(costSpan);
+          recentRequestsEl.appendChild(div);
+        });
+      } else {
+        const noReqs = document.createElement('div');
+        noReqs.className = 'recent-request';
+        noReqs.textContent = 'No requests yet';
+        recentRequestsEl.appendChild(noReqs);
+      }
+    }
+
+    fetchUsage();
   </script>
 </body>
 </html>
