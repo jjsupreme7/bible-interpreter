@@ -722,6 +722,17 @@
       color: var(--neutral-600);
     }
 
+    .word-verse-badge {
+      display: inline-block;
+      font-size: var(--text-xs);
+      background: var(--neutral-200);
+      color: var(--neutral-600);
+      padding: 2px 6px;
+      border-radius: 4px;
+      margin-left: var(--space-2);
+      vertical-align: middle;
+    }
+
     .interpretation-text {
       font-size: var(--text-sm);
       line-height: 1.8;
@@ -1521,12 +1532,23 @@
             const strongs = document.createElement('span');
             strongs.className = 'word-strongs';
             const link = document.createElement('a');
-            link.href = 'https://biblehub.com/greek/' + word.strongs.replace(/[^\d]/g, '') + '.htm';
+            const isHebrew = word.strongs.toUpperCase().startsWith('H');
+            const strongsNum = word.strongs.replace(/[^\d]/g, '');
+            link.href = isHebrew
+              ? 'https://biblehub.com/hebrew/' + strongsNum + '.htm'
+              : 'https://biblehub.com/greek/' + strongsNum + '.htm';
             link.target = '_blank';
             link.rel = 'noopener';
             link.textContent = "Strong's " + word.strongs;
             strongs.appendChild(link);
             item.appendChild(strongs);
+          }
+
+          if (word.verse) {
+            const verseBadge = document.createElement('span');
+            verseBadge.className = 'word-verse-badge';
+            verseBadge.textContent = 'v.' + word.verse;
+            item.appendChild(verseBadge);
           }
 
           if (word.definition) {

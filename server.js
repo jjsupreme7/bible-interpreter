@@ -194,17 +194,17 @@ app.post('/api/analyze', async (req, res) => {
     // Step 1: Fetch passage data from Bible API
     const passageData = await fetchPassageData(parsed, translation);
 
-    // Step 2: Fetch Greek/Hebrew word data
+    // Step 2: Fetch Greek/Hebrew word data (kept for potential future use)
     const wordData = await fetchWordData(parsed);
 
-    // Step 3: Generate AI interpretation
-    const interpretation = await generateInterpretation(reference, passageData, wordData);
+    // Step 3: Generate AI interpretation (now returns structured data)
+    const result = await generateInterpretation(reference, passageData, wordData, parsed);
 
     res.json({
       reference,
       englishText: passageData.text,
-      words: wordData,
-      interpretation
+      words: result.keyWords,  // Use AI-extracted key words
+      interpretation: result.interpretation
     });
   } catch (error) {
     console.error('Error analyzing passage:', error);
@@ -330,13 +330,39 @@ async function fetchDefinitions(words, isNT) {
   return definitions;
 }
 
-// Generate AI interpretation using Claude
-async function generateInterpretation(reference, passageData, wordData) {
-  const wordDataSummary = wordData.length > 0
-    ? wordData.map(w => `${w.original}${w.definition ? `: ${w.definition}` : ''}`).join('\n')
-    : 'Original language word data not available for detailed analysis.';
+// Parse Claude's response to extract structured word data
+function parseInterpretationResponse(responseText) {
+  const jsonMatch = responseText.match(/```json\s*([\s\S]*?)\s*```/);
+  let keyWords = [];
+  let interpretation = responseText;
 
-  const prompt = `You are a Bible scholar helping everyday readers understand Scripture the way scholars do — by examining the original Greek (New Testament) or Hebrew (Old Testament) words.
+  if (jsonMatch) {
+    try {
+      const parsed = JSON.parse(jsonMatch[1]);
+      keyWords = parsed.keyWords || [];
+      // Remove the JSON block from the interpretation text
+      interpretation = responseText.replace(/```json\s*[\s\S]*?\s*```\s*/, '').trim();
+    } catch (e) {
+      console.error('Failed to parse key words JSON:', e);
+    }
+  }
+  return { keyWords, interpretation };
+}
+
+// Generate AI interpretation using Claude
+async function generateInterpretation(reference, passageData, wordData, parsed) {
+  const isNT = parsed.isNT;
+  const language = isNT ? 'Greek' : 'Hebrew';
+  const strongsPrefix = isNT ? 'G' : 'H';
+
+  // Build verse list for multi-verse organization
+  const verses = [];
+  for (let v = parsed.startVerse; v <= parsed.endVerse; v++) {
+    verses.push(v);
+  }
+  const isMultiVerse = verses.length > 1;
+
+  const prompt = `You are a Bible scholar helping everyday readers understand Scripture the way scholars do — by examining the original ${language} words.
 
 ## Your Task
 Analyze this passage and explain what the original language reveals. Write like Timothy Keller — accessible to general audiences, not academic, but intellectually rich.
@@ -347,40 +373,62 @@ ${reference}
 ## English Text
 ${passageData.text}
 
-## Original Language Data
-${wordDataSummary}
+## Output Format
 
-## Instructions
+**Step 1:** Begin your response with a JSON code block containing 2-4 key ${language} words you'll analyze:
 
-1. **Identify 2-4 key words** where the original language adds meaning that English translations miss. Focus on:
-   - Words with rich etymology (like "puffed up" coming from "bellows")
-   - Words that appear multiple times (showing emphasis)
-   - Words with theological weight
-   - Idioms or phrases that don't translate directly
+\`\`\`json
+{
+  "keyWords": [
+    {
+      "original": "the ${language} word",
+      "transliteration": "phonetic pronunciation",
+      "strongs": "${strongsPrefix}####",
+      "definition": "core meaning (15 words max)",
+      "verse": <verse number where this word appears>
+    }
+  ]
+}
+\`\`\`
 
-2. **For each key word, explain:**
-   - The original word and what it literally means
-   - The root/etymology if significant
-   - Where else this word appears in Scripture (patterns)
-   - What nuance is lost in English translation
+**Step 2:** After the JSON block, provide your interpretation.
 
-3. **Synthesize the insight** — What does understanding the original language change about how we read this passage? What was the author really trying to communicate?
+${isMultiVerse ? `## Verse-by-Verse Organization
 
-4. **Keep it practical** — End with why this matters for the reader today.
+Since multiple verses are selected (verses ${verses.join(', ')}), organize your analysis with clear headers:
+
+${verses.map(v => `### Verse ${v}\n[Analysis of key words and meaning in verse ${v}]`).join('\n\n')}
+
+### Synthesis
+[How these verses connect; the author's flow of thought; why this matters today]
+` : `## Analysis Structure
+
+Organize your interpretation with clear sections:
+- Explain each key word's significance
+- Synthesize the overall insight
+- End with practical application
+`}
+
+## Key Word Selection
+Focus on words where ${language} adds meaning English misses:
+- Words with rich etymology
+- Repeated words showing emphasis
+- Words with theological weight
+- Idioms that don't translate directly
 
 ## Tone
 - Conversational, not academic
-- Use the Greek/Hebrew words but always explain them
-- Show genuine curiosity and discovery ("Notice that Paul doesn't use the normal word for pride here...")
+- Use ${language} words but always explain them
+- Show genuine curiosity ("Notice that Paul doesn't use the normal word for...")
 - Avoid churchy jargon
 
 ## Length
-400-600 words`;
+${isMultiVerse ? '500-800' : '400-600'} words (after the JSON block)`;
 
   try {
     const message = await anthropic.messages.create({
       model: 'claude-sonnet-4-20250514',
-      max_tokens: 1024,
+      max_tokens: 1500,
       messages: [
         { role: 'user', content: prompt }
       ]
@@ -393,10 +441,15 @@ ${wordDataSummary}
 
     console.log(`API Usage - Input: ${inputTokens}, Output: ${outputTokens}, Cost: $${calculateCost(inputTokens, outputTokens).toFixed(4)}`);
 
-    return message.content[0].text;
+    // Parse the response to extract structured data
+    const rawResponse = message.content[0].text;
+    return parseInterpretationResponse(rawResponse);
   } catch (error) {
     console.error('Claude API error:', error);
-    return 'Unable to generate interpretation. Please check your API key and try again.';
+    return {
+      keyWords: [],
+      interpretation: 'Unable to generate interpretation. Please check your API key and try again.'
+    };
   }
 }
 
