@@ -1180,6 +1180,258 @@
 
     .compare-btn svg { width: 16px; height: 16px; }
 
+    /* ===== Bible Content Wrapper (3-column layout) ===== */
+    .bible-content-wrapper {
+      display: grid;
+      grid-template-columns: 1fr minmax(0, 260px);
+      gap: var(--space-6);
+      max-width: 1020px;
+      width: 100%;
+    }
+
+    /* ===== Context Sidebar ===== */
+    .context-sidebar {
+      position: sticky;
+      top: var(--space-4);
+      align-self: start;
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-4);
+    }
+
+    .context-card, .toc-card, .notes-card {
+      background: var(--panel-bg);
+      border-radius: 10px;
+      padding: var(--space-4);
+      box-shadow: var(--shadow-sm);
+      border: 1px solid var(--neutral-200);
+    }
+
+    .context-card h4, .toc-card h4, .notes-card h4 {
+      font-size: var(--text-xs);
+      font-weight: 600;
+      color: var(--neutral-500);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: var(--space-3);
+    }
+
+    .context-row {
+      display: flex;
+      justify-content: space-between;
+      padding: 5px 0;
+      font-size: var(--text-xs);
+      border-bottom: 1px solid var(--neutral-100);
+    }
+
+    .context-row:last-child { border-bottom: none; }
+
+    .context-label {
+      color: var(--neutral-500);
+      font-weight: 500;
+    }
+
+    .context-value {
+      color: var(--neutral-800);
+      font-weight: 500;
+      text-align: right;
+      max-width: 60%;
+    }
+
+    /* ===== TOC ===== */
+    .toc-item {
+      display: flex;
+      align-items: baseline;
+      gap: var(--space-2);
+      padding: 6px 0;
+      cursor: pointer;
+      border-bottom: 1px solid var(--neutral-100);
+      transition: color var(--transition-fast);
+    }
+
+    .toc-item:last-child { border-bottom: none; }
+    .toc-item:hover { color: var(--primary-500); }
+
+    .toc-item-verses {
+      font-size: 10px;
+      font-family: var(--font-mono);
+      color: var(--primary-500);
+      white-space: nowrap;
+      min-width: 36px;
+    }
+
+    .toc-item-title {
+      font-size: var(--text-xs);
+      color: var(--neutral-700);
+      line-height: 1.3;
+    }
+
+    .toc-item:hover .toc-item-title { color: var(--primary-500); }
+
+    .toc-generate {
+      width: 100%;
+      padding: 6px;
+      border: 1px dashed var(--neutral-300);
+      border-radius: 6px;
+      background: transparent;
+      color: var(--neutral-500);
+      font-size: var(--text-xs);
+      cursor: pointer;
+      transition: all var(--transition-fast);
+    }
+
+    .toc-generate:hover {
+      border-color: var(--primary-500);
+      color: var(--primary-500);
+    }
+
+    /* ===== Highlight Palette ===== */
+    .highlight-palette {
+      position: fixed;
+      bottom: calc(var(--space-6) + 52px);
+      right: var(--space-6);
+      background: var(--panel-bg);
+      border-radius: 30px;
+      padding: 6px 10px;
+      box-shadow: var(--shadow-lg);
+      display: none;
+      align-items: center;
+      gap: 6px;
+      z-index: 101;
+      border: 1px solid var(--neutral-200);
+    }
+
+    .highlight-palette.visible { display: flex; }
+
+    .hl-dot {
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      border: 2px solid transparent;
+      cursor: pointer;
+      transition: transform var(--transition-fast), border-color var(--transition-fast);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 11px;
+    }
+
+    .hl-dot:hover { transform: scale(1.2); }
+    .hl-dot.active { border-color: var(--neutral-900); }
+    .hl-dot[data-color="yellow"] { background: rgba(250, 204, 21, 0.6); }
+    .hl-dot[data-color="green"] { background: rgba(34, 197, 94, 0.5); }
+    .hl-dot[data-color="blue"] { background: rgba(59, 130, 246, 0.4); }
+    .hl-dot[data-color="pink"] { background: rgba(244, 114, 182, 0.5); }
+    .hl-dot[data-color="clear"] {
+      background: var(--neutral-200);
+      font-size: 12px;
+      color: var(--neutral-600);
+    }
+
+    /* Highlighted verse styles */
+    .verse[data-highlight="yellow"] { background: rgba(250, 204, 21, 0.2); border-radius: 3px; }
+    .verse[data-highlight="green"] { background: rgba(34, 197, 94, 0.15); border-radius: 3px; }
+    .verse[data-highlight="blue"] { background: rgba(59, 130, 246, 0.15); border-radius: 3px; }
+    .verse[data-highlight="pink"] { background: rgba(244, 114, 182, 0.15); border-radius: 3px; }
+
+    /* ===== Note Indicator ===== */
+    .note-indicator {
+      display: inline-block;
+      font-size: 9px;
+      color: var(--primary-500);
+      margin-left: 1px;
+      vertical-align: super;
+      cursor: pointer;
+    }
+
+    /* ===== Note Editor (inline below verses) ===== */
+    .note-editor-inline {
+      display: block;
+      margin: var(--space-2) 0 var(--space-3);
+      padding: var(--space-3);
+      background: var(--panel-bg);
+      border: 1px solid var(--neutral-200);
+      border-radius: 8px;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .note-editor-inline textarea {
+      width: 100%;
+      min-height: 60px;
+      border: 1px solid var(--neutral-200);
+      border-radius: 6px;
+      padding: var(--space-2);
+      font-family: var(--font-ui);
+      font-size: var(--text-xs);
+      resize: vertical;
+      background: var(--neutral-50);
+      color: var(--neutral-800);
+    }
+
+    .note-editor-inline textarea:focus {
+      outline: 2px solid var(--primary-500);
+      outline-offset: -1px;
+    }
+
+    .note-editor-actions {
+      display: flex;
+      gap: var(--space-2);
+      margin-top: var(--space-2);
+      justify-content: flex-end;
+    }
+
+    .note-editor-actions button {
+      padding: 4px 12px;
+      border-radius: 5px;
+      font-size: var(--text-xs);
+      cursor: pointer;
+      border: 1px solid var(--neutral-200);
+      background: var(--panel-bg);
+      color: var(--neutral-600);
+      transition: all var(--transition-fast);
+    }
+
+    .note-editor-actions .note-save-btn {
+      background: var(--primary-500);
+      color: white;
+      border-color: var(--primary-500);
+    }
+
+    .note-editor-actions .note-save-btn:hover { background: var(--primary-600); }
+    .note-editor-actions .note-delete-btn { color: var(--error); border-color: var(--error); }
+
+    /* ===== Notes Panel Card ===== */
+    .notes-card .note-item {
+      padding: 6px 0;
+      border-bottom: 1px solid var(--neutral-100);
+      cursor: pointer;
+      transition: color var(--transition-fast);
+    }
+
+    .notes-card .note-item:last-child { border-bottom: none; }
+    .notes-card .note-item:hover { color: var(--primary-500); }
+
+    .note-item-verse {
+      font-size: 10px;
+      font-weight: 600;
+      color: var(--primary-500);
+    }
+
+    .note-item-text {
+      font-size: var(--text-xs);
+      color: var(--neutral-600);
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .notes-empty {
+      font-size: var(--text-xs);
+      color: var(--neutral-400);
+      text-align: center;
+      padding: var(--space-3) 0;
+    }
+
     /* ===== Animations ===== */
     @keyframes fadeIn {
       from { opacity: 0; }
@@ -1272,6 +1524,15 @@
 
       .shortcuts-help {
         display: none;
+      }
+
+      .bible-content-wrapper {
+        grid-template-columns: 1fr;
+      }
+
+      .context-sidebar {
+        position: static;
+        order: -1;
       }
 
       .search-modal {
@@ -1375,16 +1636,32 @@
 
   <main class="main-container" role="main">
     <div class="bible-panel" id="bible-panel" aria-label="Bible text">
-      <div class="bible-content">
-        <div class="instructions" id="instructions">
-          <p>Select a book and chapter above to start reading.</p>
-          <p>Click on verses to select them, then interpret.</p>
-          <p style="margin-top: var(--space-4); font-size: var(--text-sm);">
-            Press <kbd style="background: var(--neutral-200); padding: 2px 6px; border-radius: 4px; font-family: var(--font-mono);">/</kbd> to search
-          </p>
+      <div class="bible-content-wrapper">
+        <div class="bible-content">
+          <div class="instructions" id="instructions">
+            <p>Select a book and chapter above to start reading.</p>
+            <p>Click on verses to select them, then interpret.</p>
+            <p style="margin-top: var(--space-4); font-size: var(--text-sm);">
+              Press <kbd style="background: var(--neutral-200); padding: 2px 6px; border-radius: 4px; font-family: var(--font-mono);">/</kbd> to search
+            </p>
+          </div>
+          <h2 class="chapter-header" id="chapter-header" style="display:none;"></h2>
+          <div class="verses-container" id="verses-container" role="list" aria-label="Bible verses"></div>
         </div>
-        <h2 class="chapter-header" id="chapter-header" style="display:none;"></h2>
-        <div class="verses-container" id="verses-container" role="list" aria-label="Bible verses"></div>
+        <div class="context-sidebar" id="context-sidebar" style="display:none">
+          <div class="context-card" id="context-card">
+            <h4>Book Context</h4>
+            <div id="context-rows"></div>
+          </div>
+          <div class="toc-card" id="toc-card">
+            <h4>Chapter Outline</h4>
+            <div id="toc-list"></div>
+          </div>
+          <div class="notes-card" id="notes-card">
+            <h4>My Notes</h4>
+            <div id="notes-list"></div>
+          </div>
+        </div>
       </div>
     </div>
 
@@ -1433,6 +1710,13 @@
     </aside>
   </main>
 
+  <div class="highlight-palette" id="highlight-palette">
+    <span class="hl-dot" data-color="yellow" title="Yellow"></span>
+    <span class="hl-dot" data-color="green" title="Green"></span>
+    <span class="hl-dot" data-color="blue" title="Blue"></span>
+    <span class="hl-dot" data-color="pink" title="Pink"></span>
+    <span class="hl-dot" data-color="clear" title="Clear">&#10005;</span>
+  </div>
   <button class="interpret-fab" id="interpret-fab" aria-describedby="fab-description">Interpret Selection</button>
   <span id="fab-description" class="sr-only">Analyze selected verses with Greek and Hebrew insights</span>
 
@@ -1681,6 +1965,9 @@
 
 	        const data = await response.json();
 	        displayVerses(data.verses);
+	        if (typeof applyHighlights === 'function') applyHighlights();
+	        if (typeof refreshNoteIndicators === 'function') refreshNoteIndicators();
+	        if (typeof updateSidebar === 'function') updateSidebar();
 	      } catch (err) {
 	        versesContainer.textContent = 'Error loading chapter: ' + err.message;
       }
@@ -1765,6 +2052,7 @@
       } else {
         interpretFab.classList.remove('visible');
       }
+      if (typeof updateHighlightPalette === 'function') updateHighlightPalette();
     }
 
     // ===== Interpretation =====
@@ -2428,6 +2716,434 @@
 
     closeCompare.addEventListener('click', closeCompareModal);
     compareBackdrop.addEventListener('click', closeCompareModal);
+
+    // ===== Verse Highlights =====
+    const HL_KEY = 'bible-highlights';
+    const hlPalette = document.getElementById('highlight-palette');
+
+    function getHighlights() {
+      try { return JSON.parse(localStorage.getItem(HL_KEY) || '{}'); } catch { return {}; }
+    }
+
+    function saveHighlights(hl) {
+      localStorage.setItem(HL_KEY, JSON.stringify(hl));
+    }
+
+    function applyHighlights() {
+      const hl = getHighlights();
+      const prefix = currentBookIndex + '-' + currentChapter + '-';
+      document.querySelectorAll('.verse').forEach(el => {
+        const key = prefix + el.dataset.verse;
+        if (hl[key]) {
+          el.dataset.highlight = hl[key];
+        } else {
+          delete el.dataset.highlight;
+        }
+      });
+    }
+
+    function setHighlight(color) {
+      const hl = getHighlights();
+      const prefix = currentBookIndex + '-' + currentChapter + '-';
+      selectedVerses.forEach(v => {
+        const key = prefix + v;
+        if (color === 'clear') {
+          delete hl[key];
+        } else {
+          hl[key] = color;
+        }
+      });
+      saveHighlights(hl);
+      applyHighlights();
+    }
+
+    // Show palette when verses are selected
+    function updateHighlightPalette() {
+      if (selectedVerses.size > 0) {
+        hlPalette.classList.add('visible');
+        // Mark active color
+        const hl = getHighlights();
+        const prefix = currentBookIndex + '-' + currentChapter + '-';
+        const firstKey = prefix + [...selectedVerses][0];
+        const activeColor = hl[firstKey] || '';
+        hlPalette.querySelectorAll('.hl-dot').forEach(dot => {
+          dot.classList.toggle('active', dot.dataset.color === activeColor);
+        });
+      } else {
+        hlPalette.classList.remove('visible');
+      }
+    }
+
+    hlPalette.addEventListener('click', (e) => {
+      const dot = e.target.closest('.hl-dot');
+      if (!dot) return;
+      setHighlight(dot.dataset.color);
+      updateHighlightPalette();
+    });
+
+    // updateHighlightPalette is called from within the original updateFab
+
+    // ===== Personal Notes =====
+    const NOTES_KEY = 'bible-notes';
+    let activeNoteEditor = null;
+
+    function getNotes() {
+      try { return JSON.parse(localStorage.getItem(NOTES_KEY) || '{}'); } catch { return {}; }
+    }
+
+    function saveNotes(notes) {
+      localStorage.setItem(NOTES_KEY, JSON.stringify(notes));
+    }
+
+    function noteKey(verse) {
+      return currentBookIndex + '-' + currentChapter + '-' + verse;
+    }
+
+    function openNoteEditor(verseNum) {
+      closeNoteEditor();
+      const verseEl = document.querySelector('.verse[data-verse="' + verseNum + '"]');
+      if (!verseEl) return;
+
+      const notes = getNotes();
+      const key = noteKey(verseNum);
+      const existing = notes[key] || '';
+
+      const editor = document.createElement('div');
+      editor.className = 'note-editor-inline';
+      editor.dataset.noteVerse = verseNum;
+
+      const ta = document.createElement('textarea');
+      ta.value = existing;
+      ta.placeholder = 'Add a note for verse ' + verseNum + '...';
+      editor.appendChild(ta);
+
+      const actions = document.createElement('div');
+      actions.className = 'note-editor-actions';
+
+      if (existing) {
+        const delBtn = document.createElement('button');
+        delBtn.className = 'note-delete-btn';
+        delBtn.textContent = 'Delete';
+        delBtn.addEventListener('click', () => {
+          delete notes[key];
+          saveNotes(notes);
+          closeNoteEditor();
+          refreshNoteIndicators();
+          renderNotesPanel();
+          showToast('Note deleted');
+        });
+        actions.appendChild(delBtn);
+      }
+
+      const cancelBtn = document.createElement('button');
+      cancelBtn.textContent = 'Cancel';
+      cancelBtn.addEventListener('click', closeNoteEditor);
+      actions.appendChild(cancelBtn);
+
+      const saveBtn = document.createElement('button');
+      saveBtn.className = 'note-save-btn';
+      saveBtn.textContent = 'Save';
+      saveBtn.addEventListener('click', () => {
+        const text = ta.value.trim();
+        if (text) {
+          notes[key] = text;
+          saveNotes(notes);
+          showToast('Note saved');
+        } else {
+          delete notes[key];
+          saveNotes(notes);
+        }
+        closeNoteEditor();
+        refreshNoteIndicators();
+        renderNotesPanel();
+      });
+      actions.appendChild(saveBtn);
+      editor.appendChild(actions);
+
+      // Insert after the verse element - find the next sibling or append
+      verseEl.insertAdjacentElement('afterend', editor);
+      activeNoteEditor = editor;
+      ta.focus();
+    }
+
+    function closeNoteEditor() {
+      if (activeNoteEditor) {
+        activeNoteEditor.remove();
+        activeNoteEditor = null;
+      }
+    }
+
+    function refreshNoteIndicators() {
+      const notes = getNotes();
+      const prefix = currentBookIndex + '-' + currentChapter + '-';
+      document.querySelectorAll('.verse').forEach(el => {
+        const key = prefix + el.dataset.verse;
+        let ind = el.querySelector('.note-indicator');
+        if (notes[key]) {
+          if (!ind) {
+            ind = document.createElement('span');
+            ind.className = 'note-indicator';
+            ind.textContent = '\u270E';
+            ind.title = 'View/edit note';
+            el.querySelector('.verse-num').appendChild(ind);
+          }
+        } else if (ind) {
+          ind.remove();
+        }
+      });
+    }
+
+    // Double-click verse to add/edit note
+    document.getElementById('verses-container').addEventListener('dblclick', (e) => {
+      const verseEl = e.target.closest('.verse');
+      if (verseEl) {
+        e.preventDefault();
+        openNoteEditor(parseInt(verseEl.dataset.verse));
+      }
+    });
+
+    function renderNotesPanel() {
+      const notesList = document.getElementById('notes-list');
+      if (!notesList) return;
+      notesList.textContent = '';
+      const notes = getNotes();
+      const prefix = currentBookIndex + '-' + currentChapter + '-';
+      const chapterNotes = [];
+      for (const [key, text] of Object.entries(notes)) {
+        if (key.startsWith(prefix)) {
+          const verse = key.replace(prefix, '');
+          chapterNotes.push({ verse: parseInt(verse), text });
+        }
+      }
+      chapterNotes.sort((a, b) => a.verse - b.verse);
+      if (chapterNotes.length === 0) {
+        const empty = document.createElement('div');
+        empty.className = 'notes-empty';
+        empty.textContent = 'Double-click a verse to add a note';
+        notesList.appendChild(empty);
+        return;
+      }
+      chapterNotes.forEach(n => {
+        const item = document.createElement('div');
+        item.className = 'note-item';
+        const vEl = document.createElement('span');
+        vEl.className = 'note-item-verse';
+        vEl.textContent = 'v.' + n.verse;
+        item.appendChild(vEl);
+        const tEl = document.createElement('div');
+        tEl.className = 'note-item-text';
+        tEl.textContent = n.text;
+        item.appendChild(tEl);
+        item.addEventListener('click', () => {
+          const verseEl = document.querySelector('.verse[data-verse="' + n.verse + '"]');
+          if (verseEl) verseEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          openNoteEditor(n.verse);
+        });
+        notesList.appendChild(item);
+      });
+    }
+
+    // ===== Chapter Context Card =====
+    const BOOK_META = [
+      ['Moses','~1446-1406 BC','Israel','Narrative','Origins and God\'s covenant'],
+      ['Moses','~1446-1406 BC','Israel','Narrative/Law','Deliverance from Egypt'],
+      ['Moses','~1446-1406 BC','Israel','Law','Holiness and worship'],
+      ['Moses','~1446-1406 BC','Israel','Narrative/Census','Wilderness journey'],
+      ['Moses','~1406 BC','Israel','Law/Sermon','Covenant renewal'],
+      ['Joshua','~1400-1370 BC','Israel','Narrative','Conquest of Canaan'],
+      ['Samuel/Unknown','~1050-1000 BC','Israel','Narrative','Judges cycle'],
+      ['Samuel(?)','~1010 BC','Israel','Narrative','Loyalty and redemption'],
+      ['Samuel/Nathan/Gad','~930 BC','Israel','Narrative','Rise of monarchy'],
+      ['Samuel/Nathan/Gad','~930 BC','Israel','Narrative','David\'s reign'],
+      ['Jeremiah(?)','~560 BC','Israel','Narrative','Divided kingdom'],
+      ['Jeremiah(?)','~560 BC','Israel','Narrative','Fall of kingdoms'],
+      ['Ezra(?)','~450 BC','Israel','Narrative','Temple worship'],
+      ['Ezra(?)','~450 BC','Israel','Narrative','Southern kingdom'],
+      ['Ezra','~440 BC','Returnees','Narrative','Return from exile'],
+      ['Nehemiah','~430 BC','Returnees','Narrative','Rebuilding walls'],
+      ['Unknown','~470 BC','Jews in Persia','Narrative','Providence and courage'],
+      ['Unknown','~2000-500 BC','Sufferers','Wisdom/Poetry','Suffering and faith'],
+      ['David and others','~1000-400 BC','Worshipers','Poetry/Hymns','Prayer and praise'],
+      ['Solomon and others','~950-700 BC','Youth/All','Wisdom','Practical godly living'],
+      ['Solomon','~935 BC','All','Wisdom','Meaning of life'],
+      ['Solomon','~965 BC','Beloved','Poetry','Love and intimacy'],
+      ['Isaiah','~740-680 BC','Judah','Prophecy','Judgment and hope'],
+      ['Jeremiah','~627-585 BC','Judah','Prophecy','Warning and exile'],
+      ['Jeremiah','~586 BC','Exiles','Poetry','Grief over Jerusalem'],
+      ['Ezekiel','~593-571 BC','Exiles','Prophecy','God\'s glory and restoration'],
+      ['Daniel','~536 BC','Exiles','Prophecy/Narrative','Sovereignty of God'],
+      ['Hosea','~755-715 BC','Israel','Prophecy','Faithful love'],
+      ['Joel','~835-800 BC','Judah','Prophecy','Day of the LORD'],
+      ['Amos','~760 BC','Israel','Prophecy','Social justice'],
+      ['Obadiah','~845 or 586 BC','Edom','Prophecy','Judgment on Edom'],
+      ['Jonah','~780-750 BC','Nineveh','Narrative','God\'s mercy to all'],
+      ['Micah','~735-700 BC','Judah/Israel','Prophecy','Justice and mercy'],
+      ['Nahum','~663-612 BC','Nineveh','Prophecy','God\'s judgment'],
+      ['Habakkuk','~609-605 BC','Judah','Prophecy','Living by faith'],
+      ['Zephaniah','~640-621 BC','Judah','Prophecy','Coming judgment'],
+      ['Haggai','~520 BC','Returnees','Prophecy','Rebuild the temple'],
+      ['Zechariah','~520-480 BC','Returnees','Prophecy','Messianic hope'],
+      ['Malachi','~430 BC','Israel','Prophecy','Spiritual renewal'],
+      ['Matthew','~55-65 AD','Jews','Gospel','Jesus as King'],
+      ['Mark (via Peter)','~55-65 AD','Romans','Gospel','Jesus as Servant'],
+      ['Luke','~60-62 AD','Theophilus','Gospel','Jesus for all people'],
+      ['John','~85-95 AD','Believers','Gospel','Jesus as God'],
+      ['Luke','~62 AD','Theophilus','Narrative','Early church growth'],
+      ['Paul','~57 AD','Rome church','Epistle','Righteousness by faith'],
+      ['Paul','~55 AD','Corinth church','Epistle','Church unity'],
+      ['Paul','~56 AD','Corinth church','Epistle','Ministry and comfort'],
+      ['Paul','~49 AD','Galatian churches','Epistle','Freedom in Christ'],
+      ['Paul','~60-62 AD','Ephesus church','Epistle','Unity in Christ'],
+      ['Paul','~60-62 AD','Philippi church','Epistle','Joy in Christ'],
+      ['Paul','~60-62 AD','Colossae church','Epistle','Supremacy of Christ'],
+      ['Paul','~51 AD','Thessalonica','Epistle','Christ\'s return'],
+      ['Paul','~51-52 AD','Thessalonica','Epistle','Perseverance'],
+      ['Paul','~63-65 AD','Timothy','Epistle','Church leadership'],
+      ['Paul','~66-67 AD','Timothy','Epistle','Faithful endurance'],
+      ['Paul','~63-65 AD','Titus','Epistle','Sound doctrine'],
+      ['Paul','~60-62 AD','Philemon','Epistle','Forgiveness'],
+      ['Unknown','~60s AD','Jewish Christians','Epistle','Christ\'s superiority'],
+      ['James','~45-49 AD','Jewish believers','Epistle','Faith and works'],
+      ['Peter','~64-65 AD','Scattered believers','Epistle','Hope in suffering'],
+      ['Peter','~66-68 AD','Believers','Epistle','True knowledge'],
+      ['John','~85-95 AD','Believers','Epistle','God is love'],
+      ['John','~85-95 AD','Chosen lady','Epistle','Truth and love'],
+      ['John','~85-95 AD','Gaius','Epistle','Hospitality'],
+      ['Jude','~65-80 AD','Believers','Epistle','Contend for faith'],
+      ['John','~95 AD','Seven churches','Prophecy','Victory of God']
+    ];
+
+    function renderContextCard() {
+      const rows = document.getElementById('context-rows');
+      if (!rows) return;
+      rows.textContent = '';
+      const meta = BOOK_META[currentBookIndex];
+      if (!meta) return;
+
+      const fields = [
+        ['Author', meta[0]],
+        ['Written', meta[1]],
+        ['Audience', meta[2]],
+        ['Genre', meta[3]],
+        ['Theme', meta[4]]
+      ];
+      fields.forEach(([label, value]) => {
+        const row = document.createElement('div');
+        row.className = 'context-row';
+        const lbl = document.createElement('span');
+        lbl.className = 'context-label';
+        lbl.textContent = label;
+        const val = document.createElement('span');
+        val.className = 'context-value';
+        val.textContent = value;
+        row.appendChild(lbl);
+        row.appendChild(val);
+        rows.appendChild(row);
+      });
+    }
+
+    // ===== Mini Table of Contents =====
+    const TOC_CACHE_KEY = 'bible-toc-cache';
+
+    function getTocCache() {
+      try { return JSON.parse(localStorage.getItem(TOC_CACHE_KEY) || '{}'); } catch { return {}; }
+    }
+
+    function saveTocCache(cache) {
+      localStorage.setItem(TOC_CACHE_KEY, JSON.stringify(cache));
+    }
+
+    function renderToc(sections) {
+      const tocList = document.getElementById('toc-list');
+      if (!tocList) return;
+      tocList.textContent = '';
+
+      if (!sections || sections.length === 0) {
+        const btn = document.createElement('button');
+        btn.className = 'toc-generate';
+        btn.textContent = 'Generate Outline';
+        btn.addEventListener('click', () => fetchToc());
+        tocList.appendChild(btn);
+        return;
+      }
+
+      sections.forEach(s => {
+        const item = document.createElement('div');
+        item.className = 'toc-item';
+        const versesEl = document.createElement('span');
+        versesEl.className = 'toc-item-verses';
+        versesEl.textContent = 'v.' + s.verses;
+        const titleEl = document.createElement('span');
+        titleEl.className = 'toc-item-title';
+        titleEl.textContent = s.title;
+        item.appendChild(versesEl);
+        item.appendChild(titleEl);
+        item.addEventListener('click', () => {
+          const startVerse = parseInt(s.verses);
+          const verseEl = document.querySelector('.verse[data-verse="' + startVerse + '"]');
+          if (verseEl) verseEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        });
+        tocList.appendChild(item);
+      });
+    }
+
+    async function fetchToc() {
+      const tocList = document.getElementById('toc-list');
+      if (!tocList) return;
+
+      // Check cache first
+      const cache = getTocCache();
+      const cacheKey = currentBookIndex + '-' + currentChapter;
+      if (cache[cacheKey]) {
+        renderToc(cache[cacheKey]);
+        return;
+      }
+
+      tocList.textContent = '';
+      const loading = document.createElement('div');
+      loading.style.cssText = 'text-align:center;padding:8px;font-size:11px;color:var(--neutral-400)';
+      loading.textContent = 'Generating outline...';
+      tocList.appendChild(loading);
+
+      try {
+        const response = await fetch('/api/outline', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ book: currentBook, chapter: currentChapter })
+        });
+        if (!response.ok) throw new Error('Failed');
+        const data = await response.json();
+        cache[cacheKey] = data.sections;
+        saveTocCache(cache);
+        renderToc(data.sections);
+        fetchUsage();
+      } catch (err) {
+        tocList.textContent = '';
+        const errDiv = document.createElement('div');
+        errDiv.style.cssText = 'font-size:11px;color:var(--error);text-align:center;padding:8px';
+        errDiv.textContent = 'Failed to load outline';
+        tocList.appendChild(errDiv);
+      }
+    }
+
+    // ===== Update Sidebar on Chapter Load =====
+    function updateSidebar() {
+      const sidebar = document.getElementById('context-sidebar');
+      if (!sidebar) return;
+      sidebar.style.display = 'flex';
+      renderContextCard();
+      // Check TOC cache
+      const cache = getTocCache();
+      const cacheKey = currentBookIndex + '-' + currentChapter;
+      if (cache[cacheKey]) {
+        renderToc(cache[cacheKey]);
+      } else {
+        renderToc(null); // show "Generate" button
+      }
+      renderNotesPanel();
+    }
+
+    // sidebar/highlights/notes are called from within the original loadChapter
   </script>
 </body>
 </html>

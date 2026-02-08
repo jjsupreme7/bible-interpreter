@@ -682,6 +682,38 @@ app.post('/api/compare', async (req, res) => {
   }
 });
 
+// Generate chapter outline/TOC
+app.post('/api/outline', rateLimit, async (req, res) => {
+  try {
+    const { book, chapter } = req.body;
+    if (!book || !chapter) {
+      return res.status(400).json({ error: 'Book and chapter are required' });
+    }
+    if (!process.env.ANTHROPIC_API_KEY) {
+      throw new HttpError(500, 'Server missing ANTHROPIC_API_KEY');
+    }
+    const message = await anthropic.messages.create({
+      model: 'claude-sonnet-4-5-20250929',
+      max_tokens: 400,
+      messages: [{
+        role: 'user',
+        content: `For ${book} chapter ${chapter} in the Bible, provide a brief section outline. Return ONLY a JSON array with 3-6 sections. Each object must have "title" (short heading, 5 words max) and "verses" (range string like "1-5" or "16-21"). Example: [{"title":"Nicodemus Visits Jesus","verses":"1-15"},{"title":"God So Loved the World","verses":"16-21"}]. Return ONLY the JSON array, no other text.`
+      }]
+    });
+    const inputTokens = message.usage?.input_tokens || 0;
+    const outputTokens = message.usage?.output_tokens || 0;
+    trackUsage(`${book} ${chapter} (outline)`, inputTokens, outputTokens);
+    const text = message.content[0].text.trim();
+    const jsonMatch = text.match(/\[[\s\S]*\]/);
+    const sections = jsonMatch ? JSON.parse(jsonMatch[0]) : [];
+    res.json({ book, chapter, sections });
+  } catch (error) {
+    console.error('Error generating outline:', error);
+    const status = error instanceof HttpError ? error.status : 500;
+    res.status(status).json({ error: error.message || 'Failed to generate outline' });
+  }
+});
+
 app.listen(PORT, () => {
   console.log(`Bible Interpreter running at http://localhost:${PORT}`);
 });
