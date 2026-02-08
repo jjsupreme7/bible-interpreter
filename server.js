@@ -11,11 +11,58 @@ const PORT = process.env.PORT || 3000;
 app.use(cors());
 app.use(express.json());
 app.use(express.static('public'));
+app.disable('x-powered-by');
+
+// Simple rate limiter for /api/analyze (20 requests per minute per IP)
+const rateLimitMap = new Map();
+function rateLimit(req, res, next) {
+  const ip = req.ip;
+  const now = Date.now();
+  const windowMs = 60000;
+  const maxRequests = 20;
+  if (!rateLimitMap.has(ip)) rateLimitMap.set(ip, []);
+  const timestamps = rateLimitMap.get(ip).filter(t => now - t < windowMs);
+  if (timestamps.length >= maxRequests) {
+    return res.status(429).json({ error: 'Too many requests. Please wait a moment.' });
+  }
+  timestamps.push(now);
+  rateLimitMap.set(ip, timestamps);
+  next();
+}
+
+class HttpError extends Error {
+  constructor(status, message) {
+    super(message);
+    this.status = status;
+  }
+}
 
 // Initialize Anthropic client
 const anthropic = new Anthropic({
   apiKey: process.env.ANTHROPIC_API_KEY,
 });
+
+const ALLOWED_TRANSLATIONS = new Set([
+  'NIV2011',
+  'ESV',
+  'KJV',
+  'NLT',
+  'NKJV',
+  'CSB17',
+  'NASB',
+  'MSG',
+  'AMP',
+]);
+
+function normalizeTranslation(translation) {
+  const t = String(translation || '').trim();
+  const fallback = 'ESV';
+  const resolved = t || fallback;
+  if (!ALLOWED_TRANSLATIONS.has(resolved)) {
+    throw new HttpError(400, `Unsupported translation: ${resolved}`);
+  }
+  return resolved;
+}
 
 // Usage tracking
 const USAGE_FILE = path.join(__dirname, 'usage.json');
@@ -74,6 +121,45 @@ function calculateCost(inputTokens, outputTokens) {
   const inputCost = (inputTokens / 1000000) * PRICING.inputPerMillion;
   const outputCost = (outputTokens / 1000000) * PRICING.outputPerMillion;
   return inputCost + outputCost;
+}
+
+function cleanBibleText(text) {
+  return String(text || '')
+    .replace(/<S>[A-Za-z]?\d+<\/S>/g, '') // Remove Strong's numbers
+    .replace(/<[^>]+>/g, '') // Remove other HTML tags
+    .replace(/\s+/g, ' ') // Normalize whitespace
+    .trim();
+}
+
+const CHAPTER_CACHE = new Map();
+const CHAPTER_CACHE_MAX = 250;
+
+async function fetchBollsChapter(translation, bookNum, chapter) {
+  const cacheKey = `${translation}:${bookNum}:${chapter}`;
+  if (CHAPTER_CACHE.has(cacheKey)) return CHAPTER_CACHE.get(cacheKey);
+
+  const url = `https://bolls.life/get-text/${translation}/${bookNum}/${chapter}/`;
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), 10000);
+  let response;
+  try {
+    response = await fetch(url, { signal: controller.signal });
+  } finally {
+    clearTimeout(timeout);
+  }
+  if (!response.ok) {
+    throw new HttpError(502, 'Failed to fetch passage from Bible API');
+  }
+
+  const verses = await response.json();
+  CHAPTER_CACHE.set(cacheKey, verses);
+
+  if (CHAPTER_CACHE.size > CHAPTER_CACHE_MAX) {
+    const firstKey = CHAPTER_CACHE.keys().next().value;
+    if (firstKey) CHAPTER_CACHE.delete(firstKey);
+  }
+
+  return verses;
 }
 
 // Book name to number mapping for Bolls.life API
@@ -153,24 +239,31 @@ function parseReference(reference) {
   // Normalize: lowercase, trim
   const ref = reference.toLowerCase().trim();
 
-  // Match patterns like "1 corinthians 4:3-6" or "romans 8:28" or "gen 1:1"
-  const match = ref.match(/^(\d?\s*[a-z]+)\s*(\d+):(\d+)(?:-(\d+))?$/);
+  // Match patterns like:
+  // - "1 corinthians 4:3-6"
+  // - "romans 8:28"
+  // - "song of solomon 2:1"
+  // - "1john3:16"
+  const match = ref.match(/^(.+?)\s*(\d+):(\d+)(?:-(\d+))?$/);
 
   if (!match) {
-    throw new Error(`Invalid reference format: ${reference}`);
+    throw new HttpError(400, `Invalid reference format: ${reference}`);
   }
 
   const [, bookPart, chapter, startVerse, endVerse] = match;
-  const bookName = bookPart.replace(/\s+/g, ' ').trim();
+  const bookName = bookPart
+    .replace(/[^a-z0-9\s]/g, '')
+    .replace(/\s+/g, ' ')
+    .trim();
 
   const bookNum = BOOK_MAP[bookName];
   if (!bookNum) {
-    throw new Error(`Unknown book: ${bookPart}`);
+    throw new HttpError(400, `Unknown book: ${bookPart}`);
   }
 
   return {
     bookNum,
-    bookName: bookPart,
+    bookName: bookName,
     chapter: parseInt(chapter),
     startVerse: parseInt(startVerse),
     endVerse: endVerse ? parseInt(endVerse) : parseInt(startVerse),
@@ -180,7 +273,7 @@ function parseReference(reference) {
 }
 
 // API endpoint to analyze a Bible passage
-app.post('/api/analyze', async (req, res) => {
+app.post('/api/analyze', rateLimit, async (req, res) => {
   try {
     const { reference, translation = 'ESV' } = req.body;
 
@@ -188,11 +281,17 @@ app.post('/api/analyze', async (req, res) => {
       return res.status(400).json({ error: 'Reference is required' });
     }
 
+    if (!process.env.ANTHROPIC_API_KEY) {
+      throw new HttpError(500, 'Server missing ANTHROPIC_API_KEY');
+    }
+
+    const normalizedTranslation = normalizeTranslation(translation);
+
     // Parse the reference
     const parsed = parseReference(reference);
 
     // Step 1: Fetch passage data from Bible API
-    const passageData = await fetchPassageData(parsed, translation);
+    const passageData = await fetchPassageData(parsed, normalizedTranslation);
 
     // Step 2: Fetch Greek/Hebrew word data (kept for potential future use)
     const wordData = await fetchWordData(parsed);
@@ -208,23 +307,18 @@ app.post('/api/analyze', async (req, res) => {
     });
   } catch (error) {
     console.error('Error analyzing passage:', error);
-    res.status(500).json({ error: error.message || 'Failed to analyze passage' });
+    const status = error instanceof HttpError ? error.status : 500;
+    res.status(status).json({ error: error.message || 'Failed to analyze passage' });
   }
 });
 
 // Fetch passage text from Bolls.life API
 async function fetchPassageData(parsed, translation = 'ESV') {
   const { bookNum, chapter, startVerse, endVerse } = parsed;
+  const normalizedTranslation = normalizeTranslation(translation);
 
-  // Fetch the chapter from Bolls.life
-  const url = `https://bolls.life/get-text/${translation}/${bookNum}/${chapter}/`;
-
-  const response = await fetch(url);
-  if (!response.ok) {
-    throw new Error('Failed to fetch passage from Bible API');
-  }
-
-  const verses = await response.json();
+  // Fetch the chapter from Bolls.life (cached)
+  const verses = await fetchBollsChapter(normalizedTranslation, bookNum, chapter);
 
   // Filter to requested verse range
   const selectedVerses = verses.filter(v =>
@@ -232,11 +326,13 @@ async function fetchPassageData(parsed, translation = 'ESV') {
   );
 
   if (selectedVerses.length === 0) {
-    throw new Error('No verses found for the given reference');
+    throw new HttpError(404, 'No verses found for the given reference');
   }
 
   // Combine verse texts
-  const text = selectedVerses.map(v => `${v.verse} ${v.text}`).join(' ');
+  const text = selectedVerses
+    .map(v => `${v.verse} ${cleanBibleText(v.text)}`)
+    .join(' ');
 
   return { text, verses: selectedVerses };
 }
@@ -251,7 +347,14 @@ async function fetchWordData(parsed) {
   const url = `https://bolls.life/get-text/${translation}/${bookNum}/${chapter}/`;
 
   try {
-    const response = await fetch(url);
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 10000);
+    let response;
+    try {
+      response = await fetch(url, { signal: controller.signal });
+    } finally {
+      clearTimeout(timeout);
+    }
     if (!response.ok) {
       console.log('Original language text not available, skipping word data');
       return [];
@@ -310,7 +413,14 @@ async function fetchDefinitions(words, isNT) {
   for (const word of wordsToFetch) {
     try {
       const url = `https://bolls.life/dictionary-definition/${dict}/${encodeURIComponent(word)}/`;
-      const response = await fetch(url);
+      const ctrl = new AbortController();
+      const t = setTimeout(() => ctrl.abort(), 5000);
+      let response;
+      try {
+        response = await fetch(url, { signal: ctrl.signal });
+      } finally {
+        clearTimeout(t);
+      }
 
       if (response.ok) {
         const data = await response.json();
@@ -332,20 +442,32 @@ async function fetchDefinitions(words, isNT) {
 
 // Parse Claude's response to extract structured word data
 function parseInterpretationResponse(responseText) {
-  const jsonMatch = responseText.match(/```json\s*([\s\S]*?)\s*```/);
   let keyWords = [];
-  let interpretation = responseText;
 
-  if (jsonMatch) {
+  // Prefer an explicitly marked JSON block; fall back to any code block containing "keyWords".
+  const candidates = [];
+  const explicit = responseText.match(/```json\s*([\s\S]*?)\s*```/i);
+  if (explicit) candidates.push(explicit);
+
+  const anyBlocks = [...responseText.matchAll(/```[a-z0-9_-]*\s*([\s\S]*?)\s*```/gi)];
+  for (const block of anyBlocks) {
+    if (String(block[1]).includes('"keyWords"')) candidates.push(block);
+  }
+
+  let interpretation = responseText;
+  for (const match of candidates) {
     try {
-      const parsed = JSON.parse(jsonMatch[1]);
-      keyWords = parsed.keyWords || [];
-      // Remove the JSON block from the interpretation text
-      interpretation = responseText.replace(/```json\s*[\s\S]*?\s*```\s*/, '').trim();
+      const parsed = JSON.parse(match[1]);
+      if (parsed && Array.isArray(parsed.keyWords)) {
+        keyWords = parsed.keyWords;
+        interpretation = responseText.replace(match[0], '').trim();
+        break;
+      }
     } catch (e) {
-      console.error('Failed to parse key words JSON:', e);
+      // Keep trying other candidates
     }
   }
+
   return { keyWords, interpretation };
 }
 
@@ -422,12 +544,19 @@ Focus on words where ${language} adds meaning English misses:
 - Show genuine curiosity ("Notice that Paul doesn't use the normal word for...")
 - Avoid churchy jargon
 
+## Cross-References
+At the end of your interpretation, add a section:
+
+### Related Passages
+List 2-3 cross-references that illuminate this passage. Format each as:
+- **[Book Chapter:Verse]** — One sentence explaining the connection.
+
 ## Length
-${isMultiVerse ? '500-800' : '400-600'} words (after the JSON block)`;
+${isMultiVerse ? '500-800' : '400-600'} words (after the JSON block, not counting cross-references)`;
 
   try {
     const message = await anthropic.messages.create({
-      model: 'claude-sonnet-4-20250514',
+      model: 'claude-sonnet-4-5-20250929',
       max_tokens: 1500,
       messages: [
         { role: 'user', content: prompt }
@@ -489,6 +618,8 @@ app.post('/api/chapter', async (req, res) => {
       return res.status(400).json({ error: 'Book and chapter are required' });
     }
 
+    const normalizedTranslation = normalizeTranslation(translation);
+
     const bookName = book.toLowerCase().trim();
     const bookNum = BOOK_MAP[bookName];
 
@@ -496,24 +627,13 @@ app.post('/api/chapter', async (req, res) => {
       return res.status(400).json({ error: `Unknown book: ${book}` });
     }
 
-    // Fetch the chapter from Bolls.life
-    const url = `https://bolls.life/get-text/${translation}/${bookNum}/${chapter}/`;
-
-    const response = await fetch(url);
-    if (!response.ok) {
-      throw new Error('Failed to fetch chapter from Bible API');
-    }
-
-    const verses = await response.json();
+    // Fetch the chapter from Bolls.life (cached)
+    const verses = await fetchBollsChapter(normalizedTranslation, bookNum, chapter);
 
     // Clean up Strong's numbers and other markup from the text
     const cleanedVerses = verses.map(v => ({
       ...v,
-      text: v.text
-        .replace(/<S>\d+<\/S>/g, '')  // Remove Strong's numbers
-        .replace(/<[^>]+>/g, '')       // Remove any other HTML tags
-        .replace(/\s+/g, ' ')          // Normalize whitespace
-        .trim()
+      text: cleanBibleText(v.text)
     }));
 
     res.json({
@@ -523,7 +643,42 @@ app.post('/api/chapter', async (req, res) => {
     });
   } catch (error) {
     console.error('Error loading chapter:', error);
-    res.status(500).json({ error: error.message || 'Failed to load chapter' });
+    const status = error instanceof HttpError ? error.status : 500;
+    res.status(status).json({ error: error.message || 'Failed to load chapter' });
+  }
+});
+
+// Compare translations endpoint
+app.post('/api/compare', async (req, res) => {
+  try {
+    const { book, chapter, startVerse, endVerse, translations } = req.body;
+    if (!book || !chapter || !startVerse) {
+      return res.status(400).json({ error: 'Book, chapter, and startVerse are required' });
+    }
+    const bookName = book.toLowerCase().trim();
+    const bookNum = BOOK_MAP[bookName];
+    if (!bookNum) {
+      return res.status(400).json({ error: `Unknown book: ${book}` });
+    }
+    const end = endVerse || startVerse;
+    const translationList = translations || ['ESV', 'KJV', 'NLT', 'NIV2011'];
+    const results = {};
+    await Promise.all(translationList.map(async (t) => {
+      try {
+        const normalized = normalizeTranslation(t);
+        const verses = await fetchBollsChapter(normalized, bookNum, chapter);
+        const selected = verses
+          .filter(v => v.verse >= startVerse && v.verse <= end)
+          .map(v => ({ verse: v.verse, text: cleanBibleText(v.text) }));
+        results[t] = selected;
+      } catch (e) {
+        results[t] = [{ verse: startVerse, text: '(Translation unavailable)' }];
+      }
+    }));
+    res.json({ book, chapter, startVerse, endVerse: end, translations: results });
+  } catch (error) {
+    console.error('Error comparing translations:', error);
+    res.status(500).json({ error: error.message || 'Failed to compare translations' });
   }
 });
 
