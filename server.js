@@ -714,6 +714,115 @@ app.post('/api/outline', rateLimit, async (req, res) => {
   }
 });
 
+// Life Application - find relevant passages for user's life situation
+app.post('/api/life-application', rateLimit, async (req, res) => {
+  try {
+    const { situation } = req.body;
+
+    if (!situation || typeof situation !== 'string' || situation.trim().length < 10) {
+      return res.status(400).json({
+        error: 'Please describe your situation in at least a few words.'
+      });
+    }
+
+    if (situation.length > 500) {
+      return res.status(400).json({ error: 'Please keep your description under 500 characters.' });
+    }
+
+    if (!process.env.ANTHROPIC_API_KEY) {
+      throw new HttpError(500, 'Server missing ANTHROPIC_API_KEY');
+    }
+
+    const prompt = `You are a wise pastoral counselor who knows the Bible deeply. Someone has come to you and shared what's going on in their life. Your job is to find 3-5 Bible passages that genuinely speak to their situation — not just popular "go-to" verses, but passages that really connect.
+
+## The Person's Situation
+"${situation.trim()}"
+
+## Your Task
+Find 3-5 Bible passages that are genuinely relevant to this person's situation. For each passage:
+1. Choose a specific passage (book, chapter, and verse range — keep it to 1-4 verses so it's focused)
+2. Include the key verse text (paraphrase briefly if needed, but stay faithful)
+3. Explain specifically HOW this passage connects to what they described — not generic "this is comforting" but precisely why it matters for their situation
+4. Include one Greek or Hebrew word insight that deepens the meaning
+
+## Guidelines
+- Reach beyond the "usual suspects" — if Jeremiah 29:11 or Philippians 4:13 genuinely fits, fine, but prefer less obvious passages that are more precisely relevant
+- Draw from across the whole Bible: Old Testament narratives, Psalms, Prophets, Gospels, Epistles
+- The Greek/Hebrew insight should illuminate the passage in a way that matters for this person's situation, not just be a fun fact
+- Write like Timothy Keller: warm, intellectually honest, never preachy, genuinely curious about the text
+- Address the person directly using "you" and "your"
+- If the situation involves pain, acknowledge it before offering hope — don't rush past lament
+- Keep each explanation to 2-3 sentences — enough to be meaningful, short enough to invite further reading
+
+## Output Format
+Return ONLY a JSON object with this exact structure (no other text before or after):
+
+\`\`\`json
+{
+  "passages": [
+    {
+      "reference": "Book Chapter:StartVerse-EndVerse",
+      "book": "Book",
+      "chapter": 1,
+      "startVerse": 1,
+      "endVerse": 3,
+      "verseText": "The key verse text (brief, 1-2 verses max)",
+      "connection": "2-3 sentences explaining how this specifically connects to their situation",
+      "greekHebrew": {
+        "word": "the original language word",
+        "transliteration": "how to pronounce it",
+        "language": "Greek or Hebrew",
+        "insight": "One sentence explaining what this word reveals"
+      }
+    }
+  ],
+  "encouragement": "One warm, brief closing sentence (not a Bible verse — just a human word of encouragement)"
+}
+\`\`\`
+
+Important: The "reference" field must use standard Bible reference format (e.g., "Romans 8:26-28", "Psalm 34:18", "1 Peter 5:7"). Use full book names, not abbreviations. For single-verse passages, use format like "Psalm 34:18" (no range needed).`;
+
+    const message = await anthropic.messages.create({
+      model: 'claude-sonnet-4-5-20250929',
+      max_tokens: 2000,
+      messages: [
+        { role: 'user', content: prompt }
+      ]
+    });
+
+    const inputTokens = message.usage?.input_tokens || 0;
+    const outputTokens = message.usage?.output_tokens || 0;
+    trackUsage('life-application', inputTokens, outputTokens);
+
+    console.log(`Life App - Input: ${inputTokens}, Output: ${outputTokens}, Cost: $${calculateCost(inputTokens, outputTokens).toFixed(4)}`);
+
+    const responseText = message.content[0].text;
+
+    // Extract JSON from the response
+    let result;
+    const jsonMatch = responseText.match(/```json\s*([\s\S]*?)\s*```/);
+    if (jsonMatch) {
+      result = JSON.parse(jsonMatch[1]);
+    } else {
+      result = JSON.parse(responseText.trim());
+    }
+
+    if (!result || !Array.isArray(result.passages)) {
+      throw new HttpError(500, 'Invalid response format from AI');
+    }
+
+    res.json(result);
+
+  } catch (error) {
+    console.error('Life Application error:', error);
+    if (error instanceof SyntaxError) {
+      return res.status(500).json({ error: 'Failed to parse AI response. Please try again.' });
+    }
+    const status = error instanceof HttpError ? error.status : 500;
+    res.status(status).json({ error: error.message || 'Failed to find passages' });
+  }
+});
+
 app.listen(PORT, () => {
   console.log(`Bible Interpreter running at http://localhost:${PORT}`);
 });
