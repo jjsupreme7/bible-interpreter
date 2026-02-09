@@ -776,6 +776,164 @@
       margin-bottom: var(--space-2);
     }
 
+    /* ===== Cross-References Section ===== */
+    .crossref-section { margin-top: var(--space-4); }
+    .crossref-loading {
+      display: flex; align-items: center; gap: var(--space-2);
+      font-size: var(--text-xs); color: var(--neutral-400); padding: var(--space-3) 0;
+    }
+    .crossref-loading .spinner { width: 14px; height: 14px; border-width: 2px; }
+    .crossref-list { display: flex; flex-direction: column; gap: var(--space-2); }
+    .crossref-item {
+      padding: var(--space-3);
+      background: var(--neutral-100);
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all var(--transition-fast);
+      border-left: 3px solid transparent;
+    }
+    .crossref-item:hover { border-left-color: var(--primary-500); background: var(--neutral-50); }
+    .crossref-item-header { display: flex; align-items: center; gap: var(--space-2); margin-bottom: var(--space-1); }
+    .crossref-ref {
+      font-weight: 600; font-size: var(--text-sm); color: var(--primary-500);
+    }
+    .crossref-tag {
+      font-size: 10px; background: rgba(99,102,241,0.1); color: var(--primary-500);
+      padding: 1px 6px; border-radius: 3px; white-space: nowrap;
+    }
+    .crossref-connection { font-size: var(--text-xs); color: var(--neutral-500); line-height: 1.5; }
+
+    /* ===== Word Study Popover ===== */
+    .word-popover {
+      position: absolute; z-index: 1500;
+      background: var(--panel-bg); border: 1px solid var(--neutral-200);
+      border-radius: 10px; padding: var(--space-3); min-width: 220px; max-width: 280px;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+    }
+    .word-popover-original { font-size: var(--text-lg); font-weight: 600; color: var(--neutral-900); }
+    .word-popover-translit { font-size: var(--text-xs); color: var(--neutral-500); font-style: italic; }
+    .word-popover-strongs {
+      display: inline-block; font-size: 10px; background: var(--primary-500); color: white;
+      padding: 1px 6px; border-radius: 3px; margin-top: var(--space-1);
+    }
+    .word-popover-def { font-size: var(--text-xs); color: var(--neutral-600); margin-top: var(--space-2); line-height: 1.5; }
+    .word-popover-dive {
+      display: block; width: 100%; margin-top: var(--space-2);
+      padding: var(--space-1) var(--space-2); background: var(--primary-500); color: white;
+      border: none; border-radius: 6px; font-size: var(--text-xs); cursor: pointer;
+      text-align: center; font-weight: 500;
+    }
+    .word-popover-dive:hover { background: var(--primary-600); }
+
+    /* ===== Word Study Panel Mode ===== */
+    .word-study-content { padding: var(--space-3) 0; }
+    .word-study-header {
+      text-align: center; padding: var(--space-4) 0; border-bottom: 1px solid var(--neutral-200);
+      margin-bottom: var(--space-4);
+    }
+    .word-study-original { font-size: 28px; font-weight: 600; color: var(--neutral-900); }
+    .word-study-translit { font-size: var(--text-sm); color: var(--neutral-500); font-style: italic; margin-top: var(--space-1); }
+    .word-study-strongs-badge {
+      display: inline-block; font-size: var(--text-xs); background: var(--primary-500); color: white;
+      padding: 2px 10px; border-radius: 4px; margin-top: var(--space-2);
+    }
+    .word-study-section { margin-bottom: var(--space-4); }
+    .word-study-section-title {
+      font-size: var(--text-xs); font-weight: 600; text-transform: uppercase;
+      letter-spacing: 0.05em; color: var(--neutral-400); margin-bottom: var(--space-2);
+    }
+    .word-study-section p, .word-study-section div {
+      font-size: var(--text-sm); color: var(--neutral-700); line-height: 1.7;
+    }
+    .word-study-usage {
+      padding: var(--space-2) var(--space-3); background: var(--neutral-100);
+      border-radius: 6px; margin-bottom: var(--space-2); cursor: pointer;
+      transition: border-left-color var(--transition-fast);
+      border-left: 3px solid transparent;
+    }
+    .word-study-usage:hover { border-left-color: var(--primary-500); }
+    .word-study-usage-ref { font-weight: 600; font-size: var(--text-xs); color: var(--primary-500); }
+    .word-study-usage-snippet { font-size: var(--text-xs); color: var(--neutral-600); margin-top: 2px; }
+    .word-study-usage-nuance { font-size: var(--text-xs); color: var(--neutral-500); font-style: italic; margin-top: 2px; }
+    .word-study-related {
+      display: inline-block; padding: var(--space-1) var(--space-2);
+      background: var(--neutral-100); border-radius: 4px; font-size: var(--text-xs);
+      color: var(--neutral-600); margin: 2px;
+    }
+    .word-study-back {
+      display: flex; align-items: center; gap: var(--space-1);
+      font-size: var(--text-xs); color: var(--neutral-500); background: none; border: none;
+      cursor: pointer; padding: 0; margin-bottom: var(--space-3);
+    }
+    .word-study-back:hover { color: var(--primary-500); }
+
+    /* Verse word clickable styling */
+    .verse-word { cursor: pointer; border-radius: 2px; transition: background var(--transition-fast); }
+    .verse-word:hover { background: rgba(99,102,241,0.12); }
+
+    /* ===== Verse Cards ===== */
+    .hl-card-btn {
+      width: 24px; height: 24px; border-radius: 50%; cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      background: var(--primary-500); border: 2px solid transparent;
+      transition: transform var(--transition-fast);
+    }
+    .hl-card-btn:hover { transform: scale(1.15); }
+    .hl-card-btn svg { width: 14px; height: 14px; stroke: white; fill: none; }
+
+    .card-backdrop {
+      position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 1999;
+      opacity: 0; visibility: hidden; transition: all var(--transition-base);
+    }
+    .card-backdrop.open { opacity: 1; visibility: visible; }
+    .card-modal {
+      position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%) scale(0.95);
+      background: var(--panel-bg); border-radius: 16px; width: 720px; max-width: 95vw;
+      max-height: 90vh; overflow-y: auto; z-index: 2000;
+      box-shadow: var(--shadow-lg); opacity: 0; visibility: hidden;
+      transition: all var(--transition-base);
+    }
+    .card-modal.open { opacity: 1; visibility: visible; transform: translate(-50%, -50%) scale(1); }
+    .card-modal-header {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: var(--space-4) var(--space-5); border-bottom: 1px solid var(--neutral-200);
+    }
+    .card-modal-header h3 { font-size: var(--text-base); font-weight: 600; color: var(--neutral-900); }
+    .card-modal-body { padding: var(--space-5); display: flex; flex-direction: column; align-items: center; gap: var(--space-4); }
+    .card-canvas-wrap {
+      border-radius: 8px; overflow: hidden; box-shadow: 0 4px 16px rgba(0,0,0,0.2);
+      max-width: 100%;
+    }
+    .card-canvas-wrap canvas { display: block; max-width: 100%; height: auto; }
+    .card-themes { display: flex; gap: var(--space-2); flex-wrap: wrap; justify-content: center; }
+    .card-theme-btn {
+      width: 36px; height: 36px; border-radius: 50%; border: 2px solid transparent;
+      cursor: pointer; transition: all var(--transition-fast);
+    }
+    .card-theme-btn.active { border-color: var(--primary-500); transform: scale(1.1); }
+    .card-size-toggle {
+      display: flex; gap: var(--space-1); background: var(--neutral-100); border-radius: 8px; padding: 2px;
+    }
+    .card-size-btn {
+      padding: var(--space-1) var(--space-3); border: none; background: transparent;
+      border-radius: 6px; font-size: var(--text-xs); cursor: pointer; color: var(--neutral-600);
+    }
+    .card-size-btn.active { background: var(--panel-bg); color: var(--neutral-900); box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
+    .card-actions { display: flex; gap: var(--space-2); }
+    .card-actions button {
+      padding: var(--space-2) var(--space-4); border-radius: 8px; font-size: var(--text-sm);
+      cursor: pointer; font-weight: 500; border: 1px solid var(--neutral-200);
+      background: var(--panel-bg); color: var(--neutral-700); transition: all var(--transition-fast);
+    }
+    .card-actions button:hover { border-color: var(--primary-500); color: var(--primary-500); }
+    .card-actions .card-download-btn { background: var(--primary-500); color: white; border-color: var(--primary-500); }
+    .card-actions .card-download-btn:hover { background: var(--primary-600); }
+
+    @media (max-width: 640px) {
+      .card-modal { width: 100%; max-width: 100%; border-radius: 16px 16px 0 0; top: auto; bottom: 0; transform: translateX(-50%) translateY(20px); }
+      .card-modal.open { transform: translateX(-50%) translateY(0); }
+    }
+
     /* ===== Panel Actions ===== */
     .panel-actions {
       display: flex;
@@ -1845,12 +2003,757 @@
       transition: all var(--transition-fast);
     }
     .life-app-back:hover { color: var(--primary-500); border-color: var(--primary-500); }
+
+    /* ===== Left Drawer ===== */
+    .drawer-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 40px;
+      height: 40px;
+      border-radius: 8px;
+      border: none;
+      background: rgba(255,255,255,0.1);
+      color: white;
+      cursor: pointer;
+      transition: background var(--transition-fast);
+      flex-shrink: 0;
+    }
+    .drawer-btn:hover { background: rgba(255,255,255,0.2); }
+    .drawer-btn svg { width: 20px; height: 20px; }
+
+    .drawer-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.4);
+      z-index: 1999;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity var(--transition-slow), visibility var(--transition-slow);
+    }
+    .drawer-backdrop.open { opacity: 1; visibility: visible; }
+
+    .drawer {
+      position: fixed;
+      top: 0;
+      left: 0;
+      bottom: 0;
+      width: 300px;
+      background: var(--header-bg);
+      color: rgba(255,255,255,0.9);
+      z-index: 2000;
+      transform: translateX(-100%);
+      transition: transform var(--transition-slow);
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+    }
+    .drawer.open { transform: translateX(0); }
+
+    .drawer-header {
+      padding: var(--space-5) var(--space-5) var(--space-4);
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+    }
+    .drawer-greeting {
+      font-size: var(--text-lg);
+      font-weight: 600;
+      margin-bottom: var(--space-1);
+    }
+    .drawer-date {
+      font-size: var(--text-xs);
+      color: rgba(255,255,255,0.5);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .drawer-section {
+      padding: var(--space-3) var(--space-3);
+    }
+    .drawer-section-label {
+      font-size: var(--text-xs);
+      color: rgba(255,255,255,0.4);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      font-weight: 600;
+      padding: var(--space-2) var(--space-3);
+      margin-bottom: var(--space-1);
+    }
+
+    .drawer-item {
+      display: flex;
+      align-items: center;
+      gap: var(--space-3);
+      padding: var(--space-3) var(--space-3);
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background var(--transition-fast);
+      border: none;
+      background: transparent;
+      color: rgba(255,255,255,0.85);
+      font-family: var(--font-ui);
+      font-size: var(--text-sm);
+      font-weight: 500;
+      width: 100%;
+      text-align: left;
+    }
+    .drawer-item:hover { background: rgba(255,255,255,0.1); }
+    .drawer-item svg { width: 18px; height: 18px; flex-shrink: 0; opacity: 0.7; }
+    .drawer-item-label { flex: 1; }
+    .drawer-item-badge {
+      font-size: var(--text-xs);
+      color: rgba(255,255,255,0.4);
+    }
+
+    .drawer-devotional-preview {
+      margin: var(--space-1) 0 var(--space-2);
+      padding: var(--space-3);
+      background: rgba(255,255,255,0.05);
+      border-radius: 8px;
+      margin-left: var(--space-3);
+      margin-right: var(--space-3);
+    }
+    .drawer-devotional-preview p {
+      font-size: var(--text-xs);
+      color: rgba(255,255,255,0.6);
+      font-style: italic;
+      line-height: 1.5;
+      margin: 0;
+    }
+
+    .drawer-divider {
+      height: 1px;
+      background: rgba(255,255,255,0.08);
+      margin: var(--space-1) var(--space-3);
+    }
+
+    @media (max-width: 768px) {
+      .drawer { width: 100%; }
+    }
+
+    /* ===== Prayer Journal ===== */
+    .prayer-item {
+      padding: 6px 0;
+      border-bottom: 1px solid var(--neutral-100);
+      cursor: pointer;
+      transition: color var(--transition-fast);
+    }
+    .prayer-item:last-child { border-bottom: none; }
+    .prayer-item:hover { color: var(--primary-500); }
+    .prayer-item.answered { opacity: 0.5; }
+    .prayer-item.answered .prayer-item-text { text-decoration: line-through; }
+
+    .prayer-item-header {
+      display: flex;
+      align-items: center;
+      gap: var(--space-1);
+    }
+    .prayer-item-verse {
+      font-size: 10px;
+      font-weight: 600;
+      color: var(--primary-500);
+    }
+    .prayer-item-date {
+      font-size: 9px;
+      color: var(--neutral-400);
+      margin-left: auto;
+    }
+    .prayer-item-text {
+      font-size: var(--text-xs);
+      color: var(--neutral-600);
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    .prayer-answered-check {
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      border: 1.5px solid var(--neutral-300);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 9px;
+      flex-shrink: 0;
+      transition: all var(--transition-fast);
+    }
+    .prayer-answered-check:hover { border-color: var(--success); }
+    .prayer-answered-check.checked {
+      background: var(--success);
+      border-color: var(--success);
+      color: white;
+    }
+
+    .prayer-editor-toggle {
+      display: flex;
+      gap: 0;
+      margin-bottom: var(--space-2);
+      border: 1px solid var(--neutral-200);
+      border-radius: 5px;
+      overflow: hidden;
+    }
+    .prayer-editor-toggle button {
+      flex: 1;
+      padding: 4px 0;
+      font-size: 10px;
+      font-weight: 600;
+      text-align: center;
+      cursor: pointer;
+      background: transparent;
+      border: none;
+      color: var(--neutral-500);
+      transition: all var(--transition-fast);
+    }
+    .prayer-editor-toggle button.active {
+      background: var(--primary-500);
+      color: white;
+    }
+
+    .prayer-journal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.4);
+      z-index: 1999;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity var(--transition-slow), visibility var(--transition-slow);
+    }
+    .prayer-journal-backdrop.open { opacity: 1; visibility: visible; }
+
+    .prayer-journal-modal {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 90%;
+      max-width: 520px;
+      max-height: 85vh;
+      background: var(--panel-bg);
+      border-radius: 12px;
+      box-shadow: var(--shadow-xl);
+      z-index: 2000;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity var(--transition-slow), visibility var(--transition-slow);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+    .prayer-journal-modal.open { opacity: 1; visibility: visible; }
+
+    .prayer-journal-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: var(--space-4) var(--space-5);
+      border-bottom: 1px solid var(--neutral-200);
+    }
+    .prayer-journal-header h3 {
+      font-size: var(--text-lg);
+      font-weight: 600;
+      color: var(--neutral-900);
+      margin: 0;
+    }
+
+    .prayer-journal-filters {
+      display: flex;
+      gap: 0;
+      margin: var(--space-3) var(--space-5) 0;
+      border: 1px solid var(--neutral-200);
+      border-radius: 6px;
+      overflow: hidden;
+    }
+    .prayer-filter-btn {
+      flex: 1;
+      padding: 5px 0;
+      font-size: 10px;
+      font-weight: 600;
+      text-align: center;
+      cursor: pointer;
+      background: transparent;
+      border: none;
+      color: var(--neutral-500);
+      transition: all var(--transition-fast);
+    }
+    .prayer-filter-btn.active {
+      background: var(--primary-500);
+      color: white;
+    }
+    .prayer-filter-btn:not(.active):hover { background: var(--neutral-100); }
+
+    .prayer-journal-list {
+      flex: 1;
+      overflow-y: auto;
+      padding: var(--space-3) var(--space-5) var(--space-5);
+    }
+
+    .prayer-full-item {
+      padding: var(--space-3);
+      border: 1px solid var(--neutral-200);
+      border-radius: 8px;
+      margin-bottom: var(--space-3);
+      transition: opacity var(--transition-fast);
+    }
+    .prayer-full-item.answered { opacity: 0.6; }
+    .prayer-full-item-header {
+      display: flex;
+      align-items: center;
+      gap: var(--space-2);
+      margin-bottom: var(--space-1);
+    }
+    .prayer-full-item-ref {
+      font-size: var(--text-xs);
+      font-weight: 600;
+      color: var(--primary-500);
+      cursor: pointer;
+    }
+    .prayer-full-item-ref:hover { text-decoration: underline; }
+    .prayer-full-item-date {
+      font-size: var(--text-xs);
+      color: var(--neutral-400);
+      margin-left: auto;
+    }
+    .prayer-full-item-text {
+      font-size: var(--text-sm);
+      color: var(--neutral-700);
+      line-height: 1.6;
+      margin-bottom: var(--space-2);
+    }
+    .prayer-full-item.answered .prayer-full-item-text { text-decoration: line-through; color: var(--neutral-400); }
+    .prayer-full-actions {
+      display: flex;
+      align-items: center;
+      gap: var(--space-2);
+    }
+    .prayer-full-actions button {
+      font-size: var(--text-xs);
+      padding: 3px 8px;
+      border-radius: 4px;
+      border: 1px solid var(--neutral-200);
+      background: transparent;
+      color: var(--neutral-500);
+      cursor: pointer;
+      font-family: var(--font-ui);
+      transition: all var(--transition-fast);
+    }
+    .prayer-full-actions button:hover { border-color: var(--primary-500); color: var(--primary-500); }
+    .prayer-full-actions .prayer-delete-btn:hover { border-color: var(--error); color: var(--error); }
+
+    @media (max-width: 768px) {
+      .prayer-journal-modal {
+        top: 0; left: 0; transform: none;
+        width: 100%; max-width: none; height: 100vh; max-height: none; border-radius: 0;
+      }
+    }
+
+    /* ===== Topical Browse Modal ===== */
+    .topical-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.4);
+      z-index: 1999;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity var(--transition-slow), visibility var(--transition-slow);
+    }
+    .topical-backdrop.open { opacity: 1; visibility: visible; }
+
+    .topical-modal {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 90%;
+      max-width: 580px;
+      max-height: 85vh;
+      background: var(--panel-bg);
+      border-radius: 12px;
+      box-shadow: var(--shadow-xl);
+      z-index: 2000;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity var(--transition-slow), visibility var(--transition-slow);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+    .topical-modal.open { opacity: 1; visibility: visible; }
+
+    .topical-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: var(--space-4) var(--space-5);
+      border-bottom: 1px solid var(--neutral-200);
+    }
+    .topical-header h3 {
+      font-size: var(--text-lg);
+      font-weight: 600;
+      color: var(--neutral-900);
+      margin: 0;
+    }
+
+    .topical-topics {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--space-2);
+      padding: var(--space-4) var(--space-5);
+      max-height: 200px;
+      overflow-y: auto;
+    }
+
+    .topical-chip {
+      padding: var(--space-2) var(--space-3);
+      border-radius: 20px;
+      border: 1px solid var(--neutral-200);
+      background: transparent;
+      color: var(--neutral-700);
+      font-size: var(--text-xs);
+      font-family: var(--font-ui);
+      cursor: pointer;
+      transition: all var(--transition-fast);
+    }
+    .topical-chip:hover { border-color: var(--primary-500); color: var(--primary-500); }
+    .topical-chip.active { background: var(--primary-500); color: white; border-color: var(--primary-500); }
+
+    .topical-custom {
+      display: flex;
+      gap: var(--space-2);
+      padding: 0 var(--space-5) var(--space-3);
+    }
+    .topical-custom input {
+      flex: 1;
+      padding: var(--space-2) var(--space-3);
+      border: 1px solid var(--neutral-200);
+      border-radius: 6px;
+      font-size: var(--text-sm);
+      font-family: var(--font-ui);
+      background: var(--panel-bg);
+      color: var(--neutral-900);
+    }
+    .topical-custom input:focus { outline: none; border-color: var(--primary-500); }
+    .topical-custom button {
+      padding: var(--space-2) var(--space-4);
+      border-radius: 6px;
+      border: none;
+      background: var(--primary-500);
+      color: white;
+      font-size: var(--text-sm);
+      font-weight: 500;
+      font-family: var(--font-ui);
+      cursor: pointer;
+      transition: background var(--transition-fast);
+    }
+    .topical-custom button:hover { background: var(--primary-600); }
+    .topical-custom button:disabled { opacity: 0.5; cursor: not-allowed; }
+
+    .topical-results {
+      flex: 1;
+      overflow-y: auto;
+      padding: 0 var(--space-5) var(--space-5);
+    }
+    .topical-results.hidden { display: none; }
+    #topical-input-view.hidden { display: none; }
+
+    .topical-description {
+      font-size: var(--text-sm);
+      color: var(--neutral-600);
+      line-height: 1.6;
+      margin-bottom: var(--space-4);
+      padding: var(--space-3);
+      background: var(--neutral-50);
+      border-radius: 8px;
+    }
+
+    .topical-card {
+      border: 1px solid var(--neutral-200);
+      border-radius: 10px;
+      padding: var(--space-4);
+      margin-bottom: var(--space-3);
+      animation: slideUp 0.3s ease backwards;
+    }
+    .topical-card-ref {
+      font-size: var(--text-sm);
+      font-weight: 600;
+      color: var(--primary-500);
+      margin-bottom: var(--space-1);
+    }
+    .topical-card-verse {
+      font-family: var(--font-scripture);
+      font-style: italic;
+      font-size: var(--text-sm);
+      color: var(--neutral-600);
+      line-height: 1.6;
+      padding-left: var(--space-3);
+      border-left: 2px solid var(--primary-100);
+      margin-bottom: var(--space-2);
+    }
+    .topical-card-summary {
+      font-size: var(--text-xs);
+      color: var(--neutral-500);
+      line-height: 1.5;
+      margin-bottom: var(--space-3);
+    }
+
+    .topical-back {
+      display: flex;
+      align-items: center;
+      gap: var(--space-2);
+      margin-bottom: var(--space-4);
+      padding: var(--space-2) var(--space-3);
+      border: 1px solid var(--neutral-200);
+      border-radius: 6px;
+      background: transparent;
+      color: var(--neutral-500);
+      font-size: var(--text-xs);
+      font-family: var(--font-ui);
+      cursor: pointer;
+      transition: all var(--transition-fast);
+    }
+    .topical-back:hover { color: var(--primary-500); border-color: var(--primary-500); }
+
+    @media (max-width: 768px) {
+      .topical-modal {
+        top: 0; left: 0; transform: none;
+        width: 100%; max-width: none; height: 100vh; max-height: none; border-radius: 0;
+      }
+    }
+
+    /* Daily Devotional */
+    .devotional-card {
+      max-width: 680px;
+      margin: var(--space-6) auto;
+      background: var(--panel-bg);
+      border-radius: 16px;
+      border: 1px solid var(--neutral-200);
+      overflow: hidden;
+      animation: slideUp 0.4s ease;
+    }
+    .devotional-card-header {
+      padding: var(--space-5) var(--space-6);
+      background: linear-gradient(135deg, var(--primary-500), #8b5cf6);
+      color: white;
+    }
+    .devotional-card-date {
+      font-size: var(--text-xs);
+      opacity: 0.85;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: var(--space-1);
+    }
+    .devotional-card-title {
+      font-family: var(--font-scripture);
+      font-size: var(--text-lg);
+      font-weight: 600;
+    }
+    .devotional-card-body {
+      padding: var(--space-5) var(--space-6);
+    }
+    .devotional-verse-text {
+      font-family: var(--font-scripture);
+      font-size: var(--text-base);
+      line-height: 1.8;
+      color: var(--neutral-700);
+      padding: var(--space-4);
+      background: var(--neutral-50);
+      border-radius: 10px;
+      border-left: 3px solid var(--primary-500);
+      margin-bottom: var(--space-4);
+    }
+    .devotional-reflection {
+      font-size: var(--text-sm);
+      line-height: 1.7;
+      color: var(--neutral-600);
+      margin-bottom: var(--space-4);
+    }
+    .devotional-language-box {
+      display: flex;
+      gap: var(--space-3);
+      padding: var(--space-3) var(--space-4);
+      background: var(--neutral-50);
+      border-radius: 8px;
+      margin-bottom: var(--space-4);
+      align-items: flex-start;
+    }
+    .devotional-language-word {
+      font-family: var(--font-scripture);
+      font-size: var(--text-lg);
+      font-weight: 600;
+      color: var(--primary-500);
+      white-space: nowrap;
+    }
+    .devotional-language-detail {
+      font-size: var(--text-xs);
+      color: var(--neutral-500);
+      line-height: 1.5;
+    }
+    .devotional-language-detail strong {
+      color: var(--neutral-700);
+    }
+    .devotional-application {
+      font-size: var(--text-sm);
+      color: var(--neutral-600);
+      font-style: italic;
+      padding: var(--space-3) var(--space-4);
+      border-top: 1px solid var(--neutral-100);
+    }
+    .devotional-card-actions {
+      display: flex;
+      gap: var(--space-2);
+      padding: var(--space-3) var(--space-6) var(--space-5);
+    }
+    .devotional-card-actions button {
+      padding: var(--space-2) var(--space-4);
+      border-radius: 8px;
+      font-size: var(--text-sm);
+      font-family: var(--font-ui);
+      cursor: pointer;
+      transition: all var(--transition-fast);
+      border: 1px solid var(--neutral-200);
+      background: transparent;
+      color: var(--neutral-600);
+    }
+    .devotional-card-actions button:hover {
+      border-color: var(--primary-500);
+      color: var(--primary-500);
+    }
+    .devotional-read-btn {
+      background: var(--primary-500) !important;
+      color: white !important;
+      border-color: var(--primary-500) !important;
+    }
+    .devotional-read-btn:hover {
+      background: var(--primary-600) !important;
+    }
+    .devotional-dismiss-btn {
+      margin-left: auto;
+    }
+    @media (max-width: 768px) {
+      .devotional-card { margin: var(--space-3); }
+      .devotional-card-header, .devotional-card-body, .devotional-card-actions {
+        padding-left: var(--space-4); padding-right: var(--space-4);
+      }
+    }
+
+    /* Reading Plans */
+    .plans-backdrop {
+      position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 1999;
+      opacity: 0; visibility: hidden; transition: all var(--transition-normal);
+    }
+    .plans-backdrop.open { opacity: 1; visibility: visible; }
+    .plans-modal {
+      position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
+      width: 90%; max-width: 580px; max-height: 85vh;
+      background: var(--panel-bg); border-radius: 16px;
+      box-shadow: var(--shadow-xl); z-index: 2000;
+      display: flex; flex-direction: column;
+      opacity: 0; visibility: hidden; transition: all var(--transition-normal);
+    }
+    .plans-modal.open { opacity: 1; visibility: visible; }
+    .plans-header {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: var(--space-4) var(--space-5);
+      border-bottom: 1px solid var(--neutral-100);
+    }
+    .plans-header h3 { font-size: var(--text-base); font-weight: 600; color: var(--neutral-900); }
+    .plans-body { flex: 1; overflow-y: auto; padding: var(--space-4) var(--space-5); }
+    .plans-body.hidden { display: none; }
+
+    .plans-streak {
+      display: flex; align-items: center; gap: var(--space-3);
+      padding: var(--space-3) var(--space-4);
+      background: linear-gradient(135deg, #fef3c7, #fde68a);
+      border-radius: 10px; margin-bottom: var(--space-4);
+    }
+    .plans-streak-fire { font-size: 24px; }
+    .plans-streak-info { flex: 1; }
+    .plans-streak-count { font-size: var(--text-lg); font-weight: 700; color: #92400e; }
+    .plans-streak-label { font-size: var(--text-xs); color: #b45309; }
+
+    .plan-card {
+      border: 1px solid var(--neutral-200); border-radius: 10px;
+      padding: var(--space-4); margin-bottom: var(--space-3);
+      cursor: pointer; transition: all var(--transition-fast);
+    }
+    .plan-card:hover { border-color: var(--primary-500); }
+    .plan-card-title { font-weight: 600; font-size: var(--text-sm); color: var(--neutral-900); margin-bottom: var(--space-1); }
+    .plan-card-desc { font-size: var(--text-xs); color: var(--neutral-500); margin-bottom: var(--space-2); line-height: 1.5; }
+    .plan-card-meta { display: flex; gap: var(--space-3); font-size: var(--text-xs); color: var(--neutral-400); }
+    .plan-card.active { border-color: var(--primary-500); background: rgba(99,102,241,0.05); }
+    .plan-card.active .plan-card-title { color: var(--primary-500); }
+
+    .plan-progress-bar {
+      height: 6px; background: var(--neutral-100); border-radius: 3px;
+      margin-top: var(--space-2); overflow: hidden;
+    }
+    .plan-progress-fill {
+      height: 100%; background: var(--primary-500); border-radius: 3px;
+      transition: width 0.3s ease;
+    }
+
+    .plan-detail-back {
+      display: flex; align-items: center; gap: var(--space-2);
+      margin-bottom: var(--space-4);
+      padding: var(--space-2) var(--space-3);
+      border: 1px solid var(--neutral-200); border-radius: 6px;
+      background: transparent; color: var(--neutral-500);
+      font-size: var(--text-xs); font-family: var(--font-ui); cursor: pointer;
+    }
+    .plan-detail-back:hover { color: var(--primary-500); border-color: var(--primary-500); }
+
+    .plan-today-card {
+      background: var(--neutral-50); border-radius: 10px;
+      padding: var(--space-4); margin-bottom: var(--space-4);
+    }
+    .plan-today-label { font-size: var(--text-xs); color: var(--neutral-400); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: var(--space-1); }
+    .plan-today-ref { font-size: var(--text-base); font-weight: 600; color: var(--neutral-900); margin-bottom: var(--space-1); }
+    .plan-today-title { font-size: var(--text-sm); color: var(--neutral-500); margin-bottom: var(--space-3); }
+    .plan-today-actions { display: flex; gap: var(--space-2); }
+    .plan-today-actions button {
+      padding: var(--space-2) var(--space-4); border-radius: 8px;
+      font-size: var(--text-sm); font-family: var(--font-ui); cursor: pointer;
+      border: 1px solid var(--neutral-200); background: transparent; color: var(--neutral-600);
+      transition: all var(--transition-fast);
+    }
+    .plan-read-btn { background: var(--primary-500) !important; color: white !important; border-color: var(--primary-500) !important; }
+    .plan-read-btn:hover { background: var(--primary-600) !important; }
+    .plan-mark-btn:hover { border-color: #10b981; color: #10b981; }
+
+    .plan-calendar {
+      display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px;
+      margin-top: var(--space-3);
+    }
+    .plan-calendar-day {
+      aspect-ratio: 1; border-radius: 4px;
+      background: var(--neutral-100); display: flex; align-items: center;
+      justify-content: center; font-size: 10px; color: var(--neutral-400);
+    }
+    .plan-calendar-day.completed { background: var(--primary-500); color: white; }
+    .plan-calendar-day.today { border: 2px solid var(--primary-500); }
+
+    .plan-start-btn {
+      width: 100%; padding: var(--space-2) var(--space-4); border-radius: 8px;
+      border: none; background: var(--primary-500); color: white;
+      font-size: var(--text-sm); font-weight: 500; font-family: var(--font-ui);
+      cursor: pointer; margin-top: var(--space-2);
+    }
+    .plan-start-btn:hover { background: var(--primary-600); }
+
+    @media (max-width: 768px) {
+      .plans-modal {
+        top: 0; left: 0; transform: none;
+        width: 100%; max-width: none; height: 100vh; max-height: none; border-radius: 0;
+      }
+    }
   </style>
 </head>
 <body>
   <a href="#verses-container" class="sr-only">Skip to content</a>
 
   <header>
+    <button class="drawer-btn" id="drawer-btn" title="Menu (`)" aria-label="Open menu">
+      <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+    </button>
     <h1>Bible Interpreter</h1>
     <div class="nav-controls">
       <button class="nav-btn" id="prev-chapter" title="Previous Chapter" aria-label="Previous chapter">
@@ -1879,9 +2782,6 @@
         <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
         <span class="history-count" id="history-count" style="display:none">0</span>
       </button>
-      <button class="history-btn" id="life-app-btn" title="Life Application (L)" aria-label="Find passages for your situation">
-        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" style="width:20px;height:20px"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/></svg>
-      </button>
       <button class="theme-toggle" id="theme-toggle" title="Toggle dark mode" aria-label="Toggle dark mode">
         <svg class="moon-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/></svg>
         <svg class="sun-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
@@ -1891,6 +2791,64 @@
       </div>
     </div>
   </header>
+
+  <div class="drawer-backdrop" id="drawer-backdrop"></div>
+  <nav class="drawer" id="drawer" role="navigation" aria-label="Main menu">
+    <div class="drawer-header">
+      <div class="drawer-greeting" id="drawer-greeting"></div>
+      <div class="drawer-date" id="drawer-date"></div>
+    </div>
+
+    <div class="drawer-section">
+      <button class="drawer-item" id="drawer-devotional">
+        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
+        <span class="drawer-item-label">Daily Devotional</span>
+      </button>
+      <div class="drawer-devotional-preview" id="drawer-devotional-preview" style="display:none">
+        <p id="drawer-devotional-verse"></p>
+      </div>
+    </div>
+
+    <div class="drawer-divider"></div>
+
+    <div class="drawer-section">
+      <div class="drawer-section-label">Study</div>
+      <button class="drawer-item" id="drawer-topical">
+        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"/></svg>
+        <span class="drawer-item-label">Topical Browse</span>
+        <span class="drawer-item-badge">T</span>
+      </button>
+      <button class="drawer-item" id="drawer-plans">
+        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+        <span class="drawer-item-label">Reading Plans</span>
+        <span class="drawer-item-badge">P</span>
+      </button>
+    </div>
+
+    <div class="drawer-divider"></div>
+
+    <div class="drawer-section">
+      <div class="drawer-section-label">Personal</div>
+      <button class="drawer-item" id="drawer-prayers">
+        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/></svg>
+        <span class="drawer-item-label">Prayer Journal</span>
+      </button>
+      <button class="drawer-item" id="drawer-life-app">
+        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 5.636l-3.536 3.536m0 5.656l3.536 3.536M9.172 9.172L5.636 5.636m3.536 9.192l-3.536 3.536M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-5 0a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
+        <span class="drawer-item-label">Life Application</span>
+        <span class="drawer-item-badge">L</span>
+      </button>
+    </div>
+
+    <div class="drawer-divider"></div>
+
+    <div class="drawer-section">
+      <button class="drawer-item" id="drawer-shortcuts">
+        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4"/></svg>
+        <span class="drawer-item-label">Keyboard Shortcuts</span>
+      </button>
+    </div>
+  </nav>
 
   <div class="usage-modal" id="usage-modal" role="dialog" aria-labelledby="usage-modal-title">
     <h3 id="usage-modal-title">API Usage</h3>
@@ -1967,6 +2925,57 @@
     </div>
   </div>
 
+  <div class="topical-backdrop" id="topical-backdrop"></div>
+  <div class="topical-modal" id="topical-modal" role="dialog" aria-label="Topical Browse">
+    <div class="topical-header">
+      <h3>Browse by Topic</h3>
+      <button class="close-panel" id="close-topical" aria-label="Close">&times;</button>
+    </div>
+    <div id="topical-input-view">
+      <div class="topical-topics" id="topical-topics"></div>
+      <div class="topical-custom">
+        <input type="text" id="topical-custom-input" placeholder="Or type a custom topic..." maxlength="100">
+        <button id="topical-custom-btn" disabled>Search</button>
+      </div>
+    </div>
+    <div class="life-app-loading hidden" id="topical-loading">
+      <div class="spinner"></div>
+      <p>Finding passages about this topic...</p>
+    </div>
+    <div class="topical-results hidden" id="topical-results">
+      <button class="topical-back" id="topical-back">
+        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" style="width:14px;height:14px"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/></svg>
+        Browse more topics
+      </button>
+      <div class="topical-description" id="topical-description"></div>
+      <div id="topical-cards"></div>
+    </div>
+  </div>
+
+  <div class="plans-backdrop" id="plans-backdrop"></div>
+  <div class="plans-modal" id="plans-modal" role="dialog" aria-label="Reading Plans">
+    <div class="plans-header">
+      <h3 id="plans-title">Reading Plans</h3>
+      <button class="close-panel" id="close-plans" aria-label="Close">&times;</button>
+    </div>
+    <div class="plans-body" id="plans-browse"></div>
+    <div class="plans-body hidden" id="plans-detail"></div>
+  </div>
+
+  <div class="prayer-journal-backdrop" id="prayer-journal-backdrop"></div>
+  <div class="prayer-journal-modal" id="prayer-journal-modal" role="dialog" aria-label="Prayer Journal">
+    <div class="prayer-journal-header">
+      <h3>Prayer Journal</h3>
+      <button class="close-panel" id="close-prayer-journal" aria-label="Close">&times;</button>
+    </div>
+    <div class="prayer-journal-filters">
+      <button class="prayer-filter-btn active" data-filter="all">All</button>
+      <button class="prayer-filter-btn" data-filter="active">Active</button>
+      <button class="prayer-filter-btn" data-filter="answered">Answered</button>
+    </div>
+    <div class="prayer-journal-list" id="prayer-journal-list"></div>
+  </div>
+
   <main class="main-container" role="main">
     <div class="bible-panel" id="bible-panel" aria-label="Bible text">
       <div class="bible-content-wrapper">
@@ -1995,6 +3004,7 @@
             <div class="notes-tabs">
               <button class="notes-tab active" id="notes-tab-chapter">This Chapter</button>
               <button class="notes-tab" id="notes-tab-all">All Notes</button>
+              <button class="notes-tab" id="notes-tab-prayers">Prayers</button>
             </div>
             <div id="notes-list"></div>
           </div>
@@ -2028,6 +3038,13 @@
           <div class="section-content" id="interpretation-section">
             <div class="interpretation-text" id="interpretation-text"></div>
           </div>
+          <div class="crossref-section" id="crossref-section" style="display:none;">
+            <div class="section-title" id="crossref-toggle">
+              <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+              Related Passages
+            </div>
+            <div class="section-content" id="crossref-content"></div>
+          </div>
         </div>
       </div>
       <div class="panel-actions">
@@ -2053,6 +3070,28 @@
     <span class="hl-dot" data-color="blue" title="Blue"></span>
     <span class="hl-dot" data-color="pink" title="Pink"></span>
     <span class="hl-dot" data-color="clear" title="Clear">&#10005;</span>
+    <span class="hl-card-btn" id="create-card-btn" title="Create Verse Card">
+      <svg viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="9" y1="3" x2="9" y2="21"/></svg>
+    </span>
+  </div>
+  <div class="card-backdrop" id="card-backdrop"></div>
+  <div class="card-modal" id="card-modal">
+    <div class="card-modal-header">
+      <h3>Create Verse Card</h3>
+      <button class="close-panel" id="close-card">&times;</button>
+    </div>
+    <div class="card-modal-body" id="card-modal-body">
+      <div class="card-canvas-wrap"><canvas id="card-canvas" width="1080" height="1080"></canvas></div>
+      <div class="card-size-toggle">
+        <button class="card-size-btn active" data-size="square">Square</button>
+        <button class="card-size-btn" data-size="landscape">Landscape</button>
+      </div>
+      <div class="card-themes" id="card-themes"></div>
+      <div class="card-actions">
+        <button class="card-download-btn" id="card-download">Download PNG</button>
+        <button id="card-copy">Copy to Clipboard</button>
+      </div>
+    </div>
   </div>
   <button class="interpret-fab" id="interpret-fab" aria-describedby="fab-description">Interpret Selection</button>
   <span id="fab-description" class="sr-only">Analyze selected verses with Greek and Hebrew insights</span>
@@ -2060,7 +3099,7 @@
   <div class="toast" id="toast"></div>
 
   <div class="shortcuts-help">
-    <kbd>/</kbd> Search &nbsp; <kbd>L</kbd> Life App &nbsp; <kbd>D</kbd> Dark mode &nbsp; <kbd>Esc</kbd> Close
+    <kbd>`</kbd> Menu &nbsp; <kbd>/</kbd> Search &nbsp; <kbd>T</kbd> Topics &nbsp; <kbd>L</kbd> Life App &nbsp; <kbd>D</kbd> Dark mode &nbsp; <kbd>Esc</kbd> Close
   </div>
 
   <style>.sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0; }</style>
@@ -2328,7 +3367,23 @@
 
 	        const textSpan = document.createElement('span');
 	        textSpan.className = 'verse-text';
-	        textSpan.textContent = v.text + ' ';
+	        // Wrap each word in a clickable span for word study
+	        const words = v.text.split(/(\s+)/);
+	        words.forEach(w => {
+	          if (/^\s+$/.test(w)) {
+	            textSpan.appendChild(document.createTextNode(w));
+	          } else if (w.length > 0) {
+	            const ws = document.createElement('span');
+	            ws.className = 'verse-word';
+	            ws.textContent = w;
+	            ws.addEventListener('click', (e) => {
+	              e.stopPropagation();
+	              showWordPopover(w.replace(/[^\w'-]/g, ''), v.verse, e);
+	            });
+	            textSpan.appendChild(ws);
+	          }
+	        });
+	        textSpan.appendChild(document.createTextNode(' '));
 
 	        verseSpan.appendChild(numSpan);
 	        verseSpan.appendChild(textSpan);
@@ -2415,6 +3470,16 @@
       interpretationContent.style.display = 'none';
       wordList.textContent = '';
       interpretationText.textContent = '';
+      document.getElementById('crossref-section').style.display = 'none';
+      document.getElementById('crossref-content').textContent = '';
+      // Reset word study mode
+      const wsC = document.getElementById('word-study-container');
+      if (wsC) wsC.style.display = 'none';
+      document.getElementById('words-toggle').style.display = '';
+      document.getElementById('words-section').style.display = '';
+      document.getElementById('interpretation-toggle').style.display = '';
+      document.getElementById('interpretation-section').style.display = '';
+      selectedTextEl.style.display = '';
 
 	      try {
 	        const translation = versionSelect.value;
@@ -2432,6 +3497,8 @@
 	        displayInterpretation(data);
 	        fetchUsage();
 	        if (typeof saveToHistory === 'function') saveToHistory(reference, data);
+	        // Auto-fetch cross-references
+	        fetchCrossReferences(currentBook, currentChapter, startVerse, endVerse);
 	      } catch (err) {
         interpretationText.textContent = 'Error: ' + err.message;
         interpretationContent.style.display = 'block';
@@ -2540,6 +3607,499 @@
     document.getElementById('interpretation-toggle').addEventListener('click', function() {
       this.classList.toggle('collapsed');
       document.getElementById('interpretation-section').classList.toggle('collapsed');
+    });
+
+    document.getElementById('crossref-toggle').addEventListener('click', function() {
+      this.classList.toggle('collapsed');
+      document.getElementById('crossref-content').classList.toggle('collapsed');
+    });
+
+    // ===== Cross-References =====
+    const CROSSREF_CACHE_KEY = 'bible-crossref-cache';
+    function getCrossRefCache() {
+      try { return JSON.parse(localStorage.getItem(CROSSREF_CACHE_KEY)) || {}; } catch(e) { return {}; }
+    }
+
+    async function fetchCrossReferences(book, chapter, startVerse, endVerse) {
+      const crossrefSection = document.getElementById('crossref-section');
+      const crossrefContent = document.getElementById('crossref-content');
+      const cacheKey = book + ':' + chapter + ':' + startVerse + '-' + (endVerse || startVerse);
+
+      // Check cache
+      const cache = getCrossRefCache();
+      if (cache[cacheKey]) {
+        crossrefSection.style.display = '';
+        displayCrossReferences(cache[cacheKey]);
+        return;
+      }
+
+      // Show loading
+      crossrefSection.style.display = '';
+      crossrefContent.innerHTML = '<div class="crossref-loading"><div class="spinner"></div> Finding related passages...</div>';
+
+      try {
+        const resp = await fetch('/api/cross-references', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ book, chapter, startVerse, endVerse: endVerse || startVerse })
+        });
+        if (!resp.ok) throw new Error('Failed to fetch');
+        const data = await resp.json();
+
+        // Cache it
+        cache[cacheKey] = data;
+        // Keep cache manageable
+        const keys = Object.keys(cache);
+        if (keys.length > 50) delete cache[keys[0]];
+        localStorage.setItem(CROSSREF_CACHE_KEY, JSON.stringify(cache));
+
+        displayCrossReferences(data);
+        fetchUsage();
+      } catch (err) {
+        crossrefContent.innerHTML = '<div style="font-size:var(--text-xs);color:var(--neutral-400);padding:var(--space-2) 0;">Could not load cross-references.</div>';
+      }
+    }
+
+    function displayCrossReferences(data) {
+      const crossrefContent = document.getElementById('crossref-content');
+      if (!data.crossReferences || data.crossReferences.length === 0) {
+        crossrefContent.innerHTML = '<div style="font-size:var(--text-xs);color:var(--neutral-400);padding:var(--space-2) 0;">No cross-references found.</div>';
+        return;
+      }
+      const list = document.createElement('div');
+      list.className = 'crossref-list';
+      data.crossReferences.forEach(cr => {
+        const item = document.createElement('div');
+        item.className = 'crossref-item';
+        item.addEventListener('click', () => {
+          navigateToPassage(cr);
+        });
+
+        const header = document.createElement('div');
+        header.className = 'crossref-item-header';
+        const ref = document.createElement('span');
+        ref.className = 'crossref-ref';
+        ref.textContent = cr.reference;
+        header.appendChild(ref);
+        if (cr.thematicLink) {
+          const tag = document.createElement('span');
+          tag.className = 'crossref-tag';
+          tag.textContent = cr.thematicLink;
+          header.appendChild(tag);
+        }
+        item.appendChild(header);
+
+        const conn = document.createElement('div');
+        conn.className = 'crossref-connection';
+        conn.textContent = cr.connection;
+        item.appendChild(conn);
+
+        list.appendChild(item);
+      });
+      crossrefContent.textContent = '';
+      crossrefContent.appendChild(list);
+    }
+
+    // ===== Word Study =====
+    let activePopover = null;
+    const WORDSTUDY_CACHE_KEY = 'bible-wordstudy-cache';
+    function getWordStudyCache() {
+      try { return JSON.parse(localStorage.getItem(WORDSTUDY_CACHE_KEY)) || {}; } catch(e) { return {}; }
+    }
+
+    function closeWordPopover() {
+      if (activePopover) { activePopover.remove(); activePopover = null; }
+    }
+
+    document.addEventListener('click', (e) => {
+      if (activePopover && !activePopover.contains(e.target) && !e.target.classList.contains('verse-word')) {
+        closeWordPopover();
+      }
+    });
+
+    function showWordPopover(word, verseNum, event) {
+      closeWordPopover();
+      if (!word || word.length < 2) return;
+
+      const rect = event.target.getBoundingClientRect();
+      const pop = document.createElement('div');
+      pop.className = 'word-popover';
+
+      // Position near the word
+      pop.style.left = Math.min(rect.left, window.innerWidth - 300) + 'px';
+      pop.style.top = (rect.bottom + window.scrollY + 4) + 'px';
+
+      pop.innerHTML = '<div style="font-size:var(--text-sm);color:var(--neutral-500);">Loading...</div>';
+      document.body.appendChild(pop);
+      activePopover = pop;
+
+      // Quick popover: just show the word and a Deep Dive button
+      const reference = currentBook + ' ' + currentChapter + ':' + verseNum;
+      pop.innerHTML = '';
+
+      const wordEl = document.createElement('div');
+      wordEl.className = 'word-popover-original';
+      wordEl.textContent = '"' + word + '"';
+      pop.appendChild(wordEl);
+
+      const refEl = document.createElement('div');
+      refEl.className = 'word-popover-translit';
+      refEl.textContent = reference;
+      pop.appendChild(refEl);
+
+      const defEl = document.createElement('div');
+      defEl.className = 'word-popover-def';
+      defEl.textContent = 'Tap "Deep Dive" to explore the original Greek or Hebrew behind this word.';
+      pop.appendChild(defEl);
+
+      const diveBtn = document.createElement('button');
+      diveBtn.className = 'word-popover-dive';
+      diveBtn.textContent = 'Deep Dive';
+      diveBtn.addEventListener('click', () => {
+        closeWordPopover();
+        openWordStudy(word, verseNum, reference);
+      });
+      pop.appendChild(diveBtn);
+    }
+
+    async function openWordStudy(word, verseNum, reference) {
+      // Open interpretation panel in word study mode
+      interpretPanel.classList.remove('hidden');
+      const content = document.getElementById('interpretation-content');
+      content.style.display = 'block';
+
+      // Hide normal sections, show word study
+      document.getElementById('words-toggle').parentElement.querySelector('#words-toggle').style.display = 'none';
+      document.getElementById('words-section').style.display = 'none';
+      document.getElementById('interpretation-toggle').style.display = 'none';
+      document.getElementById('interpretation-section').style.display = 'none';
+      document.getElementById('crossref-section').style.display = 'none';
+      selectedTextEl.style.display = 'none';
+
+      // Create word study container
+      let wsContainer = document.getElementById('word-study-container');
+      if (!wsContainer) {
+        wsContainer = document.createElement('div');
+        wsContainer.id = 'word-study-container';
+        wsContainer.className = 'word-study-content';
+        content.appendChild(wsContainer);
+      }
+      wsContainer.style.display = '';
+      wsContainer.innerHTML = '<div class="crossref-loading"><div class="spinner"></div> Analyzing "' + word + '" in the original language...</div>';
+
+      // Get verse context
+      const verseEl = document.querySelector('.verse[data-verse="' + verseNum + '"] .verse-text');
+      const context = verseEl ? verseEl.textContent.trim() : '';
+
+      // Check cache
+      const cacheKey = word.toLowerCase() + ':' + reference;
+      const cache = getWordStudyCache();
+      if (cache[cacheKey]) {
+        displayWordStudy(cache[cacheKey], wsContainer);
+        return;
+      }
+
+      try {
+        const resp = await fetch('/api/word-study', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ word, reference, context })
+        });
+        if (!resp.ok) throw new Error('Failed to fetch');
+        const data = await resp.json();
+
+        // Cache
+        cache[cacheKey] = data;
+        const keys = Object.keys(cache);
+        if (keys.length > 30) delete cache[keys[0]];
+        localStorage.setItem(WORDSTUDY_CACHE_KEY, JSON.stringify(cache));
+
+        displayWordStudy(data, wsContainer);
+        fetchUsage();
+      } catch (err) {
+        wsContainer.innerHTML = '<div style="color:var(--neutral-400);font-size:var(--text-sm);">Could not load word study. Please try again.</div>';
+      }
+    }
+
+    function displayWordStudy(data, container) {
+      container.innerHTML = '';
+
+      // Back button
+      const back = document.createElement('button');
+      back.className = 'word-study-back';
+      back.innerHTML = '<svg fill="none" stroke="currentColor" viewBox="0 0 24 24" style="width:12px;height:12px"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/></svg> Back to Interpretation';
+      back.addEventListener('click', () => {
+        container.style.display = 'none';
+        document.getElementById('words-toggle').style.display = '';
+        document.getElementById('words-section').style.display = '';
+        document.getElementById('interpretation-toggle').style.display = '';
+        document.getElementById('interpretation-section').style.display = '';
+        selectedTextEl.style.display = '';
+        // Show crossref if it has content
+        const crs = document.getElementById('crossref-section');
+        if (crs.querySelector('.crossref-list')) crs.style.display = '';
+      });
+      container.appendChild(back);
+
+      // Header
+      const header = document.createElement('div');
+      header.className = 'word-study-header';
+      header.innerHTML = '<div class="word-study-original">' + escapeHtml(data.original || '') + '</div>'
+        + '<div class="word-study-translit">' + escapeHtml(data.transliteration || '') + ' (' + escapeHtml(data.language || '') + ')</div>'
+        + (data.strongsNumber ? '<div class="word-study-strongs-badge">Strong\'s ' + escapeHtml(data.strongsNumber) + '</div>' : '')
+        + '<div style="margin-top:var(--space-2);font-size:var(--text-sm);color:var(--neutral-600);">English: "' + escapeHtml(data.english || '') + '"</div>';
+      container.appendChild(header);
+
+      // Definition
+      if (data.definition) {
+        const sec = makeWsSection('Definition', data.definition);
+        container.appendChild(sec);
+      }
+
+      // Etymology
+      if (data.etymology) {
+        const sec = makeWsSection('Etymology', data.etymology);
+        container.appendChild(sec);
+      }
+
+      // Usage Examples
+      if (data.usageExamples && data.usageExamples.length > 0) {
+        const sec = document.createElement('div');
+        sec.className = 'word-study-section';
+        const title = document.createElement('div');
+        title.className = 'word-study-section-title';
+        title.textContent = 'Usage in Scripture';
+        sec.appendChild(title);
+
+        data.usageExamples.forEach(ex => {
+          const usage = document.createElement('div');
+          usage.className = 'word-study-usage';
+          usage.innerHTML = '<div class="word-study-usage-ref">' + escapeHtml(ex.reference || '') + '</div>'
+            + '<div class="word-study-usage-snippet">"' + escapeHtml(ex.snippet || '') + '"</div>'
+            + '<div class="word-study-usage-nuance">' + escapeHtml(ex.nuance || '') + '</div>';
+          usage.addEventListener('click', () => {
+            navigateToPassage(ex);
+          });
+          sec.appendChild(usage);
+        });
+        container.appendChild(sec);
+      }
+
+      // Theological Significance
+      if (data.theologicalSignificance) {
+        const sec = makeWsSection('Theological Significance', data.theologicalSignificance);
+        container.appendChild(sec);
+      }
+
+      // Related Words
+      if (data.relatedWords && data.relatedWords.length > 0) {
+        const sec = document.createElement('div');
+        sec.className = 'word-study-section';
+        const title = document.createElement('div');
+        title.className = 'word-study-section-title';
+        title.textContent = 'Related Words';
+        sec.appendChild(title);
+        const wrap = document.createElement('div');
+        data.relatedWords.forEach(rw => {
+          const chip = document.createElement('span');
+          chip.className = 'word-study-related';
+          chip.textContent = (rw.transliteration || rw.word) + (rw.strongs ? ' (' + rw.strongs + ')' : '') + ' — ' + (rw.relation || '');
+          wrap.appendChild(chip);
+        });
+        sec.appendChild(wrap);
+        container.appendChild(sec);
+      }
+
+      // Occurrence count
+      if (data.occurrenceCount) {
+        const occ = document.createElement('div');
+        occ.style.cssText = 'font-size:var(--text-xs);color:var(--neutral-400);margin-top:var(--space-3);text-align:center;';
+        occ.textContent = 'Appears ~' + data.occurrenceCount + ' times in the Bible';
+        container.appendChild(occ);
+      }
+    }
+
+    function makeWsSection(titleText, bodyText) {
+      const sec = document.createElement('div');
+      sec.className = 'word-study-section';
+      const title = document.createElement('div');
+      title.className = 'word-study-section-title';
+      title.textContent = titleText;
+      sec.appendChild(title);
+      const body = document.createElement('div');
+      body.textContent = bodyText;
+      sec.appendChild(body);
+      return sec;
+    }
+
+    // ===== Verse Cards =====
+    const CARD_THEMES = [
+      { name: 'Warm Gradient', bg: ['#FF6B6B', '#FFA07A'], text: '#FFFFFF', accent: '#FFD93D', sub: 'rgba(255,255,255,0.8)' },
+      { name: 'Dark Elegant', bg: ['#1a1a2e', '#16213e'], text: '#E0E0E0', accent: '#E94560', sub: 'rgba(224,224,224,0.6)' },
+      { name: 'Nature Green', bg: ['#2D6A4F', '#40916C'], text: '#FFFFFF', accent: '#B7E4C7', sub: 'rgba(255,255,255,0.7)' },
+      { name: 'Minimal Light', bg: ['#F8F9FA', '#E9ECEF'], text: '#212529', accent: '#6366F1', sub: 'rgba(33,37,41,0.5)' },
+      { name: 'Sunset', bg: ['#F97316', '#EC4899'], text: '#FFFFFF', accent: '#FDE68A', sub: 'rgba(255,255,255,0.8)' },
+      { name: 'Ocean Blue', bg: ['#0077B6', '#00B4D8'], text: '#FFFFFF', accent: '#90E0EF', sub: 'rgba(255,255,255,0.7)' }
+    ];
+    let cardThemeIdx = parseInt(localStorage.getItem('bible-card-last-theme') || '0');
+    let cardSize = 'square'; // 'square' or 'landscape'
+    const cardCanvas = document.getElementById('card-canvas');
+    const cardModal = document.getElementById('card-modal');
+    const cardBackdrop = document.getElementById('card-backdrop');
+
+    // Render theme selector chips
+    const cardThemesEl = document.getElementById('card-themes');
+    CARD_THEMES.forEach((theme, i) => {
+      const btn = document.createElement('button');
+      btn.className = 'card-theme-btn' + (i === cardThemeIdx ? ' active' : '');
+      btn.style.background = 'linear-gradient(135deg, ' + theme.bg[0] + ', ' + theme.bg[1] + ')';
+      btn.title = theme.name;
+      btn.addEventListener('click', () => {
+        cardThemeIdx = i;
+        localStorage.setItem('bible-card-last-theme', i);
+        cardThemesEl.querySelectorAll('.card-theme-btn').forEach((b, j) => b.classList.toggle('active', j === i));
+        renderVerseCard();
+      });
+      cardThemesEl.appendChild(btn);
+    });
+
+    // Size toggle
+    document.querySelectorAll('.card-size-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        cardSize = btn.dataset.size;
+        document.querySelectorAll('.card-size-btn').forEach(b => b.classList.toggle('active', b.dataset.size === cardSize));
+        renderVerseCard();
+      });
+    });
+
+    function openVerseCard() {
+      cardModal.classList.add('open');
+      cardBackdrop.classList.add('open');
+      renderVerseCard();
+    }
+
+    function closeVerseCard() {
+      cardModal.classList.remove('open');
+      cardBackdrop.classList.remove('open');
+    }
+
+    document.getElementById('close-card').addEventListener('click', closeVerseCard);
+    cardBackdrop.addEventListener('click', closeVerseCard);
+    document.getElementById('create-card-btn').addEventListener('click', openVerseCard);
+
+    function wrapText(ctx, text, maxWidth) {
+      const words = text.split(' ');
+      const lines = [];
+      let line = '';
+      for (const w of words) {
+        const test = line ? line + ' ' + w : w;
+        if (ctx.measureText(test).width > maxWidth && line) {
+          lines.push(line);
+          line = w;
+        } else {
+          line = test;
+        }
+      }
+      if (line) lines.push(line);
+      return lines;
+    }
+
+    function renderVerseCard() {
+      const theme = CARD_THEMES[cardThemeIdx];
+      const W = cardSize === 'square' ? 1080 : 1200;
+      const H = cardSize === 'square' ? 1080 : 628;
+      cardCanvas.width = W;
+      cardCanvas.height = H;
+      const ctx = cardCanvas.getContext('2d');
+
+      // Background gradient
+      const grad = ctx.createLinearGradient(0, 0, W, H);
+      grad.addColorStop(0, theme.bg[0]);
+      grad.addColorStop(1, theme.bg[1]);
+      ctx.fillStyle = grad;
+      ctx.fillRect(0, 0, W, H);
+
+      // Decorative accent line
+      ctx.strokeStyle = theme.accent;
+      ctx.lineWidth = 3;
+      const pad = W * 0.1;
+      ctx.beginPath();
+      ctx.moveTo(pad, H * 0.15);
+      ctx.lineTo(W - pad, H * 0.15);
+      ctx.stroke();
+
+      // Get verse text and reference
+      const { sortedVerses, startVerse, endVerse } = getSelectedRange();
+      if (sortedVerses.length === 0) return;
+      const reference = endVerse > startVerse
+        ? currentBook + ' ' + currentChapter + ':' + startVerse + '-' + endVerse
+        : currentBook + ' ' + currentChapter + ':' + startVerse;
+      const verseText = sortedVerses.map(v => {
+        const el = document.querySelector('.verse[data-verse="' + v + '"] .verse-text');
+        return el ? el.textContent.trim() : '';
+      }).join(' ');
+
+      // Verse text
+      const fontSize = Math.min(W * 0.042, 44);
+      ctx.font = 'italic ' + fontSize + 'px Georgia, "Times New Roman", serif';
+      ctx.fillStyle = theme.text;
+      ctx.textAlign = 'center';
+      const maxTextW = W - pad * 2;
+      const lines = wrapText(ctx, '"' + verseText + '"', maxTextW);
+      const lineH = fontSize * 1.6;
+      const totalTextH = lines.length * lineH;
+      let startY = (H - totalTextH) / 2 - 10;
+      if (startY < H * 0.2) startY = H * 0.2;
+
+      lines.forEach((line, i) => {
+        ctx.fillText(line, W / 2, startY + i * lineH);
+      });
+
+      // Bottom accent line
+      const bottomLineY = startY + totalTextH + 30;
+      ctx.strokeStyle = theme.accent;
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      ctx.moveTo(W * 0.35, bottomLineY);
+      ctx.lineTo(W * 0.65, bottomLineY);
+      ctx.stroke();
+
+      // Reference
+      const refFontSize = Math.min(W * 0.028, 28);
+      ctx.font = '600 ' + refFontSize + 'px system-ui, -apple-system, sans-serif';
+      ctx.fillStyle = theme.sub;
+      ctx.fillText('— ' + reference, W / 2, bottomLineY + 40);
+
+      // Watermark
+      ctx.font = '500 ' + (W * 0.014) + 'px system-ui, sans-serif';
+      ctx.fillStyle = theme.sub;
+      ctx.globalAlpha = 0.4;
+      ctx.fillText('Bible Interpreter', W / 2, H - 30);
+      ctx.globalAlpha = 1;
+    }
+
+    // Download
+    document.getElementById('card-download').addEventListener('click', () => {
+      cardCanvas.toBlob(blob => {
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'verse-card-' + currentBook + '-' + currentChapter + '.png';
+        a.click();
+        URL.revokeObjectURL(url);
+        showToast('Card downloaded!');
+      }, 'image/png');
+    });
+
+    // Copy to clipboard
+    document.getElementById('card-copy').addEventListener('click', async () => {
+      try {
+        const blob = await new Promise(r => cardCanvas.toBlob(r, 'image/png'));
+        await navigator.clipboard.write([new ClipboardItem({ 'image/png': blob })]);
+        showToast('Copied to clipboard!');
+      } catch (err) {
+        showToast('Could not copy to clipboard');
+      }
     });
 
 	    // ===== Panel Actions =====
@@ -2673,7 +4233,19 @@
           if (!nextChapterBtn.disabled) nextChapterBtn.click();
           break;
         case 'Escape':
-          if (lifeAppModal.classList.contains('open')) {
+          if (activePopover) {
+            closeWordPopover();
+          } else if (cardModal.classList.contains('open')) {
+            closeVerseCard();
+          } else if (drawerEl.classList.contains('open')) {
+            closeDrawer();
+          } else if (topicalModal.classList.contains('open')) {
+            closeTopicalBrowse();
+          } else if (plansModal.classList.contains('open')) {
+            closeReadingPlans();
+          } else if (prayerJournalModal.classList.contains('open')) {
+            closePrayerJournal();
+          } else if (lifeAppModal.classList.contains('open')) {
             closeLifeApp();
           } else if (searchModal.classList.contains('open')) {
             closeSearch();
@@ -2685,8 +4257,19 @@
         case 'Enter':
           if (selectedVerses.size > 0) interpretSelection();
           break;
+        case 'Backquote':
+          e.preventDefault();
+          if (drawerEl.classList.contains('open')) closeDrawer();
+          else openDrawer();
+          break;
         case 'KeyD':
           toggleDarkMode();
+          break;
+        case 'KeyT':
+          openTopicalBrowse();
+          break;
+        case 'KeyP':
+          openReadingPlans();
           break;
         case 'KeyL':
           openLifeApp();
@@ -3606,7 +5189,6 @@
       { label: 'Patience', prompt: "I'm finding it hard to wait for " },
     ];
 
-    const lifeAppBtn = document.getElementById('life-app-btn');
     const lifeAppModal = document.getElementById('life-app-modal');
     const lifeAppBackdrop = document.getElementById('life-app-backdrop');
     const lifeAppTextarea = document.getElementById('life-app-textarea');
@@ -3681,7 +5263,6 @@
       lifeAppCharCount.style.color = len > 450 ? 'var(--error)' : 'var(--neutral-400)';
     }
 
-    lifeAppBtn.addEventListener('click', openLifeApp);
     closeLifeAppBtn.addEventListener('click', closeLifeApp);
     lifeAppBackdrop.addEventListener('click', closeLifeApp);
 
@@ -3815,6 +5396,7 @@
       }
 
       closeLifeApp();
+      if (typeof closeDrawer === 'function') closeDrawer();
 
       bookSelect.value = bookIndex;
       bookSelect.dispatchEvent(new Event('change'));
@@ -3850,6 +5432,1139 @@
       if (history.length > MAX_LIFE_HISTORY) history.length = MAX_LIFE_HISTORY;
       localStorage.setItem(LIFE_HISTORY_KEY, JSON.stringify(history));
     }
+
+    // ===== Prayer Journal =====
+    const PRAYERS_KEY = 'bible-prayers';
+    let prayerFilter = 'all';
+    let notesTabPrayers;
+
+    function getPrayers() {
+      try { return JSON.parse(localStorage.getItem(PRAYERS_KEY) || '[]'); } catch { return []; }
+    }
+
+    function savePrayers(prayers) {
+      localStorage.setItem(PRAYERS_KEY, JSON.stringify(prayers));
+    }
+
+    function addPrayer(verseNum, text) {
+      const prayers = getPrayers();
+      prayers.unshift({
+        id: Date.now().toString(36) + Math.random().toString(36).slice(2, 6),
+        text: text,
+        bookIndex: currentBookIndex,
+        chapter: currentChapter,
+        verse: verseNum,
+        reference: BOOKS[currentBookIndex].name + ' ' + currentChapter + ':' + verseNum,
+        date: new Date().toISOString(),
+        answered: false
+      });
+      savePrayers(prayers);
+    }
+
+    function togglePrayerAnswered(id) {
+      const prayers = getPrayers();
+      const prayer = prayers.find(p => p.id === id);
+      if (prayer) {
+        prayer.answered = !prayer.answered;
+        savePrayers(prayers);
+      }
+    }
+
+    function deletePrayer(id) {
+      const prayers = getPrayers().filter(p => p.id !== id);
+      savePrayers(prayers);
+    }
+
+    // Sidebar prayers tab
+    function initPrayerTab() {
+      notesTabPrayers = document.getElementById('notes-tab-prayers');
+      if (!notesTabPrayers) return;
+
+      notesTabPrayers.addEventListener('click', () => {
+        notesViewMode = 'prayers';
+        notesTabChapter.classList.remove('active');
+        notesTabAll.classList.remove('active');
+        notesTabPrayers.classList.add('active');
+        renderNotesPanel();
+      });
+    }
+
+    // Override renderNotesPanel to handle prayers mode
+    const _origRenderNotesPanel = renderNotesPanel;
+    renderNotesPanel = function() {
+      if (notesViewMode === 'prayers') {
+        renderPrayersSidebar();
+      } else {
+        if (notesTabPrayers) notesTabPrayers.classList.remove('active');
+        _origRenderNotesPanel();
+      }
+    };
+
+    function renderPrayersSidebar() {
+      const notesList = document.getElementById('notes-list');
+      if (!notesList) return;
+      notesList.textContent = '';
+
+      const prayers = getPrayers();
+      const prefix = currentBookIndex + '-' + currentChapter;
+      const chapterPrayers = prayers.filter(p =>
+        p.bookIndex === currentBookIndex && p.chapter === currentChapter
+      );
+
+      if (chapterPrayers.length === 0) {
+        const empty = document.createElement('div');
+        empty.className = 'notes-empty';
+        empty.textContent = 'Double-click a verse to add a prayer';
+        notesList.appendChild(empty);
+        return;
+      }
+
+      chapterPrayers.forEach(p => {
+        const item = document.createElement('div');
+        item.className = 'prayer-item' + (p.answered ? ' answered' : '');
+
+        const header = document.createElement('div');
+        header.className = 'prayer-item-header';
+
+        const check = document.createElement('span');
+        check.className = 'prayer-answered-check' + (p.answered ? ' checked' : '');
+        check.textContent = p.answered ? '\u2713' : '';
+        check.title = p.answered ? 'Mark as active' : 'Mark as answered';
+        check.addEventListener('click', (e) => {
+          e.stopPropagation();
+          togglePrayerAnswered(p.id);
+          renderPrayersSidebar();
+        });
+        header.appendChild(check);
+
+        const vEl = document.createElement('span');
+        vEl.className = 'prayer-item-verse';
+        vEl.textContent = 'v.' + p.verse;
+        header.appendChild(vEl);
+
+        item.appendChild(header);
+
+        const tEl = document.createElement('div');
+        tEl.className = 'prayer-item-text';
+        tEl.textContent = p.text;
+        item.appendChild(tEl);
+
+        item.addEventListener('click', () => {
+          const verseEl = document.querySelector('.verse[data-verse="' + p.verse + '"]');
+          if (verseEl) verseEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        });
+
+        notesList.appendChild(item);
+      });
+    }
+
+    // Extend note editor to support prayer mode
+    const _origOpenNoteEditor = openNoteEditor;
+    openNoteEditor = function(verseNum) {
+      closeNoteEditor();
+      const verseEl = document.querySelector('.verse[data-verse="' + verseNum + '"]');
+      if (!verseEl) return;
+
+      const notes = getNotes();
+      const key = noteKey(verseNum);
+      const existingNote = notes[key] || '';
+      let editorMode = 'note';
+
+      const editor = document.createElement('div');
+      editor.className = 'note-editor-inline';
+      editor.dataset.noteVerse = verseNum;
+
+      // Mode toggle
+      const toggle = document.createElement('div');
+      toggle.className = 'prayer-editor-toggle';
+      const noteBtn = document.createElement('button');
+      noteBtn.textContent = 'Note';
+      noteBtn.className = 'active';
+      const prayerBtn = document.createElement('button');
+      prayerBtn.textContent = 'Prayer';
+      toggle.appendChild(noteBtn);
+      toggle.appendChild(prayerBtn);
+      editor.appendChild(toggle);
+
+      const ta = document.createElement('textarea');
+      ta.value = existingNote;
+      ta.placeholder = 'Add a note for verse ' + verseNum + '...';
+      editor.appendChild(ta);
+
+      noteBtn.addEventListener('click', () => {
+        editorMode = 'note';
+        noteBtn.classList.add('active');
+        prayerBtn.classList.remove('active');
+        ta.placeholder = 'Add a note for verse ' + verseNum + '...';
+      });
+      prayerBtn.addEventListener('click', () => {
+        editorMode = 'prayer';
+        prayerBtn.classList.add('active');
+        noteBtn.classList.remove('active');
+        ta.placeholder = 'Write a prayer for verse ' + verseNum + '...';
+        ta.value = '';
+      });
+
+      const actions = document.createElement('div');
+      actions.className = 'note-editor-actions';
+
+      if (existingNote) {
+        const delBtn = document.createElement('button');
+        delBtn.className = 'note-delete-btn';
+        delBtn.textContent = 'Delete';
+        delBtn.addEventListener('click', () => {
+          delete notes[key];
+          saveNotes(notes);
+          closeNoteEditor();
+          refreshNoteIndicators();
+          renderNotesPanel();
+          showToast('Note deleted');
+        });
+        actions.appendChild(delBtn);
+      }
+
+      const cancelBtn = document.createElement('button');
+      cancelBtn.textContent = 'Cancel';
+      cancelBtn.addEventListener('click', closeNoteEditor);
+      actions.appendChild(cancelBtn);
+
+      const saveBtn = document.createElement('button');
+      saveBtn.className = 'note-save-btn';
+      saveBtn.textContent = 'Save';
+      saveBtn.addEventListener('click', () => {
+        const text = ta.value.trim();
+        if (!text) {
+          closeNoteEditor();
+          return;
+        }
+
+        if (editorMode === 'prayer') {
+          addPrayer(verseNum, text);
+          showToast('Prayer saved');
+        } else {
+          notes[key] = text;
+          saveNotes(notes);
+          showToast('Note saved');
+        }
+        closeNoteEditor();
+        refreshNoteIndicators();
+        renderNotesPanel();
+      });
+      actions.appendChild(saveBtn);
+      editor.appendChild(actions);
+
+      verseEl.insertAdjacentElement('afterend', editor);
+      activeNoteEditor = editor;
+      ta.focus();
+    };
+
+    // Prayer Journal full view (modal)
+    const prayerJournalModal = document.getElementById('prayer-journal-modal');
+    const prayerJournalBackdrop = document.getElementById('prayer-journal-backdrop');
+    const prayerJournalList = document.getElementById('prayer-journal-list');
+    const closePrayerJournalBtn = document.getElementById('close-prayer-journal');
+
+    function openPrayerJournal() {
+      prayerJournalModal.classList.add('open');
+      prayerJournalBackdrop.classList.add('open');
+      renderPrayerJournalFull();
+    }
+
+    function closePrayerJournal() {
+      prayerJournalModal.classList.remove('open');
+      prayerJournalBackdrop.classList.remove('open');
+    }
+
+    closePrayerJournalBtn.addEventListener('click', closePrayerJournal);
+    prayerJournalBackdrop.addEventListener('click', closePrayerJournal);
+
+    // Filter buttons
+    document.querySelectorAll('.prayer-filter-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.prayer-filter-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        prayerFilter = btn.dataset.filter;
+        renderPrayerJournalFull();
+      });
+    });
+
+    function renderPrayerJournalFull() {
+      prayerJournalList.textContent = '';
+      let prayers = getPrayers();
+
+      if (prayerFilter === 'active') prayers = prayers.filter(p => !p.answered);
+      else if (prayerFilter === 'answered') prayers = prayers.filter(p => p.answered);
+
+      if (prayers.length === 0) {
+        const empty = document.createElement('div');
+        empty.className = 'notes-empty';
+        empty.style.padding = 'var(--space-8) 0';
+        empty.textContent = prayerFilter === 'all' ? 'No prayers yet. Double-click a verse to add one.' :
+          prayerFilter === 'active' ? 'No active prayers' : 'No answered prayers';
+        prayerJournalList.appendChild(empty);
+        return;
+      }
+
+      prayers.forEach(p => {
+        const item = document.createElement('div');
+        item.className = 'prayer-full-item' + (p.answered ? ' answered' : '');
+
+        const header = document.createElement('div');
+        header.className = 'prayer-full-item-header';
+
+        const ref = document.createElement('span');
+        ref.className = 'prayer-full-item-ref';
+        ref.textContent = p.reference;
+        ref.addEventListener('click', () => {
+          closePrayerJournal();
+          navigateToPassage({
+            book: BOOKS[p.bookIndex] ? BOOKS[p.bookIndex].name : '',
+            chapter: p.chapter,
+            startVerse: p.verse,
+            endVerse: p.verse
+          });
+        });
+        header.appendChild(ref);
+
+        const date = document.createElement('span');
+        date.className = 'prayer-full-item-date';
+        const d = new Date(p.date);
+        date.textContent = d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+        header.appendChild(date);
+        item.appendChild(header);
+
+        const text = document.createElement('div');
+        text.className = 'prayer-full-item-text';
+        text.textContent = p.text;
+        item.appendChild(text);
+
+        const actionsDiv = document.createElement('div');
+        actionsDiv.className = 'prayer-full-actions';
+
+        const answerBtn = document.createElement('button');
+        answerBtn.textContent = p.answered ? 'Mark Active' : 'Mark Answered';
+        answerBtn.addEventListener('click', () => {
+          togglePrayerAnswered(p.id);
+          renderPrayerJournalFull();
+          renderNotesPanel();
+        });
+        actionsDiv.appendChild(answerBtn);
+
+        const delBtn = document.createElement('button');
+        delBtn.className = 'prayer-delete-btn';
+        delBtn.textContent = 'Delete';
+        delBtn.addEventListener('click', () => {
+          deletePrayer(p.id);
+          renderPrayerJournalFull();
+          renderNotesPanel();
+          showToast('Prayer deleted');
+        });
+        actionsDiv.appendChild(delBtn);
+
+        item.appendChild(actionsDiv);
+        prayerJournalList.appendChild(item);
+      });
+    }
+
+    initPrayerTab();
+
+    // ===== Topical Browse =====
+    const TOPICAL_TOPICS = [
+      'Love', 'Faith', 'Hope', 'Suffering', 'Wisdom', 'Forgiveness',
+      'Prayer', 'Courage', 'Peace', 'Joy', 'Justice', 'Mercy',
+      'Grace', 'Salvation', 'Holiness', 'Humility', 'Trust', 'Patience',
+      'Community', 'Rest'
+    ];
+    const TOPICAL_CACHE_KEY = 'bible-topical-cache';
+
+    const topicalModal = document.getElementById('topical-modal');
+    const topicalBackdrop = document.getElementById('topical-backdrop');
+    const topicalTopicsEl = document.getElementById('topical-topics');
+    const topicalInputView = document.getElementById('topical-input-view');
+    const topicalLoading = document.getElementById('topical-loading');
+    const topicalResults = document.getElementById('topical-results');
+    const topicalDescription = document.getElementById('topical-description');
+    const topicalCards = document.getElementById('topical-cards');
+    const topicalCustomInput = document.getElementById('topical-custom-input');
+    const topicalCustomBtn = document.getElementById('topical-custom-btn');
+    const closeTopicalBtn = document.getElementById('close-topical');
+    const topicalBackBtn = document.getElementById('topical-back');
+
+    function getTopicalCache() {
+      try { return JSON.parse(localStorage.getItem(TOPICAL_CACHE_KEY) || '{}'); } catch { return {}; }
+    }
+
+    function saveTopicalCache(cache) {
+      localStorage.setItem(TOPICAL_CACHE_KEY, JSON.stringify(cache));
+    }
+
+    function renderTopicChips() {
+      topicalTopicsEl.textContent = '';
+      TOPICAL_TOPICS.forEach(topic => {
+        const chip = document.createElement('button');
+        chip.className = 'topical-chip';
+        chip.textContent = topic;
+        chip.addEventListener('click', () => submitTopical(topic));
+        topicalTopicsEl.appendChild(chip);
+      });
+    }
+
+    function openTopicalBrowse() {
+      topicalModal.classList.add('open');
+      topicalBackdrop.classList.add('open');
+      showTopicalView('input');
+      renderTopicChips();
+      topicalCustomInput.value = '';
+      topicalCustomBtn.disabled = true;
+    }
+
+    function closeTopicalBrowse() {
+      topicalModal.classList.remove('open');
+      topicalBackdrop.classList.remove('open');
+    }
+
+    function showTopicalView(view) {
+      topicalInputView.classList.toggle('hidden', view !== 'input');
+      topicalLoading.classList.toggle('hidden', view !== 'loading');
+      topicalResults.classList.toggle('hidden', view !== 'results');
+    }
+
+    async function submitTopical(topic) {
+      const cache = getTopicalCache();
+      if (cache[topic.toLowerCase()]) {
+        displayTopicalResults(cache[topic.toLowerCase()]);
+        return;
+      }
+
+      showTopicalView('loading');
+
+      try {
+        const resp = await fetch('/api/topical', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ topic })
+        });
+
+        if (!resp.ok) {
+          const err = await resp.json().catch(() => ({ error: 'Request failed' }));
+          throw new Error(err.error || 'Failed to fetch passages');
+        }
+
+        const data = await resp.json();
+        cache[topic.toLowerCase()] = data;
+        saveTopicalCache(cache);
+        displayTopicalResults(data);
+      } catch (err) {
+        showToast(err.message || 'Something went wrong');
+        showTopicalView('input');
+      }
+    }
+
+    function displayTopicalResults(data) {
+      topicalCards.textContent = '';
+      topicalDescription.textContent = data.description || '';
+      showTopicalView('results');
+
+      if (!data.passages || data.passages.length === 0) {
+        const empty = document.createElement('div');
+        empty.className = 'notes-empty';
+        empty.textContent = 'No passages found for this topic.';
+        topicalCards.appendChild(empty);
+        return;
+      }
+
+      data.passages.forEach((passage, i) => {
+        const card = document.createElement('div');
+        card.className = 'topical-card';
+        card.style.animationDelay = (i * 0.08) + 's';
+
+        const ref = document.createElement('div');
+        ref.className = 'topical-card-ref';
+        ref.textContent = passage.reference;
+        card.appendChild(ref);
+
+        if (passage.keyVerse) {
+          const verse = document.createElement('div');
+          verse.className = 'topical-card-verse';
+          verse.textContent = passage.keyVerse;
+          card.appendChild(verse);
+        }
+
+        if (passage.summary) {
+          const summary = document.createElement('div');
+          summary.className = 'topical-card-summary';
+          summary.textContent = passage.summary;
+          card.appendChild(summary);
+        }
+
+        const readBtn = document.createElement('button');
+        readBtn.className = 'life-app-card-read';
+        const bookSvg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+        bookSvg.setAttribute('fill', 'none');
+        bookSvg.setAttribute('stroke', 'currentColor');
+        bookSvg.setAttribute('viewBox', '0 0 24 24');
+        const bookPath = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+        bookPath.setAttribute('stroke-linecap', 'round');
+        bookPath.setAttribute('stroke-linejoin', 'round');
+        bookPath.setAttribute('stroke-width', '2');
+        bookPath.setAttribute('d', 'M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253');
+        bookSvg.appendChild(bookPath);
+        readBtn.appendChild(bookSvg);
+        readBtn.appendChild(document.createTextNode(' Read in context'));
+        readBtn.addEventListener('click', () => {
+          closeTopicalBrowse();
+          navigateToPassage(passage);
+        });
+        card.appendChild(readBtn);
+
+        topicalCards.appendChild(card);
+      });
+    }
+
+    // Event listeners
+    closeTopicalBtn.addEventListener('click', closeTopicalBrowse);
+    topicalBackdrop.addEventListener('click', closeTopicalBrowse);
+    topicalBackBtn.addEventListener('click', () => showTopicalView('input'));
+
+    topicalCustomInput.addEventListener('input', () => {
+      topicalCustomBtn.disabled = topicalCustomInput.value.trim().length < 2;
+    });
+
+    topicalCustomInput.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' && topicalCustomInput.value.trim().length >= 2) {
+        submitTopical(topicalCustomInput.value.trim());
+      }
+    });
+
+    topicalCustomBtn.addEventListener('click', () => {
+      const val = topicalCustomInput.value.trim();
+      if (val.length >= 2) submitTopical(val);
+    });
+
+    // ===== Daily Devotional =====
+    const DEVOTIONAL_SEEN_KEY = 'bible-devotional-last-seen';
+    const DEVOTIONAL_CACHE_KEY = 'bible-devotional-cache';
+    let devotionalData = null;
+
+    function getDevotionalCache() {
+      try { return JSON.parse(localStorage.getItem(DEVOTIONAL_CACHE_KEY) || '{}'); } catch { return {}; }
+    }
+
+    function saveDevotionalCache(cache) {
+      localStorage.setItem(DEVOTIONAL_CACHE_KEY, JSON.stringify(cache));
+    }
+
+    async function fetchDailyDevotional() {
+      const today = new Date().toISOString().split('T')[0];
+      const cache = getDevotionalCache();
+      if (cache[today]) {
+        devotionalData = cache[today];
+        return devotionalData;
+      }
+
+      const resp = await fetch('/api/daily-devotional', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({})
+      });
+
+      if (!resp.ok) throw new Error('Failed to fetch devotional');
+      const data = await resp.json();
+      devotionalData = data;
+      cache[today] = data;
+      // Keep only last 3 days in localStorage
+      const keys = Object.keys(cache).sort();
+      while (keys.length > 3) {
+        delete cache[keys.shift()];
+      }
+      saveDevotionalCache(cache);
+      return data;
+    }
+
+    function renderDevotionalCard(data) {
+      const card = document.createElement('div');
+      card.className = 'devotional-card';
+      card.id = 'devotional-card';
+
+      const d = new Date(data.date + 'T12:00:00');
+      const dateStr = d.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' });
+
+      card.innerHTML = '';
+
+      // Header
+      const header = document.createElement('div');
+      header.className = 'devotional-card-header';
+      const dateEl = document.createElement('div');
+      dateEl.className = 'devotional-card-date';
+      dateEl.textContent = 'Daily Devotional \u2022 ' + dateStr;
+      header.appendChild(dateEl);
+      const titleEl = document.createElement('div');
+      titleEl.className = 'devotional-card-title';
+      titleEl.textContent = data.verse.reference;
+      header.appendChild(titleEl);
+      card.appendChild(header);
+
+      // Body
+      const body = document.createElement('div');
+      body.className = 'devotional-card-body';
+
+      const verseText = document.createElement('div');
+      verseText.className = 'devotional-verse-text';
+      verseText.textContent = data.verse.text;
+      body.appendChild(verseText);
+
+      const reflection = document.createElement('div');
+      reflection.className = 'devotional-reflection';
+      reflection.textContent = data.reflection;
+      body.appendChild(reflection);
+
+      if (data.originalLanguageInsight) {
+        const langBox = document.createElement('div');
+        langBox.className = 'devotional-language-box';
+        const wordEl = document.createElement('div');
+        wordEl.className = 'devotional-language-word';
+        wordEl.textContent = data.originalLanguageInsight.word;
+        langBox.appendChild(wordEl);
+        const detailEl = document.createElement('div');
+        detailEl.className = 'devotional-language-detail';
+        detailEl.innerHTML = '<strong>' + data.originalLanguageInsight.transliteration + '</strong> (' + data.originalLanguageInsight.language + ')<br>' + data.originalLanguageInsight.insight;
+        langBox.appendChild(detailEl);
+        body.appendChild(langBox);
+      }
+
+      if (data.applicationThought) {
+        const appEl = document.createElement('div');
+        appEl.className = 'devotional-application';
+        appEl.textContent = data.applicationThought;
+        body.appendChild(appEl);
+      }
+
+      card.appendChild(body);
+
+      // Actions
+      const actions = document.createElement('div');
+      actions.className = 'devotional-card-actions';
+
+      const readBtn = document.createElement('button');
+      readBtn.className = 'devotional-read-btn';
+      readBtn.textContent = 'Read in Context';
+      readBtn.addEventListener('click', () => {
+        dismissDevotional();
+        navigateToPassage(data.verse);
+      });
+      actions.appendChild(readBtn);
+
+      const dismissBtn = document.createElement('button');
+      dismissBtn.className = 'devotional-dismiss-btn';
+      dismissBtn.textContent = 'Start Reading';
+      dismissBtn.addEventListener('click', dismissDevotional);
+      actions.appendChild(dismissBtn);
+
+      card.appendChild(actions);
+      return card;
+    }
+
+    function showDevotionalOnLoad(data) {
+      const instructions = document.getElementById('instructions');
+      if (!instructions || instructions.style.display === 'none') return;
+
+      instructions.style.display = 'none';
+      const card = renderDevotionalCard(data);
+      instructions.parentNode.insertBefore(card, instructions.nextSibling);
+    }
+
+    function dismissDevotional() {
+      const card = document.getElementById('devotional-card');
+      if (card) card.remove();
+      const instructions = document.getElementById('instructions');
+      if (instructions && !document.getElementById('chapter-header').style.display !== 'none') {
+        instructions.style.display = '';
+      }
+      localStorage.setItem(DEVOTIONAL_SEEN_KEY, new Date().toISOString().split('T')[0]);
+    }
+
+    function openDailyDevotional() {
+      // Show devotional from drawer — fetch and display
+      if (devotionalData) {
+        showDevotionalInModal(devotionalData);
+        return;
+      }
+      showToast('Loading devotional...');
+      fetchDailyDevotional().then(data => {
+        showDevotionalInModal(data);
+      }).catch(() => showToast('Could not load devotional'));
+    }
+
+    function showDevotionalInModal(data) {
+      // Reuse instructions area if no chapter is loaded, otherwise replace content
+      const instructions = document.getElementById('instructions');
+      const chapterHeader = document.getElementById('chapter-header');
+      const existingCard = document.getElementById('devotional-card');
+      if (existingCard) existingCard.remove();
+
+      if (chapterHeader && chapterHeader.style.display !== 'none') {
+        // A chapter is loaded — scroll to top and show card above verses
+        const card = renderDevotionalCard(data);
+        const versesContainer = document.getElementById('verses-container');
+        versesContainer.parentNode.insertBefore(card, versesContainer);
+        card.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      } else {
+        // No chapter loaded — show in instructions area
+        showDevotionalOnLoad(data);
+      }
+    }
+
+    // Auto-show devotional on first visit of the day
+    (function checkDailyDevotional() {
+      const today = new Date().toISOString().split('T')[0];
+      const lastSeen = localStorage.getItem(DEVOTIONAL_SEEN_KEY);
+      if (lastSeen === today) return;
+
+      fetchDailyDevotional()
+        .then(data => showDevotionalOnLoad(data))
+        .catch(() => {}); // silently fail
+    })();
+
+    // ===== Reading Plans =====
+    const PLANS_KEY = 'bible-reading-plans';
+    const ACTIVE_PLAN_KEY = 'bible-active-plan';
+    const STREAK_KEY = 'bible-reading-streak';
+
+    const READING_PLANS = [
+      {
+        id: 'gospels-40',
+        title: 'Gospels in 40 Days',
+        description: 'Walk through the life of Jesus by reading all four Gospels in 40 days.',
+        duration: 40,
+        readings: [
+          { ref: 'Matthew 1-2', book: 'Matthew', chapter: 1, startVerse: 1, endVerse: 25, title: 'The Birth of Jesus' },
+          { ref: 'Matthew 3-4', book: 'Matthew', chapter: 3, startVerse: 1, endVerse: 17, title: 'Baptism & Temptation' },
+          { ref: 'Matthew 5-6', book: 'Matthew', chapter: 5, startVerse: 1, endVerse: 48, title: 'Sermon on the Mount (Part 1)' },
+          { ref: 'Matthew 7-8', book: 'Matthew', chapter: 7, startVerse: 1, endVerse: 29, title: 'Sermon on the Mount (Part 2)' },
+          { ref: 'Matthew 9-10', book: 'Matthew', chapter: 9, startVerse: 1, endVerse: 38, title: 'Healing & Sending the Twelve' },
+          { ref: 'Matthew 11-12', book: 'Matthew', chapter: 11, startVerse: 1, endVerse: 30, title: 'Jesus and John the Baptist' },
+          { ref: 'Matthew 13-14', book: 'Matthew', chapter: 13, startVerse: 1, endVerse: 58, title: 'Kingdom Parables' },
+          { ref: 'Matthew 15-17', book: 'Matthew', chapter: 16, startVerse: 13, endVerse: 28, title: 'Peter\'s Confession & Transfiguration' },
+          { ref: 'Matthew 18-20', book: 'Matthew', chapter: 18, startVerse: 1, endVerse: 35, title: 'Forgiveness & the Kingdom' },
+          { ref: 'Matthew 21-23', book: 'Matthew', chapter: 21, startVerse: 1, endVerse: 22, title: 'Triumphal Entry' },
+          { ref: 'Matthew 24-25', book: 'Matthew', chapter: 25, startVerse: 31, endVerse: 46, title: 'End Times Teaching' },
+          { ref: 'Matthew 26-28', book: 'Matthew', chapter: 28, startVerse: 1, endVerse: 20, title: 'Crucifixion & Resurrection' },
+          { ref: 'Mark 1-2', book: 'Mark', chapter: 1, startVerse: 1, endVerse: 45, title: 'Jesus Begins His Ministry' },
+          { ref: 'Mark 3-4', book: 'Mark', chapter: 4, startVerse: 35, endVerse: 41, title: 'Calming the Storm' },
+          { ref: 'Mark 5-6', book: 'Mark', chapter: 5, startVerse: 21, endVerse: 43, title: 'Jairus\' Daughter & Feeding 5000' },
+          { ref: 'Mark 7-8', book: 'Mark', chapter: 8, startVerse: 27, endVerse: 38, title: 'Who Do You Say I Am?' },
+          { ref: 'Mark 9-10', book: 'Mark', chapter: 10, startVerse: 17, endVerse: 31, title: 'Rich Young Ruler' },
+          { ref: 'Mark 11-13', book: 'Mark', chapter: 12, startVerse: 28, endVerse: 34, title: 'Greatest Commandment' },
+          { ref: 'Mark 14-16', book: 'Mark', chapter: 16, startVerse: 1, endVerse: 8, title: 'Mark\'s Passion & Resurrection' },
+          { ref: 'Luke 1-2', book: 'Luke', chapter: 2, startVerse: 1, endVerse: 20, title: 'The Birth Narrative' },
+          { ref: 'Luke 3-4', book: 'Luke', chapter: 4, startVerse: 14, endVerse: 30, title: 'Jesus in Nazareth' },
+          { ref: 'Luke 5-6', book: 'Luke', chapter: 6, startVerse: 20, endVerse: 49, title: 'Sermon on the Plain' },
+          { ref: 'Luke 7-8', book: 'Luke', chapter: 7, startVerse: 36, endVerse: 50, title: 'The Sinful Woman Anoints Jesus' },
+          { ref: 'Luke 9-10', book: 'Luke', chapter: 10, startVerse: 25, endVerse: 37, title: 'Good Samaritan' },
+          { ref: 'Luke 11-12', book: 'Luke', chapter: 12, startVerse: 22, endVerse: 34, title: 'Do Not Worry' },
+          { ref: 'Luke 13-14', book: 'Luke', chapter: 14, startVerse: 15, endVerse: 35, title: 'Cost of Discipleship' },
+          { ref: 'Luke 15-16', book: 'Luke', chapter: 15, startVerse: 11, endVerse: 32, title: 'The Prodigal Son' },
+          { ref: 'Luke 17-18', book: 'Luke', chapter: 18, startVerse: 1, endVerse: 14, title: 'Persistent Prayer' },
+          { ref: 'Luke 19-20', book: 'Luke', chapter: 19, startVerse: 1, endVerse: 10, title: 'Zacchaeus' },
+          { ref: 'Luke 21-22', book: 'Luke', chapter: 22, startVerse: 39, endVerse: 53, title: 'Garden of Gethsemane' },
+          { ref: 'Luke 23-24', book: 'Luke', chapter: 24, startVerse: 13, endVerse: 35, title: 'Road to Emmaus' },
+          { ref: 'John 1-2', book: 'John', chapter: 1, startVerse: 1, endVerse: 18, title: 'The Word Became Flesh' },
+          { ref: 'John 3-4', book: 'John', chapter: 3, startVerse: 1, endVerse: 21, title: 'Nicodemus & Living Water' },
+          { ref: 'John 5-6', book: 'John', chapter: 6, startVerse: 25, endVerse: 59, title: 'Bread of Life' },
+          { ref: 'John 7-8', book: 'John', chapter: 8, startVerse: 1, endVerse: 11, title: 'Light of the World' },
+          { ref: 'John 9-10', book: 'John', chapter: 10, startVerse: 1, endVerse: 18, title: 'The Good Shepherd' },
+          { ref: 'John 11-12', book: 'John', chapter: 11, startVerse: 1, endVerse: 44, title: 'Raising Lazarus' },
+          { ref: 'John 13-15', book: 'John', chapter: 15, startVerse: 1, endVerse: 17, title: 'The Vine & Farewell' },
+          { ref: 'John 16-18', book: 'John', chapter: 17, startVerse: 1, endVerse: 26, title: 'Jesus\' High Priestly Prayer' },
+          { ref: 'John 19-21', book: 'John', chapter: 21, startVerse: 1, endVerse: 25, title: 'Crucifixion & Restoration of Peter' },
+        ]
+      },
+      {
+        id: 'psalms-proverbs',
+        title: 'Psalms & Proverbs',
+        description: 'Read through the wisdom literature — one Psalm or Proverb chapter each day for 61 days.',
+        duration: 61,
+        readings: Array.from({ length: 31 }, (_, i) => ({
+          ref: 'Proverbs ' + (i + 1), book: 'Proverbs', chapter: i + 1, startVerse: 1, endVerse: 1,
+          title: 'Proverbs ' + (i + 1)
+        })).concat(Array.from({ length: 30 }, (_, i) => ({
+          ref: 'Psalm ' + (i * 5 + 1) + '-' + (i * 5 + 5), book: 'Psalms', chapter: i * 5 + 1, startVerse: 1, endVerse: 1,
+          title: 'Psalms ' + (i * 5 + 1) + '\u2013' + (i * 5 + 5)
+        })))
+      },
+      {
+        id: 'pauls-letters',
+        title: 'Paul\'s Letters',
+        description: 'Explore the apostle Paul\'s letters to the early churches — one reading each day for 30 days.',
+        duration: 30,
+        readings: [
+          { ref: 'Romans 1-2', book: 'Romans', chapter: 1, startVerse: 1, endVerse: 32, title: 'The Gospel\'s Power' },
+          { ref: 'Romans 3-4', book: 'Romans', chapter: 3, startVerse: 21, endVerse: 31, title: 'Righteousness by Faith' },
+          { ref: 'Romans 5-6', book: 'Romans', chapter: 5, startVerse: 1, endVerse: 21, title: 'Peace with God' },
+          { ref: 'Romans 7-8', book: 'Romans', chapter: 8, startVerse: 1, endVerse: 39, title: 'Life in the Spirit' },
+          { ref: 'Romans 9-11', book: 'Romans', chapter: 11, startVerse: 33, endVerse: 36, title: 'God\'s Sovereign Plan' },
+          { ref: 'Romans 12-14', book: 'Romans', chapter: 12, startVerse: 1, endVerse: 21, title: 'Living Sacrifice' },
+          { ref: 'Romans 15-16', book: 'Romans', chapter: 15, startVerse: 1, endVerse: 13, title: 'Unity & Greetings' },
+          { ref: '1 Corinthians 1-3', book: '1 Corinthians', chapter: 1, startVerse: 18, endVerse: 31, title: 'Wisdom of the Cross' },
+          { ref: '1 Corinthians 4-7', book: '1 Corinthians', chapter: 6, startVerse: 12, endVerse: 20, title: 'Temple of the Spirit' },
+          { ref: '1 Corinthians 8-10', book: '1 Corinthians', chapter: 10, startVerse: 1, endVerse: 13, title: 'Freedom & Responsibility' },
+          { ref: '1 Corinthians 11-13', book: '1 Corinthians', chapter: 13, startVerse: 1, endVerse: 13, title: 'The Love Chapter' },
+          { ref: '1 Corinthians 14-16', book: '1 Corinthians', chapter: 15, startVerse: 1, endVerse: 28, title: 'The Resurrection' },
+          { ref: '2 Corinthians 1-4', book: '2 Corinthians', chapter: 4, startVerse: 1, endVerse: 18, title: 'Treasure in Jars of Clay' },
+          { ref: '2 Corinthians 5-9', book: '2 Corinthians', chapter: 5, startVerse: 14, endVerse: 21, title: 'Ministry of Reconciliation' },
+          { ref: '2 Corinthians 10-13', book: '2 Corinthians', chapter: 12, startVerse: 1, endVerse: 10, title: 'Strength in Weakness' },
+          { ref: 'Galatians 1-3', book: 'Galatians', chapter: 2, startVerse: 15, endVerse: 21, title: 'Justified by Faith' },
+          { ref: 'Galatians 4-6', book: 'Galatians', chapter: 5, startVerse: 16, endVerse: 26, title: 'Fruit of the Spirit' },
+          { ref: 'Ephesians 1-3', book: 'Ephesians', chapter: 2, startVerse: 1, endVerse: 10, title: 'Saved by Grace' },
+          { ref: 'Ephesians 4-6', book: 'Ephesians', chapter: 6, startVerse: 10, endVerse: 20, title: 'Armor of God' },
+          { ref: 'Philippians 1-2', book: 'Philippians', chapter: 2, startVerse: 1, endVerse: 18, title: 'Christ\'s Humility' },
+          { ref: 'Philippians 3-4', book: 'Philippians', chapter: 4, startVerse: 4, endVerse: 13, title: 'Rejoice in the Lord' },
+          { ref: 'Colossians 1-2', book: 'Colossians', chapter: 1, startVerse: 15, endVerse: 23, title: 'Supremacy of Christ' },
+          { ref: 'Colossians 3-4', book: 'Colossians', chapter: 3, startVerse: 1, endVerse: 17, title: 'New Self in Christ' },
+          { ref: '1 Thessalonians', book: '1 Thessalonians', chapter: 4, startVerse: 13, endVerse: 18, title: 'The Lord\'s Return' },
+          { ref: '2 Thessalonians', book: '2 Thessalonians', chapter: 2, startVerse: 1, endVerse: 12, title: 'Stand Firm' },
+          { ref: '1 Timothy', book: '1 Timothy', chapter: 6, startVerse: 6, endVerse: 19, title: 'Godliness & Contentment' },
+          { ref: '2 Timothy', book: '2 Timothy', chapter: 2, startVerse: 1, endVerse: 13, title: 'Endure as a Soldier' },
+          { ref: 'Titus & Philemon', book: 'Titus', chapter: 3, startVerse: 3, endVerse: 8, title: 'Saved by Mercy' },
+          { ref: 'Hebrews 1-7', book: 'Hebrews', chapter: 4, startVerse: 14, endVerse: 16, title: 'Our Great High Priest' },
+          { ref: 'Hebrews 8-13', book: 'Hebrews', chapter: 11, startVerse: 1, endVerse: 6, title: 'The Hall of Faith' },
+        ]
+      },
+      {
+        id: 'redemption-30',
+        title: 'The Story of Redemption',
+        description: 'Trace God\'s plan of salvation from Genesis to Revelation in 30 key passages.',
+        duration: 30,
+        readings: [
+          { ref: 'Genesis 1-2', book: 'Genesis', chapter: 1, startVerse: 1, endVerse: 31, title: 'Creation' },
+          { ref: 'Genesis 3', book: 'Genesis', chapter: 3, startVerse: 1, endVerse: 24, title: 'The Fall' },
+          { ref: 'Genesis 6-9', book: 'Genesis', chapter: 6, startVerse: 5, endVerse: 22, title: 'Noah & The Flood' },
+          { ref: 'Genesis 12', book: 'Genesis', chapter: 12, startVerse: 1, endVerse: 9, title: 'Abraham\'s Call' },
+          { ref: 'Genesis 22', book: 'Genesis', chapter: 22, startVerse: 1, endVerse: 19, title: 'The Sacrifice of Isaac' },
+          { ref: 'Exodus 3', book: 'Exodus', chapter: 3, startVerse: 1, endVerse: 15, title: 'The Burning Bush' },
+          { ref: 'Exodus 12', book: 'Exodus', chapter: 12, startVerse: 1, endVerse: 14, title: 'The Passover' },
+          { ref: 'Exodus 20', book: 'Exodus', chapter: 20, startVerse: 1, endVerse: 21, title: 'The Ten Commandments' },
+          { ref: 'Joshua 1', book: 'Joshua', chapter: 1, startVerse: 1, endVerse: 9, title: 'Entering the Promised Land' },
+          { ref: '1 Samuel 16', book: '1 Samuel', chapter: 16, startVerse: 1, endVerse: 13, title: 'David Anointed King' },
+          { ref: '2 Samuel 7', book: '2 Samuel', chapter: 7, startVerse: 8, endVerse: 16, title: 'The Davidic Covenant' },
+          { ref: 'Psalm 22', book: 'Psalms', chapter: 22, startVerse: 1, endVerse: 18, title: 'Prophecy of the Cross' },
+          { ref: 'Isaiah 53', book: 'Isaiah', chapter: 53, startVerse: 1, endVerse: 12, title: 'The Suffering Servant' },
+          { ref: 'Jeremiah 31', book: 'Jeremiah', chapter: 31, startVerse: 31, endVerse: 34, title: 'The New Covenant' },
+          { ref: 'Ezekiel 37', book: 'Ezekiel', chapter: 37, startVerse: 1, endVerse: 14, title: 'Valley of Dry Bones' },
+          { ref: 'Daniel 7', book: 'Daniel', chapter: 7, startVerse: 13, endVerse: 14, title: 'The Son of Man' },
+          { ref: 'Micah 5', book: 'Micah', chapter: 5, startVerse: 2, endVerse: 5, title: 'Out of Bethlehem' },
+          { ref: 'Luke 1-2', book: 'Luke', chapter: 2, startVerse: 1, endVerse: 20, title: 'The Incarnation' },
+          { ref: 'Matthew 3', book: 'Matthew', chapter: 3, startVerse: 13, endVerse: 17, title: 'Baptism of Jesus' },
+          { ref: 'John 3', book: 'John', chapter: 3, startVerse: 16, endVerse: 21, title: 'For God So Loved' },
+          { ref: 'Matthew 16', book: 'Matthew', chapter: 16, startVerse: 13, endVerse: 20, title: 'Peter\'s Confession' },
+          { ref: 'Mark 10', book: 'Mark', chapter: 10, startVerse: 32, endVerse: 45, title: 'Servant of All' },
+          { ref: 'Luke 22', book: 'Luke', chapter: 22, startVerse: 14, endVerse: 23, title: 'The Last Supper' },
+          { ref: 'John 19', book: 'John', chapter: 19, startVerse: 16, endVerse: 30, title: 'The Crucifixion' },
+          { ref: 'Luke 24', book: 'Luke', chapter: 24, startVerse: 1, endVerse: 12, title: 'The Resurrection' },
+          { ref: 'Acts 2', book: 'Acts', chapter: 2, startVerse: 1, endVerse: 21, title: 'Pentecost' },
+          { ref: 'Romans 8', book: 'Romans', chapter: 8, startVerse: 28, endVerse: 39, title: 'More Than Conquerors' },
+          { ref: 'Ephesians 2', book: 'Ephesians', chapter: 2, startVerse: 1, endVerse: 10, title: 'Saved by Grace' },
+          { ref: 'Revelation 21', book: 'Revelation', chapter: 21, startVerse: 1, endVerse: 8, title: 'New Heaven & New Earth' },
+          { ref: 'Revelation 22', book: 'Revelation', chapter: 22, startVerse: 1, endVerse: 5, title: 'The River of Life' },
+        ]
+      }
+    ];
+
+    const plansModal = document.getElementById('plans-modal');
+    const plansBackdrop = document.getElementById('plans-backdrop');
+    const plansBrowse = document.getElementById('plans-browse');
+    const plansDetail = document.getElementById('plans-detail');
+
+    function getPlansProgress() {
+      try { return JSON.parse(localStorage.getItem(PLANS_KEY) || '{}'); } catch { return {}; }
+    }
+    function savePlansProgress(p) { localStorage.setItem(PLANS_KEY, JSON.stringify(p)); }
+    function getActivePlan() { return localStorage.getItem(ACTIVE_PLAN_KEY) || ''; }
+    function setActivePlan(id) { localStorage.setItem(ACTIVE_PLAN_KEY, id); }
+    function getStreak() {
+      try { return JSON.parse(localStorage.getItem(STREAK_KEY) || '{"current":0,"lastRead":"","longest":0}'); }
+      catch { return { current: 0, lastRead: '', longest: 0 }; }
+    }
+    function saveStreak(s) { localStorage.setItem(STREAK_KEY, JSON.stringify(s)); }
+
+    function updateStreak() {
+      const streak = getStreak();
+      const today = new Date().toISOString().split('T')[0];
+      if (streak.lastRead === today) return streak;
+
+      const yesterday = new Date(Date.now() - 86400000).toISOString().split('T')[0];
+      if (streak.lastRead === yesterday) {
+        streak.current += 1;
+      } else {
+        streak.current = 1;
+      }
+      streak.lastRead = today;
+      if (streak.current > streak.longest) streak.longest = streak.current;
+      saveStreak(streak);
+      return streak;
+    }
+
+    function openReadingPlans() {
+      plansModal.classList.add('open');
+      plansBackdrop.classList.add('open');
+      const activePlanId = getActivePlan();
+      if (activePlanId) {
+        showPlanDetail(activePlanId);
+      } else {
+        showPlansBrowse();
+      }
+    }
+
+    function closeReadingPlans() {
+      plansModal.classList.remove('open');
+      plansBackdrop.classList.remove('open');
+    }
+
+    function showPlansBrowse() {
+      plansBrowse.classList.remove('hidden');
+      plansDetail.classList.add('hidden');
+      document.getElementById('plans-title').textContent = 'Reading Plans';
+      plansBrowse.textContent = '';
+
+      const progress = getPlansProgress();
+      const activePlanId = getActivePlan();
+      const streak = getStreak();
+
+      if (streak.current > 0) {
+        const streakEl = document.createElement('div');
+        streakEl.className = 'plans-streak';
+        streakEl.innerHTML = '<div class="plans-streak-fire">\ud83d\udd25</div><div class="plans-streak-info"><div class="plans-streak-count">' + streak.current + ' day' + (streak.current > 1 ? 's' : '') + '</div><div class="plans-streak-label">Reading streak (best: ' + streak.longest + ')</div></div>';
+        plansBrowse.appendChild(streakEl);
+      }
+
+      READING_PLANS.forEach(plan => {
+        const card = document.createElement('div');
+        card.className = 'plan-card' + (plan.id === activePlanId ? ' active' : '');
+
+        const title = document.createElement('div');
+        title.className = 'plan-card-title';
+        title.textContent = plan.title;
+        card.appendChild(title);
+
+        const desc = document.createElement('div');
+        desc.className = 'plan-card-desc';
+        desc.textContent = plan.description;
+        card.appendChild(desc);
+
+        const meta = document.createElement('div');
+        meta.className = 'plan-card-meta';
+        meta.textContent = plan.duration + ' days';
+
+        const completed = progress[plan.id] ? Object.keys(progress[plan.id]).filter(k => progress[plan.id][k]).length : 0;
+        if (completed > 0) {
+          meta.textContent += ' \u2022 ' + completed + '/' + plan.duration + ' completed';
+        }
+        card.appendChild(meta);
+
+        if (completed > 0) {
+          const bar = document.createElement('div');
+          bar.className = 'plan-progress-bar';
+          const fill = document.createElement('div');
+          fill.className = 'plan-progress-fill';
+          fill.style.width = Math.round((completed / plan.duration) * 100) + '%';
+          bar.appendChild(fill);
+          card.appendChild(bar);
+        }
+
+        card.addEventListener('click', () => showPlanDetail(plan.id));
+        plansBrowse.appendChild(card);
+      });
+    }
+
+    function showPlanDetail(planId) {
+      const plan = READING_PLANS.find(p => p.id === planId);
+      if (!plan) return;
+
+      plansBrowse.classList.add('hidden');
+      plansDetail.classList.remove('hidden');
+      plansDetail.textContent = '';
+      document.getElementById('plans-title').textContent = plan.title;
+
+      const progress = getPlansProgress();
+      if (!progress[planId]) progress[planId] = {};
+      const planProgress = progress[planId];
+      const completed = Object.keys(planProgress).filter(k => planProgress[k]).length;
+
+      // Back button
+      const back = document.createElement('button');
+      back.className = 'plan-detail-back';
+      back.innerHTML = '<svg fill="none" stroke="currentColor" viewBox="0 0 24 24" style="width:14px;height:14px"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/></svg> All Plans';
+      back.addEventListener('click', showPlansBrowse);
+      plansDetail.appendChild(back);
+
+      // Find current day (first incomplete)
+      let currentDay = 0;
+      for (let i = 0; i < plan.readings.length; i++) {
+        if (!planProgress[i]) { currentDay = i; break; }
+        if (i === plan.readings.length - 1) currentDay = i;
+      }
+
+      const reading = plan.readings[currentDay];
+      if (reading) {
+        const todayCard = document.createElement('div');
+        todayCard.className = 'plan-today-card';
+
+        const label = document.createElement('div');
+        label.className = 'plan-today-label';
+        label.textContent = 'Day ' + (currentDay + 1) + ' of ' + plan.duration;
+        todayCard.appendChild(label);
+
+        const ref = document.createElement('div');
+        ref.className = 'plan-today-ref';
+        ref.textContent = reading.ref;
+        todayCard.appendChild(ref);
+
+        const title = document.createElement('div');
+        title.className = 'plan-today-title';
+        title.textContent = reading.title;
+        todayCard.appendChild(title);
+
+        // Progress bar
+        const bar = document.createElement('div');
+        bar.className = 'plan-progress-bar';
+        const fill = document.createElement('div');
+        fill.className = 'plan-progress-fill';
+        fill.style.width = Math.round((completed / plan.duration) * 100) + '%';
+        bar.appendChild(fill);
+        todayCard.appendChild(bar);
+
+        const pctLabel = document.createElement('div');
+        pctLabel.style.cssText = 'font-size: var(--text-xs); color: var(--neutral-400); margin-top: var(--space-1); text-align: right;';
+        pctLabel.textContent = Math.round((completed / plan.duration) * 100) + '% complete';
+        todayCard.appendChild(pctLabel);
+
+        const actions = document.createElement('div');
+        actions.className = 'plan-today-actions';
+        actions.style.marginTop = 'var(--space-3)';
+
+        const readBtn = document.createElement('button');
+        readBtn.className = 'plan-read-btn';
+        readBtn.textContent = 'Read Now';
+        readBtn.addEventListener('click', () => {
+          closeReadingPlans();
+          navigateToPassage(reading);
+        });
+        actions.appendChild(readBtn);
+
+        if (!planProgress[currentDay]) {
+          const markBtn = document.createElement('button');
+          markBtn.className = 'plan-mark-btn';
+          markBtn.textContent = 'Mark as Read';
+          markBtn.addEventListener('click', () => {
+            planProgress[currentDay] = true;
+            savePlansProgress(progress);
+            updateStreak();
+            showToast('Day ' + (currentDay + 1) + ' completed!');
+            showPlanDetail(planId);
+          });
+          actions.appendChild(markBtn);
+        }
+
+        todayCard.appendChild(actions);
+        plansDetail.appendChild(todayCard);
+      }
+
+      // Start/continue button
+      if (!getActivePlan() || getActivePlan() !== planId) {
+        const startBtn = document.createElement('button');
+        startBtn.className = 'plan-start-btn';
+        startBtn.textContent = completed > 0 ? 'Continue This Plan' : 'Start This Plan';
+        startBtn.addEventListener('click', () => {
+          setActivePlan(planId);
+          showToast('Plan activated!');
+          showPlanDetail(planId);
+        });
+        plansDetail.appendChild(startBtn);
+      }
+
+      // Calendar grid
+      const calLabel = document.createElement('div');
+      calLabel.style.cssText = 'font-size: var(--text-xs); color: var(--neutral-400); margin-top: var(--space-4); margin-bottom: var(--space-2);';
+      calLabel.textContent = 'Progress Calendar';
+      plansDetail.appendChild(calLabel);
+
+      const cal = document.createElement('div');
+      cal.className = 'plan-calendar';
+      for (let i = 0; i < plan.readings.length; i++) {
+        const day = document.createElement('div');
+        day.className = 'plan-calendar-day' + (planProgress[i] ? ' completed' : '') + (i === currentDay ? ' today' : '');
+        day.textContent = i + 1;
+        day.title = plan.readings[i].ref;
+        cal.appendChild(day);
+      }
+      plansDetail.appendChild(cal);
+    }
+
+    document.getElementById('close-plans').addEventListener('click', closeReadingPlans);
+    document.getElementById('plans-backdrop').addEventListener('click', closeReadingPlans);
+
+    // ===== Left Drawer =====
+    const drawerEl = document.getElementById('drawer');
+    const drawerBackdrop = document.getElementById('drawer-backdrop');
+    const drawerBtn = document.getElementById('drawer-btn');
+
+    function openDrawer() {
+      drawerEl.classList.add('open');
+      drawerBackdrop.classList.add('open');
+      updateDrawerGreeting();
+    }
+
+    function closeDrawer() {
+      drawerEl.classList.remove('open');
+      drawerBackdrop.classList.remove('open');
+    }
+
+    function updateDrawerGreeting() {
+      const hour = new Date().getHours();
+      let greeting = 'Good evening';
+      if (hour < 12) greeting = 'Good morning';
+      else if (hour < 17) greeting = 'Good afternoon';
+
+      document.getElementById('drawer-greeting').textContent = greeting;
+
+      const now = new Date();
+      const options = { weekday: 'long', month: 'long', day: 'numeric' };
+      document.getElementById('drawer-date').textContent = now.toLocaleDateString('en-US', options);
+    }
+
+    drawerBtn.addEventListener('click', openDrawer);
+    drawerBackdrop.addEventListener('click', closeDrawer);
+
+    // Drawer item handlers
+    document.getElementById('drawer-life-app').addEventListener('click', () => {
+      closeDrawer();
+      openLifeApp();
+    });
+
+    document.getElementById('drawer-topical').addEventListener('click', () => {
+      closeDrawer();
+      openTopicalBrowse();
+    });
+
+    document.getElementById('drawer-plans').addEventListener('click', () => {
+      closeDrawer();
+      openReadingPlans();
+    });
+
+    document.getElementById('drawer-prayers').addEventListener('click', () => {
+      closeDrawer();
+      openPrayerJournal();
+    });
+
+    document.getElementById('drawer-devotional').addEventListener('click', () => {
+      closeDrawer();
+      openDailyDevotional();
+    });
+
+    document.getElementById('drawer-shortcuts').addEventListener('click', () => {
+      closeDrawer();
+      showToast('/ Search  ·  T Topics  ·  P Plans  ·  L Life App  ·  D Dark mode  ·  ` Menu');
+    });
   </script>
 </body>
 </html>

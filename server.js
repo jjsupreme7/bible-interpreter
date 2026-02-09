@@ -823,6 +823,349 @@ Important: The "reference" field must use standard Bible reference format (e.g.,
   }
 });
 
+// ===== Topical Browse =====
+app.post('/api/topical', rateLimit, async (req, res) => {
+  try {
+    const { topic } = req.body;
+    if (!topic || typeof topic !== 'string' || topic.trim().length < 2) {
+      return res.status(400).json({ error: 'Please provide a topic.' });
+    }
+    if (topic.length > 100) {
+      return res.status(400).json({ error: 'Topic must be under 100 characters.' });
+    }
+
+    const prompt = `You are a Bible scholar with deep knowledge of Scripture. A user wants to study the topic: "${topic.trim()}"
+
+Find 5-8 of the most important and relevant Bible passages for this topic. Go beyond the most commonly cited verses — include lesser-known but powerful passages from across the entire Bible (Old and New Testaments).
+
+For each passage:
+1. Choose a specific reference (1-3 verses)
+2. Provide the key verse text (brief, just the most important 1-2 verses)
+3. Write a 1-2 sentence summary explaining why this passage is essential for understanding this topic
+
+Also write a brief (2-3 sentence) description of how the Bible addresses this topic overall.
+
+Return ONLY valid JSON in this exact format:
+{
+  "topic": "${topic.trim()}",
+  "description": "Brief overview of how the Bible addresses this topic",
+  "passages": [
+    {
+      "reference": "Book Chapter:StartVerse-EndVerse",
+      "book": "Book Name",
+      "chapter": 1,
+      "startVerse": 1,
+      "endVerse": 3,
+      "keyVerse": "The actual verse text quoted briefly",
+      "summary": "Why this passage matters for this topic"
+    }
+  ]
+}`;
+
+    const message = await anthropic.messages.create({
+      model: 'claude-sonnet-4-5-20250929',
+      max_tokens: 2500,
+      messages: [{ role: 'user', content: prompt }]
+    });
+
+    const responseText = message.content[0].text;
+    const inputTokens = message.usage?.input_tokens || 0;
+    const outputTokens = message.usage?.output_tokens || 0;
+    console.log(`Topical - Input: ${inputTokens}, Output: ${outputTokens}, Cost: $${calculateCost(inputTokens, outputTokens).toFixed(4)}`);
+    trackUsage('topical:' + topic.trim(), inputTokens, outputTokens);
+
+    let result;
+    const jsonBlockMatch = responseText.match(/```(?:json)?\s*([\s\S]*?)\s*```/);
+    if (jsonBlockMatch) {
+      result = JSON.parse(jsonBlockMatch[1]);
+    } else {
+      // Try to find a JSON object in the response
+      const objectMatch = responseText.match(/\{[\s\S]*"passages"[\s\S]*\}/);
+      if (objectMatch) {
+        result = JSON.parse(objectMatch[0]);
+      } else {
+        result = JSON.parse(responseText.trim());
+      }
+    }
+
+    if (!result || !Array.isArray(result.passages)) {
+      throw new HttpError(500, 'Invalid response format from AI');
+    }
+
+    res.json(result);
+  } catch (error) {
+    console.error('Topical error:', error.message);
+    if (error instanceof SyntaxError) {
+      return res.status(500).json({ error: 'Failed to parse AI response. Please try again.' });
+    }
+    const status = error instanceof HttpError ? error.status : 500;
+    res.status(status).json({ error: error.message || 'Failed to find passages for topic' });
+  }
+});
+
+// Daily Devotional - server-side cache to avoid regenerating for each user
+const dailyDevotionalCache = new Map();
+
+app.post('/api/daily-devotional', rateLimit, async (req, res) => {
+  try {
+    const today = new Date().toISOString().split('T')[0];
+    const requestDate = req.body.date || today;
+
+    // Return cached devotional if available for this date
+    if (dailyDevotionalCache.has(requestDate)) {
+      return res.json(dailyDevotionalCache.get(requestDate));
+    }
+
+    const prompt = `You are a wise, warm Bible teacher preparing a daily devotional for ${requestDate}.
+
+Choose a meaningful passage (2-4 verses) from anywhere in the Bible. Vary your selections — don't always pick the most famous verses. Consider passages from Wisdom literature, Minor Prophets, the Epistles, or narratives that offer fresh insight.
+
+Write a thoughtful reflection (3-4 sentences) that connects the passage to daily life in a genuine, non-preachy way.
+
+Include one original-language insight — a Hebrew or Greek word from the passage with its deeper meaning.
+
+End with a brief application thought (1-2 sentences) — a practical takeaway for the day.
+
+Return ONLY valid JSON in this exact format:
+{
+  "date": "${requestDate}",
+  "verse": {
+    "reference": "Book Chapter:StartVerse-EndVerse",
+    "book": "Book Name",
+    "chapter": 1,
+    "startVerse": 1,
+    "endVerse": 3,
+    "text": "The full verse text"
+  },
+  "reflection": "Your thoughtful reflection paragraph",
+  "originalLanguageInsight": {
+    "word": "Original word",
+    "transliteration": "How it's pronounced",
+    "language": "Hebrew or Greek",
+    "insight": "What this word reveals about the passage"
+  },
+  "applicationThought": "Practical takeaway for today"
+}`;
+
+    const message = await anthropic.messages.create({
+      model: 'claude-sonnet-4-5-20250929',
+      max_tokens: 1200,
+      messages: [{ role: 'user', content: prompt }]
+    });
+
+    const responseText = message.content[0].text;
+    const inputTokens = message.usage?.input_tokens || 0;
+    const outputTokens = message.usage?.output_tokens || 0;
+    console.log(`Devotional - Input: ${inputTokens}, Output: ${outputTokens}, Cost: $${calculateCost(inputTokens, outputTokens).toFixed(4)}`);
+    trackUsage('devotional:' + requestDate, inputTokens, outputTokens);
+
+    let result;
+    const jsonBlockMatch = responseText.match(/```(?:json)?\s*([\s\S]*?)\s*```/);
+    if (jsonBlockMatch) {
+      result = JSON.parse(jsonBlockMatch[1]);
+    } else {
+      const objectMatch = responseText.match(/\{[\s\S]*"verse"[\s\S]*\}/);
+      if (objectMatch) {
+        result = JSON.parse(objectMatch[0]);
+      } else {
+        result = JSON.parse(responseText.trim());
+      }
+    }
+
+    if (!result || !result.verse || !result.reflection) {
+      throw new HttpError(500, 'Invalid devotional format from AI');
+    }
+
+    // Cache for the day
+    dailyDevotionalCache.set(requestDate, result);
+
+    // Clean old entries (keep last 7 days)
+    if (dailyDevotionalCache.size > 7) {
+      const firstKey = dailyDevotionalCache.keys().next().value;
+      if (firstKey) dailyDevotionalCache.delete(firstKey);
+    }
+
+    res.json(result);
+  } catch (error) {
+    console.error('Devotional error:', error.message);
+    if (error instanceof SyntaxError) {
+      return res.status(500).json({ error: 'Failed to parse devotional. Please try again.' });
+    }
+    const status = error instanceof HttpError ? error.status : 500;
+    res.status(status).json({ error: error.message || 'Failed to generate devotional' });
+  }
+});
+
+// ===== Cross-References =====
+app.post('/api/cross-references', rateLimit, async (req, res) => {
+  try {
+    const { book, chapter, startVerse, endVerse } = req.body;
+    if (!book || !chapter || !startVerse) {
+      return res.status(400).json({ error: 'Book, chapter, and startVerse are required' });
+    }
+
+    const end = endVerse || startVerse;
+    const reference = end > startVerse
+      ? `${book} ${chapter}:${startVerse}-${end}`
+      : `${book} ${chapter}:${startVerse}`;
+
+    const prompt = `You are a Bible scholar identifying cross-references for ${reference}.
+
+Find 4-6 passages from across the Bible that are genuinely connected to this passage. Include:
+- Direct quotations or allusions (e.g., NT quoting OT)
+- Parallel accounts (e.g., same event in different Gospels)
+- Thematic connections (same theological concept)
+- Typological links (OT foreshadowing fulfilled in NT)
+
+For each cross-reference, explain the connection in one clear sentence.
+
+Return ONLY valid JSON:
+{
+  "source": "${reference}",
+  "crossReferences": [
+    {
+      "reference": "Book Chapter:StartVerse-EndVerse",
+      "book": "Book Name",
+      "chapter": 1,
+      "startVerse": 1,
+      "endVerse": 3,
+      "connection": "One sentence explaining how this connects",
+      "thematicLink": "2-3 word category like 'Divine Promise' or 'Faith & Works'"
+    }
+  ]
+}`;
+
+    const message = await anthropic.messages.create({
+      model: 'claude-sonnet-4-5-20250929',
+      max_tokens: 1000,
+      messages: [{ role: 'user', content: prompt }]
+    });
+
+    const responseText = message.content[0].text;
+    const inputTokens = message.usage?.input_tokens || 0;
+    const outputTokens = message.usage?.output_tokens || 0;
+    console.log(`CrossRef - Input: ${inputTokens}, Output: ${outputTokens}, Cost: $${calculateCost(inputTokens, outputTokens).toFixed(4)}`);
+    trackUsage('crossref:' + reference, inputTokens, outputTokens);
+
+    let result;
+    const jsonBlockMatch = responseText.match(/```(?:json)?\s*([\s\S]*?)\s*```/);
+    if (jsonBlockMatch) {
+      result = JSON.parse(jsonBlockMatch[1]);
+    } else {
+      const objectMatch = responseText.match(/\{[\s\S]*"crossReferences"[\s\S]*\}/);
+      if (objectMatch) {
+        result = JSON.parse(objectMatch[0]);
+      } else {
+        result = JSON.parse(responseText.trim());
+      }
+    }
+
+    if (!result || !Array.isArray(result.crossReferences)) {
+      throw new HttpError(500, 'Invalid cross-reference format from AI');
+    }
+
+    res.json(result);
+  } catch (error) {
+    console.error('CrossRef error:', error.message);
+    if (error instanceof SyntaxError) {
+      return res.status(500).json({ error: 'Failed to parse cross-references. Please try again.' });
+    }
+    const status = error instanceof HttpError ? error.status : 500;
+    res.status(status).json({ error: error.message || 'Failed to find cross-references' });
+  }
+});
+
+// ===== Word Study =====
+app.post('/api/word-study', rateLimit, async (req, res) => {
+  try {
+    const { word, reference, context } = req.body;
+    if (!word || typeof word !== 'string' || word.trim().length < 1) {
+      return res.status(400).json({ error: 'Word is required.' });
+    }
+    if (!reference) {
+      return res.status(400).json({ error: 'Reference is required.' });
+    }
+
+    const prompt = `You are a Bible scholar providing a deep word study for the English word "${word.trim()}" as it appears in ${reference}.
+
+Context: "${context || ''}"
+
+Analyze the original Greek or Hebrew word behind this English translation. Provide:
+1. The original language word, transliteration, and Strong's number
+2. Etymology and root meaning
+3. A clear definition
+4. 3-4 examples of how this word is used in other Bible passages (with different nuances)
+5. Theological significance of this word
+6. 2-3 related words in the same language
+
+Return ONLY valid JSON:
+{
+  "english": "${word.trim()}",
+  "original": "The Greek/Hebrew word",
+  "transliteration": "Phonetic pronunciation",
+  "strongsNumber": "G#### or H####",
+  "language": "Greek or Hebrew",
+  "etymology": "Root origin and word formation (1-2 sentences)",
+  "definition": "Core meaning (1 sentence)",
+  "usageExamples": [
+    {
+      "reference": "Book Chapter:Verse",
+      "snippet": "Brief quote showing this word in context",
+      "nuance": "How the meaning differs here"
+    }
+  ],
+  "theologicalSignificance": "2-3 sentences on theological weight",
+  "relatedWords": [
+    {
+      "word": "Related original word",
+      "transliteration": "Pronunciation",
+      "strongs": "G/H####",
+      "relation": "How it relates (synonym, antonym, cognate)"
+    }
+  ],
+  "occurrenceCount": "Approximate number of times in Bible"
+}`;
+
+    const message = await anthropic.messages.create({
+      model: 'claude-sonnet-4-5-20250929',
+      max_tokens: 1500,
+      messages: [{ role: 'user', content: prompt }]
+    });
+
+    const responseText = message.content[0].text;
+    const inputTokens = message.usage?.input_tokens || 0;
+    const outputTokens = message.usage?.output_tokens || 0;
+    console.log(`WordStudy - Input: ${inputTokens}, Output: ${outputTokens}, Cost: $${calculateCost(inputTokens, outputTokens).toFixed(4)}`);
+    trackUsage('wordstudy:' + word.trim(), inputTokens, outputTokens);
+
+    let result;
+    const jsonBlockMatch = responseText.match(/```(?:json)?\s*([\s\S]*?)\s*```/);
+    if (jsonBlockMatch) {
+      result = JSON.parse(jsonBlockMatch[1]);
+    } else {
+      const objectMatch = responseText.match(/\{[\s\S]*"original"[\s\S]*\}/);
+      if (objectMatch) {
+        result = JSON.parse(objectMatch[0]);
+      } else {
+        result = JSON.parse(responseText.trim());
+      }
+    }
+
+    if (!result || !result.original) {
+      throw new HttpError(500, 'Invalid word study format from AI');
+    }
+
+    res.json(result);
+  } catch (error) {
+    console.error('WordStudy error:', error.message);
+    if (error instanceof SyntaxError) {
+      return res.status(500).json({ error: 'Failed to parse word study. Please try again.' });
+    }
+    const status = error instanceof HttpError ? error.status : 500;
+    res.status(status).json({ error: error.message || 'Failed to generate word study' });
+  }
+});
+
 app.listen(PORT, () => {
   console.log(`Bible Interpreter running at http://localhost:${PORT}`);
 });
