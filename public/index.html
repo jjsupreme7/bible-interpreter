@@ -6790,15 +6790,9 @@
       }
     }
 
-    // Auto-show devotional on first visit of the day
-    (function checkDailyDevotional() {
-      const today = new Date().toISOString().split('T')[0];
-      const lastSeen = localStorage.getItem(DEVOTIONAL_SEEN_KEY);
-      if (lastSeen === today) return;
-
-      fetchDailyDevotional()
-        .then(data => showDevotionalOnLoad(data))
-        .catch(() => {}); // silently fail
+    // Pre-fetch devotional so it's ready when opened from drawer
+    (function prefetchDevotional() {
+      fetchDailyDevotional().catch(() => {});
     })();
 
     // ===== Reading Plans =====
