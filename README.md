@@ -1,8 +1,20 @@
 # Bible Interpreter
 
-An AI-powered Bible study app that provides verse-by-verse interpretation with Greek/Hebrew word analysis, historical context, and personalized life application. Built with vanilla HTML/CSS/JS and an Express.js backend using Claude API.
+An AI-powered Bible study app. Pick a book and chapter, read the text, select any verses that stand out to you, and get a detailed AI interpretation — complete with historical context, Greek/Hebrew word analysis, and practical application for your life.
+
+The app also includes a personal Bible counselor (Life Application), daily devotionals, topical browsing, reading plans, a prayer journal, and more. All study data syncs across devices with an optional user account.
 
 **Live:** Deployed on Railway
+
+## How It Works
+
+1. **Read** — Choose a book and chapter from the dropdowns. The full chapter text loads from the Bolls.life Bible API (free, no key required).
+2. **Select** — Click on verses to highlight them. Pick a highlight color if you want to save it.
+3. **Interpret** — Hit the Interpret button. Claude AI analyzes your selected verses and returns a structured interpretation with context, key words, and takeaways.
+4. **Go deeper** — Use cross-references, word studies, translation comparisons, or the chapter outline to keep studying.
+5. **Get personal** — Open Life Application, describe what's going on in your life, and get relevant passages with personalized explanations.
+
+Everything works without an account (data saves to localStorage). Create an account to sync across devices.
 
 ## Features
 
@@ -26,17 +38,23 @@ An AI-powered Bible study app that provides verse-by-verse interpretation with G
 - **Frontend:** Vanilla HTML/CSS/JS (single `index.html`)
 - **Backend:** Node.js + Express
 - **AI:** Claude API (Anthropic) — Claude Haiku for interpretations, Sonnet for life application and devotionals
-- **Bible API:** [Bolls.life](https://bolls.life) — multiple translations
+- **Bible API:** [Bolls.life](https://bolls.life) — free, no API key needed, supports 20+ translations
 - **Auth & Database:** Supabase (PostgreSQL with Row Level Security)
 - **Hosting:** Railway
+
+## Cost
+
+The app uses the Claude API for all AI features. Each interpretation costs roughly $0.01-0.05 depending on verse length. The app tracks cumulative API cost in the header so you can monitor usage. A rate limiter (20 requests/minute) prevents runaway costs.
+
+The Bolls.life Bible API and Supabase free tier cost nothing.
 
 ## Setup
 
 ### Prerequisites
 
 - Node.js >= 18
-- Anthropic API key
-- Supabase project (optional — app works without auth using localStorage)
+- Anthropic API key ([console.anthropic.com](https://console.anthropic.com))
+- Supabase project (optional — app works fully without it using localStorage)
 
 ### Install
 
@@ -53,29 +71,30 @@ Create a `.env` file:
 ```
 ANTHROPIC_API_KEY=your-api-key
 
-# Optional: Supabase for user accounts
+# Optional: enables user accounts with cloud sync
 SUPABASE_URL=https://your-project.supabase.co
 SUPABASE_ANON_KEY=your-anon-key
 ```
 
 ### Supabase Setup (Optional)
 
-If you want user accounts with cloud sync, create a Supabase project and run `supabase-setup.sql` in the SQL Editor. This creates 6 tables with RLS policies:
+If you want user accounts with cloud sync:
 
-- `user_highlights`
-- `user_notes`
-- `user_prayers`
-- `user_reading_progress`
-- `user_history`
-- `user_preferences`
+1. Create a free Supabase project at [supabase.com](https://supabase.com)
+2. Open the SQL Editor and run the contents of `supabase-setup.sql`
+3. Go to Authentication > Sign In / Providers and disable "Confirm email" for instant signup
+4. Copy your project URL and anon key from Settings > API into `.env`
 
-Disable "Confirm email" in Authentication > Sign In / Providers if you want instant signup.
+This creates 6 tables with Row Level Security policies so each user can only access their own data:
+
+- `user_highlights`, `user_notes`, `user_prayers`
+- `user_reading_progress`, `user_history`, `user_preferences`
 
 ### Run
 
 ```bash
-npm start          # Production (port 3000)
-npm run dev        # Development with auto-reload
+npm start            # Production (port 3000)
+npm run dev          # Development with auto-reload
 PORT=4000 npm start  # Custom port
 ```
 
@@ -96,14 +115,18 @@ PORT=4000 npm start  # Custom port
 | POST | `/api/usage/reset` | Reset usage counters |
 | GET | `/api/config` | Supabase config for frontend |
 
+All AI endpoints are rate-limited to 20 requests per minute per IP.
+
 ## Project Structure
 
 ```
 bible-interpreter/
-├── server.js              # Express server + all API routes
+├── server.js              # Express server + all API routes + Claude prompts
 ├── public/
 │   └── index.html         # Entire frontend (HTML + CSS + JS)
 ├── supabase-setup.sql     # Database schema for user accounts
 ├── package.json
 └── .env                   # API keys (not committed)
 ```
+
+The frontend is a single file by design — no build step, no bundler, no framework. Just open and edit.
