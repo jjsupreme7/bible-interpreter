@@ -1166,6 +1166,14 @@ Return ONLY valid JSON:
   }
 });
 
+// Expose Supabase config to frontend (anon key is safe to expose — RLS enforces security)
+app.get('/api/config', (req, res) => {
+  res.json({
+    supabaseUrl: process.env.SUPABASE_URL || '',
+    supabaseAnonKey: process.env.SUPABASE_ANON_KEY || ''
+  });
+});
+
 app.listen(PORT, () => {
   console.log(`Bible Interpreter running at http://localhost:${PORT}`);
 });
