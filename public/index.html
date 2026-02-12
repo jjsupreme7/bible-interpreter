@@ -2286,6 +2286,38 @@
     }
     .prayer-filter-btn:not(.active):hover { background: var(--neutral-100); }
 
+    /* ===== Compose Area (shared by Prayer Journal + Notes) ===== */
+    .compose-area { padding: var(--space-3) var(--space-5) 0; }
+    .notes-card .compose-area { padding: 0 0 var(--space-2); }
+    .compose-btn {
+      width: 100%; padding: 8px; border: 1px dashed var(--neutral-300); border-radius: 6px;
+      background: transparent; color: var(--neutral-500); font-size: var(--text-xs);
+      font-weight: 600; cursor: pointer; transition: all var(--transition-fast); font-family: var(--font-ui);
+    }
+    .compose-btn:hover { border-color: var(--primary-500); color: var(--primary-500); }
+    .compose-form { display: flex; flex-direction: column; gap: var(--space-2); }
+    .compose-form.hidden { display: none; }
+    .compose-ref {
+      width: 100%; padding: var(--space-2); border: 1px solid var(--neutral-200); border-radius: 6px;
+      font-family: var(--font-ui); font-size: var(--text-xs); background: var(--neutral-50); color: var(--neutral-800);
+      box-sizing: border-box;
+    }
+    .compose-ref:focus { outline: 2px solid var(--primary-500); outline-offset: -1px; }
+    .compose-text {
+      width: 100%; min-height: 60px; border: 1px solid var(--neutral-200); border-radius: 6px;
+      padding: var(--space-2); font-family: var(--font-ui); font-size: var(--text-xs);
+      resize: vertical; background: var(--neutral-50); color: var(--neutral-800); box-sizing: border-box;
+    }
+    .compose-text:focus { outline: 2px solid var(--primary-500); outline-offset: -1px; }
+    .compose-actions { display: flex; gap: var(--space-2); justify-content: flex-end; }
+    .compose-actions button {
+      padding: 4px 12px; border-radius: 5px; font-size: var(--text-xs); cursor: pointer;
+      border: 1px solid var(--neutral-200); background: var(--panel-bg); color: var(--neutral-600);
+      transition: all var(--transition-fast); font-family: var(--font-ui);
+    }
+    .compose-save { background: var(--primary-500) !important; color: white !important; border-color: var(--primary-500) !important; }
+    .compose-save:hover { background: var(--primary-600) !important; }
+
     .prayer-journal-list {
       flex: 1;
       overflow-y: auto;
@@ -2886,7 +2918,7 @@
 
   <header>
     <button class="drawer-btn" id="drawer-btn" title="Menu (`)" aria-label="Open menu">
-      <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+      <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
     </button>
     <h1>Bible Interpreter</h1>
     <div class="nav-controls">
@@ -3163,6 +3195,17 @@
       <button class="prayer-filter-btn" data-filter="active">Active</button>
       <button class="prayer-filter-btn" data-filter="answered">Answered</button>
     </div>
+    <div class="compose-area" id="prayer-compose-area">
+      <button class="compose-btn" id="prayer-compose-btn">+ New Prayer</button>
+      <div class="compose-form hidden" id="prayer-compose-form">
+        <input type="text" class="compose-ref" id="prayer-compose-ref" placeholder="Verse reference (optional, e.g. John 3:16)">
+        <textarea class="compose-text" id="prayer-compose-text" placeholder="Write your prayer..." rows="3"></textarea>
+        <div class="compose-actions">
+          <button class="compose-cancel" id="prayer-compose-cancel">Cancel</button>
+          <button class="compose-save" id="prayer-compose-save">Save Prayer</button>
+        </div>
+      </div>
+    </div>
     <div class="prayer-journal-list" id="prayer-journal-list"></div>
   </div>
 
@@ -3195,6 +3238,17 @@
               <button class="notes-tab active" id="notes-tab-chapter">This Chapter</button>
               <button class="notes-tab" id="notes-tab-all">All Notes</button>
               <button class="notes-tab" id="notes-tab-prayers">Prayers</button>
+            </div>
+            <div class="compose-area" id="notes-compose-area">
+              <button class="compose-btn" id="notes-compose-btn">+ New Note</button>
+              <div class="compose-form hidden" id="notes-compose-form">
+                <input type="text" class="compose-ref" id="notes-compose-ref" placeholder="Verse reference (optional, e.g. Psalm 23:1)">
+                <textarea class="compose-text" id="notes-compose-text" placeholder="Write your note..." rows="3"></textarea>
+                <div class="compose-actions">
+                  <button class="compose-cancel" id="notes-compose-cancel">Cancel</button>
+                  <button class="compose-save" id="notes-compose-save">Save Note</button>
+                </div>
+              </div>
             </div>
             <div id="notes-list"></div>
           </div>
@@ -5435,6 +5489,29 @@
     const NOTES_KEY = 'bible-notes';
     let activeNoteEditor = null;
 
+    function parseVerseReference(input) {
+      if (!input || !input.trim()) return null;
+      const match = input.trim().match(/^(.+?)\s*(\d+)(?::(\d+))?$/i);
+      if (!match) return null;
+      const [, bookPart, chapter, verse] = match;
+      const bookName = bookPart.trim().replace(/\s+/g, '').toLowerCase();
+      let bookIndex = -1;
+      BOOKS.forEach((book, index) => {
+        if (bookIndex >= 0) return;
+        const name = book.name.toLowerCase().replace(/\s+/g, '');
+        if (name === bookName || name.startsWith(bookName) || BOOK_ALIASES[bookName] === index) {
+          bookIndex = index;
+        }
+      });
+      if (bookIndex < 0) return null;
+      return {
+        bookIndex,
+        chapter: parseInt(chapter),
+        verse: verse ? parseInt(verse) : 1,
+        reference: BOOKS[bookIndex].name + ' ' + chapter + (verse ? ':' + verse : '')
+      };
+    }
+
     function getNotes() {
       return DataStore.getNotes();
     }
@@ -5569,6 +5646,67 @@
       renderNotesPanel();
     });
 
+    // Notes compose
+    const notesComposeBtn = document.getElementById('notes-compose-btn');
+    const notesComposeForm = document.getElementById('notes-compose-form');
+    const notesComposeRef = document.getElementById('notes-compose-ref');
+    const notesComposeText = document.getElementById('notes-compose-text');
+    let editingFreeformKey = null;
+
+    function addFreeformNote(refInput, text) {
+      const notes = getNotes();
+      const parsed = parseVerseReference(refInput);
+      if (parsed) {
+        const key = parsed.bookIndex + '-' + parsed.chapter + '-' + parsed.verse;
+        const existing = notes[key];
+        notes[key] = existing ? existing + '\n\n' + text : text;
+      } else {
+        const key = 'freeform-' + Date.now();
+        notes[key] = JSON.stringify({ text, reference: refInput.trim() || 'General', date: new Date().toISOString() });
+      }
+      saveNotes(notes);
+    }
+
+    function resetNotesCompose() {
+      notesComposeForm.classList.add('hidden');
+      notesComposeBtn.style.display = '';
+      notesComposeRef.value = '';
+      notesComposeText.value = '';
+      editingFreeformKey = null;
+    }
+
+    notesComposeBtn.addEventListener('click', () => {
+      notesComposeBtn.style.display = 'none';
+      notesComposeForm.classList.remove('hidden');
+      notesComposeText.focus();
+    });
+
+    document.getElementById('notes-compose-cancel').addEventListener('click', resetNotesCompose);
+
+    document.getElementById('notes-compose-save').addEventListener('click', () => {
+      const text = notesComposeText.value.trim();
+      if (!text) { showToast('Please write a note'); return; }
+      if (editingFreeformKey) {
+        const notes = getNotes();
+        const parsed = parseVerseReference(notesComposeRef.value);
+        if (parsed) {
+          delete notes[editingFreeformKey];
+          const vKey = parsed.bookIndex + '-' + parsed.chapter + '-' + parsed.verse;
+          notes[vKey] = text;
+        } else {
+          notes[editingFreeformKey] = JSON.stringify({ text, reference: notesComposeRef.value.trim() || 'General', date: new Date().toISOString() });
+        }
+        saveNotes(notes);
+        showToast('Note updated');
+      } else {
+        addFreeformNote(notesComposeRef.value, text);
+        showToast('Note saved');
+      }
+      resetNotesCompose();
+      refreshNoteIndicators();
+      renderNotesPanel();
+    });
+
     function renderNotesPanel() {
       const notesList = document.getElementById('notes-list');
       if (!notesList) return;
@@ -5595,7 +5733,7 @@
       if (chapterNotes.length === 0) {
         const empty = document.createElement('div');
         empty.className = 'notes-empty';
-        empty.textContent = 'Double-click a verse to add a note';
+        empty.textContent = 'Tap "+ New Note" above or double-click a verse';
         notesList.appendChild(empty);
         return;
       }
@@ -5689,6 +5827,46 @@
           notesList.appendChild(item);
         });
       });
+
+      // Render freeform notes
+      const freeformNotes = [];
+      for (const [key, value] of allEntries) {
+        if (key.startsWith('freeform-')) {
+          try {
+            const parsed = JSON.parse(value);
+            freeformNotes.push({ key, text: parsed.text, reference: parsed.reference || 'General', date: parsed.date });
+          } catch (e) {
+            freeformNotes.push({ key, text: value, reference: 'General', date: '' });
+          }
+        }
+      }
+      if (freeformNotes.length > 0) {
+        const header = document.createElement('div');
+        header.className = 'note-group-header';
+        header.textContent = 'General Notes';
+        notesList.appendChild(header);
+        freeformNotes.forEach(n => {
+          const item = document.createElement('div');
+          item.className = 'note-item';
+          const refEl = document.createElement('span');
+          refEl.className = 'note-item-verse';
+          refEl.textContent = n.reference;
+          item.appendChild(refEl);
+          const tEl = document.createElement('div');
+          tEl.className = 'note-item-text';
+          tEl.textContent = n.text;
+          item.appendChild(tEl);
+          item.addEventListener('click', () => {
+            notesComposeBtn.style.display = 'none';
+            notesComposeForm.classList.remove('hidden');
+            notesComposeRef.value = n.reference === 'General' ? '' : n.reference;
+            notesComposeText.value = n.text;
+            editingFreeformKey = n.key;
+            notesComposeText.focus();
+          });
+          notesList.appendChild(item);
+        });
+      }
     }
 
     // ===== Chapter Context Card =====
@@ -6236,7 +6414,7 @@
       if (chapterPrayers.length === 0) {
         const empty = document.createElement('div');
         empty.className = 'notes-empty';
-        empty.textContent = 'Double-click a verse to add a prayer';
+        empty.textContent = 'Double-click a verse or use the Prayer Journal';
         notesList.appendChild(empty);
         return;
       }
@@ -6386,9 +6564,57 @@
     const prayerJournalList = document.getElementById('prayer-journal-list');
     const closePrayerJournalBtn = document.getElementById('close-prayer-journal');
 
+    // Prayer compose elements
+    const prayerComposeBtn = document.getElementById('prayer-compose-btn');
+    const prayerComposeForm = document.getElementById('prayer-compose-form');
+    const prayerComposeRef = document.getElementById('prayer-compose-ref');
+    const prayerComposeText = document.getElementById('prayer-compose-text');
+
+    function addFreeformPrayer(refInput, text) {
+      const prayers = getPrayers();
+      const parsed = parseVerseReference(refInput);
+      prayers.unshift({
+        id: Date.now().toString(36) + Math.random().toString(36).slice(2, 6),
+        text: text,
+        bookIndex: parsed ? parsed.bookIndex : -1,
+        chapter: parsed ? parsed.chapter : 0,
+        verse: parsed ? parsed.verse : 0,
+        reference: parsed ? parsed.reference : 'General',
+        date: new Date().toISOString(),
+        answered: false
+      });
+      savePrayers(prayers);
+    }
+
+    function resetPrayerCompose() {
+      prayerComposeForm.classList.add('hidden');
+      prayerComposeBtn.style.display = '';
+      prayerComposeRef.value = '';
+      prayerComposeText.value = '';
+    }
+
+    prayerComposeBtn.addEventListener('click', () => {
+      prayerComposeBtn.style.display = 'none';
+      prayerComposeForm.classList.remove('hidden');
+      prayerComposeText.focus();
+    });
+
+    document.getElementById('prayer-compose-cancel').addEventListener('click', resetPrayerCompose);
+
+    document.getElementById('prayer-compose-save').addEventListener('click', () => {
+      const text = prayerComposeText.value.trim();
+      if (!text) { showToast('Please write a prayer'); return; }
+      addFreeformPrayer(prayerComposeRef.value, text);
+      resetPrayerCompose();
+      renderPrayerJournalFull();
+      renderNotesPanel();
+      showToast('Prayer saved');
+    });
+
     function openPrayerJournal() {
       prayerJournalModal.classList.add('open');
       prayerJournalBackdrop.classList.add('open');
+      resetPrayerCompose();
       renderPrayerJournalFull();
     }
 
@@ -6421,7 +6647,7 @@
         const empty = document.createElement('div');
         empty.className = 'notes-empty';
         empty.style.padding = 'var(--space-8) 0';
-        empty.textContent = prayerFilter === 'all' ? 'No prayers yet. Double-click a verse to add one.' :
+        empty.textContent = prayerFilter === 'all' ? 'No prayers yet. Tap "+ New Prayer" above or double-click a verse.' :
           prayerFilter === 'active' ? 'No active prayers' : 'No answered prayers';
         prayerJournalList.appendChild(empty);
         return;
@@ -6437,15 +6663,20 @@
         const ref = document.createElement('span');
         ref.className = 'prayer-full-item-ref';
         ref.textContent = p.reference;
-        ref.addEventListener('click', () => {
-          closePrayerJournal();
-          navigateToPassage({
-            book: BOOKS[p.bookIndex] ? BOOKS[p.bookIndex].name : '',
-            chapter: p.chapter,
-            startVerse: p.verse,
-            endVerse: p.verse
+        if (p.bookIndex >= 0) {
+          ref.addEventListener('click', () => {
+            closePrayerJournal();
+            navigateToPassage({
+              book: BOOKS[p.bookIndex] ? BOOKS[p.bookIndex].name : '',
+              chapter: p.chapter,
+              startVerse: p.verse,
+              endVerse: p.verse
+            });
           });
-        });
+        } else {
+          ref.style.cursor = 'default';
+          ref.style.color = 'var(--neutral-500)';
+        }
         header.appendChild(ref);
 
         const date = document.createElement('span');
