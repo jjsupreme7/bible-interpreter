@@ -526,6 +526,10 @@
       margin: 0 -2px;
       border-radius: 4px;
       transition: background var(--transition-fast), box-shadow var(--transition-fast);
+      -webkit-user-select: none;
+      user-select: none;
+      -webkit-tap-highlight-color: transparent;
+      touch-action: manipulation;
     }
 
     .verse:hover {
@@ -868,8 +872,9 @@
     .word-study-back:hover { color: var(--primary-500); }
 
     /* Verse word clickable styling */
-    .verse-word { cursor: pointer; border-radius: 2px; transition: background var(--transition-fast); }
+    .verse-word { cursor: pointer; border-radius: 2px; transition: background var(--transition-fast); -webkit-tap-highlight-color: transparent; }
     .verse-word:hover { background: rgba(99,102,241,0.12); }
+    .verse-word.long-press-active { background: rgba(99,102,241,0.18); }
 
     /* ===== Verse Cards ===== */
     .hl-card-btn {
@@ -4044,6 +4049,8 @@
 
 	        const textSpan = document.createElement('span');
 	        textSpan.className = 'verse-text';
+	        const isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+	        let touchHandled = false;
 	        // Wrap each word in a clickable span for word study
 	        const words = v.text.split(/(\s+)/);
 	        words.forEach(w => {
@@ -4053,10 +4060,41 @@
 	            const ws = document.createElement('span');
 	            ws.className = 'verse-word';
 	            ws.textContent = w;
-	            ws.addEventListener('click', (e) => {
-	              e.stopPropagation();
-	              showWordPopover(w.replace(/[^\w'-]/g, ''), v.verse, e);
-	            });
+	            if (isTouchDevice) {
+	              // Mobile: long-press (500ms) for word study, tap selects verse
+	              let longPressTimer = null;
+	              let didLongPress = false;
+	              ws.addEventListener('touchstart', (e) => {
+	                didLongPress = false;
+	                longPressTimer = setTimeout(() => {
+	                  didLongPress = true;
+	                  ws.classList.add('long-press-active');
+	                  showWordPopover(w.replace(/[^\w'-]/g, ''), v.verse, { target: ws, clientX: (e.touches[0] || {}).clientX, clientY: (e.touches[0] || {}).clientY, getBoundingClientRect: () => ws.getBoundingClientRect() });
+	                }, 500);
+	              }, { passive: true });
+	              ws.addEventListener('touchend', (e) => {
+	                clearTimeout(longPressTimer);
+	                ws.classList.remove('long-press-active');
+	                if (!didLongPress) {
+	                  // Short tap — select the verse
+	                  touchHandled = true;
+	                  toggleVerse(v.verse);
+	                } else {
+	                  // Long press handled word popover; suppress the click
+	                  touchHandled = true;
+	                }
+	              });
+	              ws.addEventListener('touchmove', () => {
+	                clearTimeout(longPressTimer);
+	                ws.classList.remove('long-press-active');
+	              });
+	            } else {
+	              // Desktop: click for word study
+	              ws.addEventListener('click', (e) => {
+	                e.stopPropagation();
+	                showWordPopover(w.replace(/[^\w'-]/g, ''), v.verse, e);
+	              });
+	            }
 	            textSpan.appendChild(ws);
 	          }
 	        });
@@ -4064,7 +4102,10 @@
 
 	        verseSpan.appendChild(numSpan);
 	        verseSpan.appendChild(textSpan);
-	        verseSpan.addEventListener('click', () => toggleVerse(v.verse));
+	        verseSpan.addEventListener('click', () => {
+	          if (touchHandled) { touchHandled = false; return; }
+	          toggleVerse(v.verse);
+	        });
 
 	        versesContainer.appendChild(verseSpan);
 	      });
@@ -4389,6 +4430,11 @@
     }
 
     document.addEventListener('click', (e) => {
+      if (activePopover && !activePopover.contains(e.target) && !e.target.classList.contains('verse-word')) {
+        closeWordPopover();
+      }
+    });
+    document.addEventListener('touchstart', (e) => {
       if (activePopover && !activePopover.contains(e.target) && !e.target.classList.contains('verse-word')) {
         closeWordPopover();
       }
